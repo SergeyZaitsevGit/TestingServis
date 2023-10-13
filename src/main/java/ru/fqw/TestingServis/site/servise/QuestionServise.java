@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.Question;
+import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 import ru.fqw.TestingServis.site.repo.UserRepository;
@@ -26,7 +27,7 @@ public class QuestionServise {
             return questionRepo.save(question);
     }
 
-//    public List<Question> getQuestionsByType(Type type){
-//        return questionRepo.findByType(type);
-//    }
+    public List<Question> getQuestionsByType(Type type){
+        return questionRepo.findByType(type);
+    }
 }

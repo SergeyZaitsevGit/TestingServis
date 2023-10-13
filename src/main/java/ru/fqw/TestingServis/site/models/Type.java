@@ -1,5 +1,6 @@
 package ru.fqw.TestingServis.site.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,11 @@ public class Type {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
+    @JsonIgnore
     private List<Question> questionList;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User creator;
 }

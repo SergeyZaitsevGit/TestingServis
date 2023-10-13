@@ -42,6 +42,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "type_id", nullable = true)
+    @JsonIgnore
     private Type type;
 
 

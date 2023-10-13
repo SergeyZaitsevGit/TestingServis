@@ -49,9 +49,9 @@
                     <div class="modal-body">
 
                             <input type="hidden" id="question-id">
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected> </option>
-                            <option value="1">One</option>
+                        <select class="form-select" aria-label="Default select example" id = "selectTypeCreate">
+                            <option id = "nullSelected" selected> </option>
+                            <option th:each="tp : ${types}" th:text="${tp.name}" th:value="${tp.id}"/>
                         </select>
                             <div class="form-group">
                                 <label for="question-name" class="col-form-label">Введите вопрос</label>
@@ -100,7 +100,7 @@
                             <label class="form-check-label" for="inlineRadio3">Свободный ответ</label>
                         </div>
                         <ol class="list-group list-group-numbered">
-                            <li class="list-group-item" th:each="ans : ${el.answerList}" th:text="${ans.text}"/>
+                            <li class="list-group-item" th:each="ans : ${el.answerList}"  th:text="${ans.text}"/>
                         </ol>
                     </div>
                 </div>
@@ -145,9 +145,8 @@
 
     $('#save-user-button').click(function() {
            let modal = $('#userEditDialog')
-           let type={
-                name: '1'
-           }
+           let option = $('#selectTypeCreate option:selected')
+
            let question = {
                text: modal.find('#question-name').val(),
                ball: modal.find('#question-ball').val(),
@@ -157,15 +156,15 @@
            let nameTest = form.find('#form3Example1c').val()
 
            console.log(question);
+
            $.ajax({
-               url: '/api/v1/question',
+               url: '/api/v1/question?typeId=' + option.val(),
                type: 'POST',
                data: JSON.stringify(question),
                contentType: "application/json; charset=utf-8",
                dataType: "json",
              success: () => {
-                //location.reload()
-                console.log(data);
+                location.reload()
             },
             error: (err) => {
                 console.log(err);

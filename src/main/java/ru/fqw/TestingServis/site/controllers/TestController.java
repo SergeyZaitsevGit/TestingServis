@@ -18,6 +18,7 @@ import ru.fqw.TestingServis.site.repo.UserRepository;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TestServise;
+import ru.fqw.TestingServis.site.servise.TypeServise;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -31,7 +32,7 @@ public class TestController {
     TestServise testServise;
     QuestionServise questionServise;
     AnswerServise answerServise;
- //   TypeServis typeServis;
+    TypeServise typeServis;
     @GetMapping("/test")
     public String tests(Model model) {
         Iterable<Test> tests = testServise.getTestsByAuthenticationUser();
@@ -44,10 +45,8 @@ public class TestController {
         model.addAttribute("test", new Test());
         model.addAttribute("question", new Question());
         Iterable<Question> questions =questionServise.getQuestionsByAuthenticationUser();
-   //     Type type = new Type();
-  //      type.setName("Математика");
- //       typeServis.createType(type);
- //       Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
+        Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
+        model.addAttribute("types", types);
         model.addAttribute("questions",questions);
         return "test-new";
     }
