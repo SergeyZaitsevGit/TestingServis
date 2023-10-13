@@ -49,6 +49,10 @@
                     <div class="modal-body">
 
                             <input type="hidden" id="question-id">
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected> </option>
+                            <option value="1">One</option>
+                        </select>
                             <div class="form-group">
                                 <label for="question-name" class="col-form-label">Введите вопрос</label>
                                 <input type="text" class="form-control" id="question-name">
@@ -141,6 +145,9 @@
 
     $('#save-user-button').click(function() {
            let modal = $('#userEditDialog')
+           let type={
+                name: '1'
+           }
            let question = {
                text: modal.find('#question-name').val(),
                ball: modal.find('#question-ball').val(),

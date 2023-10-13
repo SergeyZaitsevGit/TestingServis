@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.Question;
 import ru.fqw.TestingServis.site.models.Test;
+import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 import ru.fqw.TestingServis.site.repo.UserRepository;
@@ -27,5 +28,9 @@ public class QuestionServise {
             User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
             question.setCreator(user);
             return questionRepo.save(question);
+    }
+
+    public List<Question> getQuestionsByType(Type type){
+        return questionRepo.findByType(type);
     }
 }

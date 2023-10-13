@@ -35,4 +35,8 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
     private List<Question> questionList;
 
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+//    private List<Type> typeList;
+
+
 }

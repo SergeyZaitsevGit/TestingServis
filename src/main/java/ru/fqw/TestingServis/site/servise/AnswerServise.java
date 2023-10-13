@@ -17,7 +17,7 @@ public class AnswerServise {
         return answerRepo.save(answer);
     }
 
-    public List<Answer> getAnswersByQouestion(Question question){
+    public List<Answer> getAnswersByQuestion(Question question){
         return answerRepo.findByQuestion(question);
     }
 }

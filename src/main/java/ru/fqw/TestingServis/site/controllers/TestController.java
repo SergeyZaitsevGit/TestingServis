@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.fqw.TestingServis.site.models.Answer;
-import ru.fqw.TestingServis.site.models.Question;
-import ru.fqw.TestingServis.site.models.Test;
-import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.*;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 import ru.fqw.TestingServis.site.repo.UserRepository;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
@@ -34,6 +31,7 @@ public class TestController {
     TestServise testServise;
     QuestionServise questionServise;
     AnswerServise answerServise;
+ //   TypeServis typeServis;
     @GetMapping("/test")
     public String tests(Model model) {
         Iterable<Test> tests = testServise.getTestsByAuthenticationUser();
@@ -46,6 +44,10 @@ public class TestController {
         model.addAttribute("test", new Test());
         model.addAttribute("question", new Question());
         Iterable<Question> questions =questionServise.getQuestionsByAuthenticationUser();
+   //     Type type = new Type();
+  //      type.setName("Математика");
+ //       typeServis.createType(type);
+ //       Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
         model.addAttribute("questions",questions);
         return "test-new";
     }
