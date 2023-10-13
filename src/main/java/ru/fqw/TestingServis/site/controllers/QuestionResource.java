@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.models;
+package ru.fqw.TestingServis.site.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import ru.fqw.TestingServis.site.models.Answer;
+import ru.fqw.TestingServis.site.models.Question;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 

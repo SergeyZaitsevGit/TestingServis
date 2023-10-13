@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.fqw.TestingServis.site.models.Emuns.TypeAnswerOptions;
 
 import java.util.HashSet;
@@ -15,8 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Question {
@@ -39,6 +35,8 @@ public class Question {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User creator;
+
+    private Type type;
 
 
 }
