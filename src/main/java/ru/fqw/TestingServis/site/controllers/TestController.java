@@ -8,10 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.site.models.*;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 import ru.fqw.TestingServis.site.repo.UserRepository;
@@ -26,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequestMapping
 @Controller
 @AllArgsConstructor
 public class TestController {
@@ -37,7 +35,14 @@ public class TestController {
     public String tests(Model model) {
         Iterable<Test> tests = testServise.getTestsByAuthenticationUser();
         model.addAttribute("tests",tests);
-        return "/test";
+        return "test";
+    }
+
+    @GetMapping("/test/{testId}")
+    public String test( @PathVariable Long testId, Model model) {
+        Test test = testServise.getTestById(testId);
+       // List<Question> questions = questionServise.
+        return "testCurred";
     }
 
     @GetMapping("/test/new")

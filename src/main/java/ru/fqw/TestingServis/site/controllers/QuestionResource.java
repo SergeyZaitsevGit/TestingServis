@@ -6,6 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.site.models.Answer;
 import ru.fqw.TestingServis.site.models.Question;
+import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;
@@ -21,7 +22,7 @@ public class QuestionResource {
     TypeServise typeServise;
     @PostMapping
     public Question createQuestion(@RequestBody  Question question, @RequestParam("typeId") Long typeId){
-        question.setType(typeServise.getTypeById(typeId));
+        if (typeId != -1)question.setType(typeServise.getTypeById(typeId));
         List<Answer>  answerList = new ArrayList<>(question.getAnswerList());
         question.getAnswerList().clear();
         questionServise.saveQuestion(question);
@@ -29,5 +30,16 @@ public class QuestionResource {
                 answerServise.saveAnswer(a,question);
             }
         return question;
+    }
+
+    @GetMapping("type/{typeId}")
+    public List<Long> findById(@PathVariable long typeId) {
+        List<Question> questions = questionServise.getQuestionsByType(typeServise.getTypeById(typeId));
+        List<Long> questionIds = new ArrayList<>();
+        for (Question question : questions){
+            questionIds.add(question.getId());
+        }
+
+        return questionIds;
     }
 }

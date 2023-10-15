@@ -3,23 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-    <script src="../static/js/questionForm.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href = "../static/css/main.css" rel="stylesheet">
+    <link href="../static/css/main.css" rel="stylesheet">
 </head>
 <header th:insert="blocks/header :: header"></header>
 <body>
@@ -55,68 +41,18 @@
                                 <button id="edit-user" type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#userEditDialog">Добавить вопрос
                                 </button>
-
+                                <select class="form-select" aria-label="Default select example"
+                                        id="selectTypeSearch">
+                                    <option id="nullSelected" selected value="-1"></option>
+                                    <option th:each="tp : ${types}" th:text="${tp.name}"
+                                            th:value="${tp.id}"/>
+                                </select>
+                                <button id="search-question" type="button" class="btn btn-primary">Найти
+                                </button>
                                 <!-- Модальное окно -->
-                                <div class="modal fade" id="userEditDialog" tabindex="-1" role="dialog"
-                                     aria-labelledby="userEditDialogLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="userEditDialogLabel">Добавление вопроса</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
+                                <div th:insert="blocks/questionModal :: questionModal"></div>
 
-                                                <input type="hidden" id="question-id">
-                                                <select class="form-select" aria-label="Default select example"
-                                                        id="selectTypeCreate">
-                                                    <option id="nullSelected" selected></option>
-                                                    <option th:each="tp : ${types}" th:text="${tp.name}"
-                                                            th:value="${tp.id}"/>
-                                                </select>
-                                                <div class="form-group">
-                                                    <label for="question-name" class="col-form-label">Введите
-                                                        вопрос</label>
-                                                    <input type="text" class="form-control" id="question-name">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="question-name" class="col-form-label">Введите балл за
-                                                        вопрос</label>
-                                                    <input type="number" class="form-control" id="question-ball">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="question-name" class="col-form-label">Введите вариант
-                                                        ответа</label>
-                                                    <input type="text" class="form-control" id="question-newAnswer">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           name="inlineRadioOptions" id="corrected"
-                                                           value="option1"><span>  Отмьетьте, если вариант ответа правильный</span><br><br>
-                                                    <div class="d-flex justify-content-center">
-                                                        <button id="save-answer-button" type="button"
-                                                                class="btn btn-primary">Добавть вариант ответа
-                                                        </button>
-                                                    </div>
-                                                    <br>
-                                                    <h6>Варианты ответа:</h6>
-                                                    <ol id="listAnswers" class="list-group list-group-numbered"></ol>
-                                                </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                    Close
-                                                </button>
-                                                <button id="save-user-button" type="button" class="btn btn-primary">
-                                                    Save
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item" th:each="el : ${questions}">
+                                <div class="accordion-item" th:each="el : ${questions}" th:value="${el.id}">
                                     <h2 class="accordion-header" th:id="flush-heading + ${el.id}">
                                         <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" th:data-bs-target="|#flush-collapse${el.id}|"
@@ -129,30 +65,13 @@
                                          data-bs-parent="#accordionFlushExample">
                                         <div class="accordion-body">
                                             <div class="accordion-body">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                           name="inlineRadioOptions" id="inlineRadio1" value="option1"
-                                                           disabled checked>
-                                                    <label class="form-check-label" for="inlineRadio1">Один
-                                                        вариант</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                           name="inlineRadioOptions" id="inlineRadio2" value="option2"
-                                                           disabled>
-                                                    <label class="form-check-label" for="inlineRadio2">Несколько
-                                                        вариантов</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                           name="inlineRadioOptions" id="inlineRadio3" value="option2"
-                                                           disabled>
-                                                    <label class="form-check-label" for="inlineRadio3">Свободный
-                                                        ответ</label>
-                                                </div>
                                                 <ol class="list-group list-group-numbered">
-                                                    <li class="list-group-item" th:each="ans : ${el.answerList}"
-                                                        th:text="${ans.text}"/>
+                                                    <span th:each="ans : ${el.answerList}" th:switch="${ans.corrected}">
+                                                    <li th:case="false" class="list-group-item"
+                                                        th:text="${ans.text}"></li>
+                                                        <li th:case="true" class="list-group-item active"
+                                                            aria-current="true" th:text="${ans.text}"></li>
+                                                    </span>
                                                 </ol>
                                             </div>
                                         </div>
@@ -172,6 +91,19 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="../static/js/questionForm.js"></script>
+<script type="text/javascript" src="../static/js/questionFilter.js"></script>
 </body>
 </html>

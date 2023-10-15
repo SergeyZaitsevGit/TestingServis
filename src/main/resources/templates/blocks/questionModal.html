@@ -1,0 +1,62 @@
+<script src="../static/js/questionForm.js"></script>
+<div class="modal fade" id="userEditDialog" tabindex="-1" role="dialog"
+     aria-labelledby="userEditDialogLabel" aria-hidden="true" th:fragment="questionModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userEditDialogLabel">Добавление вопроса</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" id="question-id">
+                <select class="form-select" aria-label="Default select example"
+                        id="selectTypeCreate">
+                    <option id="nullSelected" value="-1"  selected></option>
+                    <option th:each="tp : ${types}" th:text="${tp.name}"
+                            th:value="${tp.id}"/>
+                </select>
+                <div class="form-group">
+                    <label for="question-name" class="col-form-label">Введите
+                        вопрос</label>
+                    <input type="text" class="form-control" id="question-name">
+                    <span hidden class ="text-danger" id="validNameQuestion">Вопрос не может быть пустой</span>
+                </div>
+                <div class="form-group">
+                    <label for="question-name" class="col-form-label">Введите балл за
+                        вопрос</label>
+                    <input type="number" class="form-control" id="question-ball">
+                    <span hidden class ="text-danger" id="validBallQuestion">Балл введен некорректно</span>
+                </div>
+                <div class="form-group">
+                    <label for="question-name" class="col-form-label">Введите вариант
+                        ответа</label>
+                    <input type="text" class="form-control" id="question-newAnswer">
+                    <input class="form-check-input" type="checkbox"
+                           name="inlineRadioOptions" id="corrected"
+                           value="option1"><span>  Отмьетьте, если вариант ответа правильный</span><br><br>
+                    <div class="d-flex justify-content-center">
+                        <button id="save-answer-button" type="button"
+                                class="btn btn-primary">Добавть вариант ответа
+                        </button>
+                    </div>
+                    <br>
+                    <h6>Варианты ответа:</h6>
+                    <ol id="listAnswers" class="list-group list-group-numbered"></ol>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+                <button id="save-user-button" type="button" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
