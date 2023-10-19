@@ -33,7 +33,7 @@ public class Test {
     @Min(value = 3, message = "Время теста должно быть от 3 минут")
     private int timeActiv;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "TestLikeQuestion",
             joinColumns = @JoinColumn(name = "test_id"),

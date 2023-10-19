@@ -1,4 +1,3 @@
-
 //кнопка поиска
     $('#search-question').click(function() {
         var questionsIds = [];

@@ -10,6 +10,8 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;
+import ru.fqw.TestingServis.site.servise.UserServise;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class QuestionResource {
     QuestionServise questionServise;
     AnswerServise answerServise;
     TypeServise typeServise;
+    UserServise userServise;
     @PostMapping
     public Question createQuestion(@RequestBody  Question question, @RequestParam("typeId") Long typeId){
         if (typeId != -1)question.setType(typeServise.getTypeById(typeId));
@@ -33,7 +36,7 @@ public class QuestionResource {
     }
 
     @GetMapping("type/{typeId}")
-    public List<Long> findById(@PathVariable long typeId) {
+    public List<Long> findQuestionByTypeId(@PathVariable long typeId) {
         List<Question> questions = questionServise.getQuestionsByType(typeServise.getTypeById(typeId));
         List<Long> questionIds = new ArrayList<>();
         for (Question question : questions){
@@ -41,5 +44,18 @@ public class QuestionResource {
         }
 
         return questionIds;
+    }
+
+    @GetMapping("/{questionId}")
+    public Question findTypeById(@PathVariable long questionId) {
+        Question result = questionServise.getQuestionById(questionId);
+        if (result.getCreator().getUsername().equals(userServise.getAuthenticationUser().getUsername()))return result;
+        return null;
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deliteQuestion(@PathVariable long id){
+        questionServise.deliteQuestionById(id);
     }
 }

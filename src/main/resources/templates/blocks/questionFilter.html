@@ -1,0 +1,15 @@
+<div class="row" th:fragment="questionFilter">
+    <div class="col-4"><h6>Фильтры:</h6></div>
+    <div class="col-6">
+        <select class="form-select" aria-label="Default select example"
+                id="selectTypeSearch">
+            <option id="nullSelected" selected value="-1"></option>
+            <option th:each="tp : ${types}" th:text="${tp.name}"
+                    th:value="${tp.id}"/>
+        </select>
+    </div>
+    <div class="col-2">
+        <button id="search-question" type="button" class="btn btn-primary">Найти
+        </button>
+    </div>
+</div>

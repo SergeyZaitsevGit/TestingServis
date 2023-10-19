@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ru.fqw.TestingServis.site.models.Emuns.TypeAnswerOptions;
 
 import java.util.HashSet;
@@ -29,10 +31,11 @@ public class Question {
     private int ball;
     private TypeAnswerOptions typeAnswerOptions = TypeAnswerOptions.ONE_ANSWER;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<Test> testSet = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",  cascade = {CascadeType.MERGE}, orphanRemoval=true)
     private List<Answer> answerList;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -42,8 +45,16 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "type_id", nullable = true)
-    @JsonIgnore
     private Type type;
+
+    @PreRemove
+    private void removeQuestionAssociations() {
+        for (Test test: this.testSet) {
+            test.getQuestionSet().remove(this);
+        }
+       this.creator.getQuestionList().remove(this);
+        if (this.type != null)this.type.getQuestionList().remove(this);
+    }
 
 
 }

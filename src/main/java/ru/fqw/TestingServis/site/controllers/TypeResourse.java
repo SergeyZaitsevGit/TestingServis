@@ -16,7 +16,7 @@ import ru.fqw.TestingServis.site.servise.TypeServise;
 public class TypeResourse {
     TypeServise typeServise;
     @GetMapping("/{typeId}")
-    public Type findById(@PathVariable long typeId) {
+    public Type findTypeById(@PathVariable long typeId) {
         return typeServise.getTypeById(typeId);
     }
 

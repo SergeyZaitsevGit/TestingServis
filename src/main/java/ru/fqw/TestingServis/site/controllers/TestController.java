@@ -41,7 +41,9 @@ public class TestController {
     @GetMapping("/test/{testId}")
     public String test( @PathVariable Long testId, Model model) {
         Test test = testServise.getTestById(testId);
-       // List<Question> questions = questionServise.
+        List<Question> questions = questionServise.getQuestionsByTest(test);
+        model.addAttribute("test", test);
+        model.addAttribute("questions", questions);
         return "testCurred";
     }
 
@@ -53,7 +55,7 @@ public class TestController {
         Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
         model.addAttribute("types", types);
         model.addAttribute("questions",questions);
-        return "test-new";
+        return "testNew";
     }
 
     @PostMapping("/test/new")

@@ -29,6 +29,6 @@ public class TestServise {
         return testRepo.findByCreator(user);
     }
 
-    public Test getTestById(Long testId){return testRepo.findById(testId).get();}
+    public Test getTestById(Long testId){return testRepo.findById(testId).orElseThrow();}
 
 }

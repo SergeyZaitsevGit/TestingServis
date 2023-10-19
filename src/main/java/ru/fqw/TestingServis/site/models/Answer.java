@@ -20,7 +20,8 @@ public class Answer {
     @NotBlank(message = "Введите вариант ответа")
     private String text;
     private boolean corrected;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "question_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    @JsonIgnore
     private Question question;
 }

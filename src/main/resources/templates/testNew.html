@@ -15,7 +15,7 @@
             <div class="card text-black" style="border-radius: 25px;">
                 <div class="card-body p-md-5">
                     <div class="row justify-content-center">
-
+                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" >Новый тест</p>
                         <form th:action="@{/test/new}" method="post" th:object="${test}" class="mx-20 mx-md-4"
                               id="formTest">
                             <div class="d-flex flex-row align-items-center mb-4">
@@ -36,22 +36,23 @@
                                        th:errors="*{timeActiv}">
                                 </div>
                             </div>
-                            <div class="accordion accordion-flush" id="accordionFlushExample">
-                                <!-- Кнопка-триггер модального окна -->
-                                <button id="edit-user" type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#userEditDialog">Добавить вопрос
-                                </button>
-                                <select class="form-select" aria-label="Default select example"
-                                        id="selectTypeSearch">
-                                    <option id="nullSelected" selected value="-1"></option>
-                                    <option th:each="tp : ${types}" th:text="${tp.name}"
-                                            th:value="${tp.id}"/>
-                                </select>
-                                <button id="search-question" type="button" class="btn btn-primary">Найти
-                                </button>
-                                <!-- Модальное окно -->
-                                <div th:insert="blocks/questionModal :: questionModal"></div>
+                            <hr class="mt-1 mb-1"/>
+                            <br><br>
+                            <!-- Фильтры -->
+                            <div th:insert="blocks/questionFilter :: questionFilter"></div>
 
+                            <!-- Кнопка-триггер модального окна -->
+                            <br><br>
+                            <div class="container d-flex align-items-center justify-content-center">
+                                <button id="questionButton" type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#questionDialog">Добавить вопрос
+                                </button>
+                            </div>
+                            <!-- Модальное окно -->
+                            <div th:insert="blocks/questionModal :: questionModal"></div>
+
+
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
                                 <div class="accordion-item" th:each="el : ${questions}" th:value="${el.id}">
                                     <h2 class="accordion-header" th:id="flush-heading + ${el.id}">
                                         <button class="accordion-button collapsed" type="button"
@@ -103,7 +104,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script type="text/javascript" src="../static/js/questionForm.js"></script>
+<script type="text/javascript" src="../static/js/questionModal.js"></script>
 <script type="text/javascript" src="../static/js/questionFilter.js"></script>
 </body>
 </html>

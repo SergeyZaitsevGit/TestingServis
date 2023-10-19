@@ -1,6 +1,7 @@
 package ru.fqw.TestingServis.site.servise;
 
 import lombok.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.User;
@@ -18,6 +19,9 @@ public class UserServise {
             return userRepository.save(user);
         }
         return null;
+    }
+
+    public User getAuthenticationUser(){return  userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
     }
 
 }
