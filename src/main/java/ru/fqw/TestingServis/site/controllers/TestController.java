@@ -31,15 +31,16 @@ public class TestController {
     QuestionServise questionServise;
     AnswerServise answerServise;
     TypeServise typeServis;
+
     @GetMapping("/test")
     public String tests(Model model) {
         Iterable<Test> tests = testServise.getTestsByAuthenticationUser();
-        model.addAttribute("tests",tests);
+        model.addAttribute("tests", tests);
         return "test";
     }
 
     @GetMapping("/test/{testId}")
-    public String test( @PathVariable Long testId, Model model) {
+    public String test(@PathVariable Long testId, Model model) {
         Test test = testServise.getTestById(testId);
         List<Question> questions = questionServise.getQuestionsByTest(test);
         model.addAttribute("test", test);
@@ -51,10 +52,10 @@ public class TestController {
     public String newTest(Model model) {
         model.addAttribute("test", new Test());
         model.addAttribute("question", new Question());
-        Iterable<Question> questions =questionServise.getQuestionsByAuthenticationUser();
+        Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
         Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
         model.addAttribute("types", types);
-        model.addAttribute("questions",questions);
+        model.addAttribute("questions", questions);
         return "testNew";
     }
 
@@ -63,13 +64,14 @@ public class TestController {
             @ModelAttribute("test")
             @Valid Test test, Errors errors,
             Model model
-    ){
+    ) {
         if (errors.hasErrors()) {
             model.addAttribute("question", new Question());
-            Iterable<Question> questions =questionServise.getQuestionsByAuthenticationUser();
-            model.addAttribute("questions",questions);
-            return "test-new";
-        };
+            Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
+            model.addAttribute("questions", questions);
+            return "testNew";
+        }
+
         testServise.saveTest(test);
         return "redirect:/test";
     }

@@ -17,14 +17,15 @@ import java.util.List;
 public class QuestionController {
     QuestionServise questionServise;
     TypeServise typeServise;
+
     @GetMapping("/question")
-    public String questions(Model model){
-        Iterable<Question> questions =questionServise.getQuestionsByAuthenticationUser();
+    public String questions(Model model) {
+        Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
         Iterable<Type> types = typeServise.getTypeByAuthenticationUser();
         model.addAttribute("types", types);
-        model.addAttribute("questions",questions);
+        model.addAttribute("questions", questions);
         long questionId = -1;
-        model.addAttribute("idQuestionDelete",questionId);
+        model.addAttribute("idQuestionDelete", questionId);
 
         return "question";
     }

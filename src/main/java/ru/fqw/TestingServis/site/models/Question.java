@@ -31,14 +31,14 @@ public class Question {
     private int ball;
     private TypeAnswerOptions typeAnswerOptions = TypeAnswerOptions.ONE_ANSWER;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet")
     @JsonIgnore
     private Set<Test> testSet = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",  cascade = {CascadeType.MERGE}, orphanRemoval=true)
     private List<Answer> answerList;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User creator;

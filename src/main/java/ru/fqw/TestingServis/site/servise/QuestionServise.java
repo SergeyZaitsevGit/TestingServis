@@ -1,31 +1,28 @@
 package ru.fqw.TestingServis.site.servise;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.Question;
 import ru.fqw.TestingServis.site.models.Test;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
-import ru.fqw.TestingServis.site.repo.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class QuestionServise {
     QuestionRepo questionRepo;
-    UserRepository userRepository;
+    UserServise userServise;
 
     public List<Question> getQuestionsByAuthenticationUser() {
-        return questionRepo.findByCreator(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get());
+        return questionRepo.findByCreator(userServise.getAuthenticationUser());
     }
 
     public Question saveQuestion(Question question) {
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        User user =  userServise.getAuthenticationUser();
         question.setCreator(user);
         return questionRepo.save(question);
     }
@@ -39,7 +36,7 @@ public class QuestionServise {
     }
 
     public Question getQuestionById(long questionId) {
-        return questionRepo.findById(questionId).orElseThrow();
+        return questionRepo.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found"));
     }
 
     public void deliteQuestionById(long questionId){

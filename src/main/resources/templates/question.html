@@ -7,7 +7,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="../static/css/main.css" rel="stylesheet">
 </head>
-<header th:insert="blocks/header :: header"></header>
+<header th:insert="~{blocks/header :: header}"></header>
 <body>
 <div class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -16,7 +16,7 @@
                 <div class="card-body p-md-5">
                     <div class="row justify-content-center">
                         <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Список вопросов</p>
-                        <div th:insert="blocks/questionFilter :: questionFilter"></div>
+                        <div th:insert="~{blocks/questionFilter :: questionFilter}"></div>
                         <!-- Кнопка-триггер модального окна -->
                         <br><br>
                         <div class="container d-flex align-items-center justify-content-center">
@@ -25,7 +25,7 @@
                             </button>
                         </div>
                         <!-- Модальное окно -->
-                        <div th:insert="blocks/questionModal :: questionModal"></div>
+                        <div th:insert="~{blocks/questionModal :: questionModal}"></div>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item" th:each="el : ${questions}" th:value="${el.id}">
                                 <h2 class="accordion-header" th:id="flush-heading + ${el.id}">

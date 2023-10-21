@@ -2,6 +2,7 @@ package ru.fqw.TestingServis.site.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.site.models.Answer;
@@ -23,23 +24,25 @@ public class QuestionResource {
     AnswerServise answerServise;
     TypeServise typeServise;
     UserServise userServise;
+
     @PostMapping
-    public Question createQuestion(@RequestBody  Question question, @RequestParam("typeId") Long typeId){
-        if (typeId != -1)question.setType(typeServise.getTypeById(typeId));
-        List<Answer>  answerList = new ArrayList<>(question.getAnswerList());
+    @PreAuthorize("@customSecurityExpression.canAccessType(#typeId)")
+    public Question createQuestion(@RequestBody Question question, @RequestParam("typeId") Long typeId) { //Создание нового вопроса
+        if (typeId != -1) question.setType(typeServise.getTypeById(typeId));
+        List<Answer> answerList = new ArrayList<>(question.getAnswerList());
         question.getAnswerList().clear();
         questionServise.saveQuestion(question);
-            for (Answer a : answerList){
-                answerServise.saveAnswer(a,question);
-            }
+        for (Answer a : answerList) {
+            answerServise.saveAnswer(a, question);
+        }
         return question;
     }
 
     @GetMapping("type/{typeId}")
-    public List<Long> findQuestionByTypeId(@PathVariable long typeId) {
+    public List<Long> findQuestionByTypeId(@PathVariable long typeId) { //Получение списка id вопросов, соответствующих выбранному типу
         List<Question> questions = questionServise.getQuestionsByType(typeServise.getTypeById(typeId));
         List<Long> questionIds = new ArrayList<>();
-        for (Question question : questions){
+        for (Question question : questions) {
             questionIds.add(question.getId());
         }
 
@@ -47,15 +50,14 @@ public class QuestionResource {
     }
 
     @GetMapping("/{questionId}")
+    @PreAuthorize("@customSecurityExpression.canAccessQuestion(#questionId)")
     public Question findTypeById(@PathVariable long questionId) {
-        Question result = questionServise.getQuestionById(questionId);
-        if (result.getCreator().getUsername().equals(userServise.getAuthenticationUser().getUsername()))return result;
-        return null;
-
+        return questionServise.getQuestionById(questionId);
     }
 
+    @PreAuthorize("@customSecurityExpression.canAccessQuestion(#id)")
     @DeleteMapping("/delete/{id}")
-    public void deliteQuestion(@PathVariable long id){
+    public void deliteQuestion(@PathVariable long id) {
         questionServise.deliteQuestionById(id);
     }
 }

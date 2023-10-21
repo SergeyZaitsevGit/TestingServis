@@ -29,11 +29,13 @@ public class Test {
 
     private Timestamp dateCreated;
 
+    private boolean activ = false;
+
 
     @Min(value = 3, message = "Время теста должно быть от 3 минут")
     private int timeActiv;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "TestLikeQuestion",
             joinColumns = @JoinColumn(name = "test_id"),

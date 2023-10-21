@@ -14,12 +14,13 @@ import ru.fqw.TestingServis.site.repo.UserRepository;
 @AllArgsConstructor
 public class UserDetailsServisImpl implements UserDetailsService {
     UserRepository userRepo;
+
     @Override
     @Transactional
     public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
         User userEntity = userRepo.findByEmail(username)
-                .orElseThrow(()-> new UsernameNotFoundException(
-                        "User with email '"+username+"' not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User with email '" + username + "' not found"));
         return UserDetailsImpl.build(userEntity);
     }
 }

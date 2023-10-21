@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.repo.UserRepository;
 
 @Service
@@ -21,7 +22,15 @@ public class UserServise {
         return null;
     }
 
-    public User getAuthenticationUser(){return  userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+    public User getAuthenticationUser(){
+
+        return  userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+    }
+
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
     }
 
 }
