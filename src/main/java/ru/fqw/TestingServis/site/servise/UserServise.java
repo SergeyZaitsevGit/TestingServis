@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.repo.UserRepository;
 
@@ -23,7 +23,6 @@ public class UserServise {
     }
 
     public User getAuthenticationUser(){
-
         return  userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
     }
 

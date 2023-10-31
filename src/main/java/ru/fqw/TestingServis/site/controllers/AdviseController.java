@@ -12,12 +12,9 @@ public class AdviseController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBody handleResourceNotFound(
-            final ResourceNotFoundException e
-    ) {
+    public ExceptionBody handleResourceNotFound(final ResourceNotFoundException e) {
         return new ExceptionBody(e.getMessage());
     }
-
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -30,8 +27,6 @@ public class AdviseController {
     public ExceptionBody handleAccessDenied() {
         return new ExceptionBody("Access denied.");
     }
-
-
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

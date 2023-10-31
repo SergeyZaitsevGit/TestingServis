@@ -154,9 +154,9 @@
                    })
             modal.modal('hide');
        });
-       $("#questionDialog").on("hidden.bs.modal", function () {
+       $("#questionDialog").on("hidden.bs.modal", function () { //при закрытии модального окна
              $('#listAnswers').empty()
-             $('.form-control').val('')
+             $('#questionDialog .form-control').val('')
              $('#selectTypeCreate').val("-1")
              answers = []
              $('#ONE_ANSWER').prop("checked", true)

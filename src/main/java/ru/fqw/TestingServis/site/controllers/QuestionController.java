@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.fqw.TestingServis.site.models.Question;
+import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;
-
-import java.util.List;
 
 @Controller
 @RequestMapping

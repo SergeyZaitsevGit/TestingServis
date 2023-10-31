@@ -1,13 +1,10 @@
 package ru.fqw.TestingServis.site.controllers;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import ru.fqw.TestingServis.site.models.Answer;
-import ru.fqw.TestingServis.site.models.Question;
-import ru.fqw.TestingServis.site.models.Type;
+import ru.fqw.TestingServis.site.models.answer.Answer;
+import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;

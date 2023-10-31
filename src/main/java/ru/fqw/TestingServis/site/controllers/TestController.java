@@ -2,25 +2,22 @@ package ru.fqw.TestingServis.site.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
+import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
+import ru.fqw.TestingServis.bot.servise.bot.TelegramBot;
+import ru.fqw.TestingServis.bot.servise.bot.TelegramTestingServise;
 import ru.fqw.TestingServis.site.models.*;
-import ru.fqw.TestingServis.site.repo.QuestionRepo;
-import ru.fqw.TestingServis.site.repo.UserRepository;
+import ru.fqw.TestingServis.site.models.question.Question;
+import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
 import ru.fqw.TestingServis.site.servise.QuestionServise;
 import ru.fqw.TestingServis.site.servise.TestServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping
@@ -31,6 +28,9 @@ public class TestController {
     QuestionServise questionServise;
     AnswerServise answerServise;
     TypeServise typeServis;
+    TelegramUserServise telegramUserServise;
+    TelegramTestingServise testingServise;
+    TelegramBot telegramBot;
 
     @GetMapping("/test")
     public String tests(Model model) {
@@ -40,11 +40,13 @@ public class TestController {
     }
 
     @GetMapping("/test/{testId}")
-    public String test(@PathVariable Long testId, Model model) {
+    public String testCurred(@PathVariable Long testId, Model model) {
         Test test = testServise.getTestById(testId);
         List<Question> questions = questionServise.getQuestionsByTest(test);
         model.addAttribute("test", test);
         model.addAttribute("questions", questions);
+        List<TelegramUser> telegramUsers = telegramUserServise.getTelegramUserByAuthenticationUser();
+        model.addAttribute("telegramUsers", telegramUsers);
         return "testCurred";
     }
 
@@ -52,11 +54,29 @@ public class TestController {
     public String newTest(Model model) {
         model.addAttribute("test", new Test());
         model.addAttribute("question", new Question());
-        Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
-        Iterable<Type> types = typeServis.getTypeByAuthenticationUser();
+        List<Question> questions = questionServise.getQuestionsByAuthenticationUser();
+        List<Type> types = typeServis.getTypeByAuthenticationUser();
         model.addAttribute("types", types);
         model.addAttribute("questions", questions);
         return "testNew";
+    }
+
+    @PostMapping("/test/{testId}")
+    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, Model model) {
+        Test test = testServise.getTestById(testId);
+        testingServise.startTest(tgUsersResult,test,telegramBot);
+        return "redirect:/test/" + testId;
+    }
+
+    @GetMapping("/test/edit/{testId}")
+    public String testEdit(@PathVariable Long testId, Model model) {
+        Test test = testServise.getTestById(testId);
+        List<Question> questions = questionServise.getQuestionsByAuthenticationUser();
+        List<Type> types = typeServis.getTypeByAuthenticationUser();
+        model.addAttribute("test", test);
+        model.addAttribute("questions", questions);
+        model.addAttribute("types", types);
+        return "testEdit";
     }
 
     @PostMapping("/test/new")
@@ -71,7 +91,6 @@ public class TestController {
             model.addAttribute("questions", questions);
             return "testNew";
         }
-
         testServise.saveTest(test);
         return "redirect:/test";
     }

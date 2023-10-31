@@ -23,6 +23,7 @@ public class CustomSecurityExpression {
     }
 
     public boolean canAccessType(long typeId){ //Проверка является ли пользователь владельцом типа  вопроса, с которым хочет взаимодействовать
+        if (typeId == -1) return true;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
         return typeServise.getTypeById(typeId).getCreator().getEmail().equals(user.getUsername());

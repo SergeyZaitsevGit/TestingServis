@@ -1,18 +1,13 @@
 package ru.fqw.TestingServis.site.controllers;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.fqw.TestingServis.bot.servise.TelegramBot;
 import ru.fqw.TestingServis.site.models.Type;
-import ru.fqw.TestingServis.site.models.User;
 import ru.fqw.TestingServis.site.servise.TypeServise;
 
 import java.util.List;

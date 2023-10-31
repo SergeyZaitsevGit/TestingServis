@@ -3,7 +3,7 @@ package ru.fqw.TestingServis.site.config;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.user.User;
 
 import java.util.Collection;
 import java.util.List;

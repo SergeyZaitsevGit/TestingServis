@@ -2,8 +2,8 @@ package ru.fqw.TestingServis.site.servise;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.fqw.TestingServis.site.models.Answer;
-import ru.fqw.TestingServis.site.models.Question;
+import ru.fqw.TestingServis.site.models.answer.Answer;
+import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.repo.AnswerRepo;
 
 import java.util.List;

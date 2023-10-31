@@ -3,8 +3,8 @@ package ru.fqw.TestingServis.site.servise;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
-import ru.fqw.TestingServis.site.models.Test;
-import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.test.Test;
+import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TestRepo;
 
 import java.sql.Timestamp;

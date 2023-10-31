@@ -1,12 +1,11 @@
 package ru.fqw.TestingServis.bot.models;
 
 import lombok.Data;
-import ru.fqw.TestingServis.site.models.Answer;
-import ru.fqw.TestingServis.site.models.Question;
-import ru.fqw.TestingServis.site.models.Test;
+import ru.fqw.TestingServis.site.models.test.Test;
 
 import java.sql.Timestamp;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class TestFromTelegramUser {
@@ -14,10 +13,13 @@ public class TestFromTelegramUser {
     private Test test;
     private int currentQuestion;
 
-    private Map<Question, Answer> questionAnswerMap;
+    private List<AnswerFromTelegramUser> answerFromTelegramUserList = new ArrayList<>();
     private int ball;
 
     private Timestamp timeStart;
 
     private Timestamp timeEnd;
+    public TestFromTelegramUser(Test test) {
+        this.test = test;
+    }
 }

@@ -1,25 +1,26 @@
-package ru.fqw.TestingServis.bot.servise;
+package ru.fqw.TestingServis.bot.servise.bot;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.config.BotConfig;
-import ru.fqw.TestingServis.site.models.Test;
 
 @Component
 @AllArgsConstructor
 
 public class TelegramBot extends TelegramLongPollingBot {
     BotConfig botConfig;
-    TestingServise testingServise;
+    TelegramTestingServise telegramTestingServise;
+    RegistrationServise registrationServise;
 
     @Override
     public void onUpdateReceived(Update update) {
-        testingServise.registration(update,this);
+
+        registrationServise.registration(update,this);
+        telegramTestingServise.testing(update, this);
     }
 
     @SneakyThrows

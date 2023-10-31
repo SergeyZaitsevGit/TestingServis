@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.fqw.TestingServis.site.models.question.Question;
+import ru.fqw.TestingServis.site.models.user.User;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class Type {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private List<Question> questionList;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

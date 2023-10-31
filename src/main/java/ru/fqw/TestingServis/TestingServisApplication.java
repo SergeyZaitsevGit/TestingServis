@@ -9,8 +9,4 @@ public class TestingServisApplication implements WebMvcConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(TestingServisApplication.class, args);
 	}
-
-
-
-
 }

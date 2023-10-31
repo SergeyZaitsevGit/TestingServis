@@ -3,10 +3,10 @@ package ru.fqw.TestingServis.site.servise;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
-import ru.fqw.TestingServis.site.models.Question;
-import ru.fqw.TestingServis.site.models.Test;
+import ru.fqw.TestingServis.site.models.question.Question;
+import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.models.Type;
-import ru.fqw.TestingServis.site.models.User;
+import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 
 import java.util.List;
@@ -24,6 +24,7 @@ public class QuestionServise {
     public Question saveQuestion(Question question) {
         User user =  userServise.getAuthenticationUser();
         question.setCreator(user);
+        question.getBaseAnswerList().addAll(question.getAnswerList());
         return questionRepo.save(question);
     }
 
