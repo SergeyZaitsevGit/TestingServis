@@ -21,10 +21,6 @@ public class TypeServise {
         return typeRepo.findByCreator(user);
     }
 
-    public Optional<Type> getTypeByName(String name){
-        return typeRepo.findByName(name);
-    }
-
     public Type createType(Type type){
         User user = userServise.getAuthenticationUser();
         type.setCreator(user);

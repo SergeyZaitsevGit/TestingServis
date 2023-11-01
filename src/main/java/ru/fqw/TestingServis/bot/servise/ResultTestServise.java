@@ -1,6 +1,5 @@
 package ru.fqw.TestingServis.bot.servise;
 
-import jdk.dynalink.linker.LinkerServices;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.ResultTest;
@@ -8,9 +7,7 @@ import ru.fqw.TestingServis.bot.repo.ResultsTestRepo;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 import ru.fqw.TestingServis.site.servise.UserServise;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

@@ -30,7 +30,6 @@ public class TestController {
     TypeServise typeServis;
     TelegramUserServise telegramUserServise;
     TelegramTestingServise testingServise;
-    TelegramBot telegramBot;
 
     @GetMapping("/test")
     public String tests(Model model) {
@@ -64,7 +63,7 @@ public class TestController {
     @PostMapping("/test/{testId}")
     public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, Model model) {
         Test test = testServise.getTestById(testId);
-        testingServise.startTest(tgUsersResult,test,telegramBot);
+        testingServise.startTest(tgUsersResult,test);
         return "redirect:/test/" + testId;
     }
 

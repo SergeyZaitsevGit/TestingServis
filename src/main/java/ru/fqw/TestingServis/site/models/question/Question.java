@@ -11,10 +11,7 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -26,7 +23,7 @@ public class Question extends BaseQuestion{
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "questionSet")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    private Set<Test> testSet = new HashSet<>();
+    private Set<Test> testSet = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)

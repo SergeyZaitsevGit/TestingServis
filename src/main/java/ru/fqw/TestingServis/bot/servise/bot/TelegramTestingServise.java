@@ -1,7 +1,13 @@
 package ru.fqw.TestingServis.bot.servise.bot;
 
+import jakarta.ws.rs.ext.ParamConverter;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -21,16 +27,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@AllArgsConstructor
 @Service
 public class TelegramTestingServise {
+    @Autowired
     TelegramUserServise telegramUserServise;
-    @Qualifier("testingMapRepo")
+    @Qualifier("testingMapRepo") //Уточнение для возможности масштабирования
+    @Autowired
     TestingRepo testingRepo;
+    @Autowired
     ResultTestServise resultTestServise;
+    @Autowired
     TelegramTestingHelper telegramTestingHelper;
 
-    public void testing(Update update, TelegramBot telegramBot) {
+    @Autowired
+    public TelegramTestingServise(@Lazy TelegramBot telegramBot) { // используем ленивую подгрузку, чтобы избежать зацикленности
+        this.telegramBot = telegramBot;
+    }
+
+    private TelegramBot telegramBot;
+
+    public void testing(Update update) {
 
         Message message = update.getMessage();
         boolean isUserHaveTest = testingRepo.isUserHaveTest(message.getChatId());
@@ -64,27 +80,43 @@ public class TelegramTestingServise {
                 }
                 else {
                     parseAnswer(testFromTelegramUser, questionList, telegramBot, message);
-                    resultSave(testFromTelegramUser, message);
+                    resultSave(testFromTelegramUser, message.getChatId());
                     testingRepo.delite(message.getChatId());
+                    telegramBot.sendMessege(message.getChatId(), "Тест завершен");
                 }
         }
     }
+    @Scheduled(cron = "0 * * * * *") //Вызываем метод раз в минуту
+    private void endTestByTime(){ // Пробегаем по всем активным тестам, и закрываем их если время на них вышло
+       List<TestFromTelegramUser> testFromTelegramUsers = testingRepo.getAll();
+       if (testFromTelegramUsers == null) return;
+       for (TestFromTelegramUser testFromTelegramUser:testFromTelegramUsers) {
+           if (testFromTelegramUser.getTimeStart().getTime() + (testFromTelegramUser.getTest().getTimeActiv()*60000L) > System.currentTimeMillis()) return;
+            List<Long> chatIds = testingRepo.getChatIdsByTest(testFromTelegramUser);
 
-
-    private void resultSave(TestFromTelegramUser testFromTelegramUser, Message message) {
-        ResultTest resultTest = new ResultTest();
-        resultTest.setBall(testFromTelegramUser.getBall());
-        resultTest.setTest(testFromTelegramUser.getTest());
-        resultTest.setTelegramUser(telegramUserServise.getTelegramUserByChatId(message.getChatId()));
-        resultTest.setAnswerFromTelegramUserList(testFromTelegramUser.getAnswerFromTelegramUserList());
-        resultTest.setTimeStart(testFromTelegramUser.getTimeStart());
-        resultTest.setTimeEnd(testFromTelegramUser.getTimeEnd());
-        resultTestServise.save(resultTest);
+           for (Long chatId:chatIds) {
+                resultSave(testFromTelegramUser,chatId);
+                testingRepo.delite(chatId);
+                telegramBot.sendMessege(chatId, "Тест завершен автоматически, поскольку время на его прохождение вышло. Текущие результаты сохранены");
+           }
+        }
     }
 
     private void goNextQuestion(TelegramBot telegramBot, Message message, TestFromTelegramUser testFromTelegramUser, Question question) {
         telegramBot.sendMessege(message.getChatId(), question.toString());
         testFromTelegramUser.setCurrentQuestion(testFromTelegramUser.getCurrentQuestion() + 1);
+    }
+
+    private void resultSave(TestFromTelegramUser testFromTelegramUser, long chatId) {
+        testFromTelegramUser.setTimeEnd(new Timestamp(System.currentTimeMillis()));
+        ResultTest resultTest = new ResultTest();
+        resultTest.setBall(testFromTelegramUser.getBall());
+        resultTest.setTest(testFromTelegramUser.getTest());
+        resultTest.setTelegramUser(telegramUserServise.getTelegramUserByChatId(chatId));
+        resultTest.setAnswerFromTelegramUserList(testFromTelegramUser.getAnswerFromTelegramUserList());
+        resultTest.setTimeStart(testFromTelegramUser.getTimeStart());
+        resultTest.setTimeEnd(testFromTelegramUser.getTimeEnd());
+        resultTestServise.save(resultTest);
     }
 
     private void parseAnswer(TestFromTelegramUser testFromTelegramUser, List<Question> questionList, TelegramBot telegramBot, Message message) {
@@ -116,7 +148,7 @@ public class TelegramTestingServise {
             }
     }
 
-    public void startTest(List<Long> tgUsersChatIds, Test test, TelegramBot telegramBot) {
+    public void startTest(List<Long> tgUsersChatIds, Test test) {
         TestFromTelegramUser testFromTelegramUser = new TestFromTelegramUser(test);
         for (long chatId : tgUsersChatIds) {
             testingRepo.save(chatId, testFromTelegramUser);

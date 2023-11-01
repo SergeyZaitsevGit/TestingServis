@@ -10,6 +10,7 @@ import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -24,7 +25,7 @@ public class Test extends BaseTest{
             joinColumns = @JoinColumn(name = "test_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
     @org.springframework.data.annotation.Transient
-    private Set<Question> questionSet = new HashSet<>();
+    private Set<Question> questionSet = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
