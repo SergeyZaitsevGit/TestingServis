@@ -10,7 +10,6 @@ public interface TestingRepo {
     TestFromTelegramUser get(Long chatId);
     boolean isUserHaveTest(Long chatId);
     List<TestFromTelegramUser> getAll();
-
     List<Long> getChatIdsByTest(TestFromTelegramUser test);
 
 }

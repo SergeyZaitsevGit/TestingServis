@@ -1,12 +1,8 @@
 package ru.fqw.TestingServis.bot.servise.bot;
 
-import jakarta.ws.rs.ext.ParamConverter;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -38,7 +34,6 @@ public class TelegramTestingServise {
     ResultTestServise resultTestServise;
     @Autowired
     TelegramTestingHelper telegramTestingHelper;
-
     @Autowired
     public TelegramTestingServise(@Lazy TelegramBot telegramBot) { // используем ленивую подгрузку, чтобы избежать зацикленности
         this.telegramBot = telegramBot;
@@ -46,7 +41,7 @@ public class TelegramTestingServise {
 
     private TelegramBot telegramBot;
 
-    public void testing(Update update) {
+    public void testing(Update update) { //Обработка прохождения теста
 
         Message message = update.getMessage();
         boolean isUserHaveTest = testingRepo.isUserHaveTest(message.getChatId());
@@ -151,6 +146,7 @@ public class TelegramTestingServise {
     public void startTest(List<Long> tgUsersChatIds, Test test) {
         TestFromTelegramUser testFromTelegramUser = new TestFromTelegramUser(test);
         for (long chatId : tgUsersChatIds) {
+            if (testingRepo.isUserHaveTest(chatId)) continue;
             testingRepo.save(chatId, testFromTelegramUser);
             telegramBot.sendMessege(chatId, "Внимание!\nДля вас активирован следующий тест:\n" + test + "\nДля начала введите /go");
         }

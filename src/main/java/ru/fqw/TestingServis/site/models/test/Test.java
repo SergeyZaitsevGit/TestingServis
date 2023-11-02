@@ -1,6 +1,5 @@
 package ru.fqw.TestingServis.site.models.test;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
-
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

@@ -2,13 +2,13 @@ package ru.fqw.TestingServis.site.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
-import ru.fqw.TestingServis.bot.servise.bot.TelegramBot;
 import ru.fqw.TestingServis.bot.servise.bot.TelegramTestingServise;
 import ru.fqw.TestingServis.site.models.*;
 import ru.fqw.TestingServis.site.models.question.Question;
@@ -38,6 +38,7 @@ public class TestController {
         return "test";
     }
 
+    @PreAuthorize("@customSecurityExpression.canAccessTest(#testId)")
     @GetMapping("/test/{testId}")
     public String testCurred(@PathVariable Long testId, Model model) {
         Test test = testServise.getTestById(testId);
@@ -60,14 +61,8 @@ public class TestController {
         return "testNew";
     }
 
-    @PostMapping("/test/{testId}")
-    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, Model model) {
-        Test test = testServise.getTestById(testId);
-        testingServise.startTest(tgUsersResult,test);
-        return "redirect:/test/" + testId;
-    }
-
     @GetMapping("/test/edit/{testId}")
+    @PreAuthorize("@customSecurityExpression.canAccessTest(#testId)")
     public String testEdit(@PathVariable Long testId, Model model) {
         Test test = testServise.getTestById(testId);
         List<Question> questions = questionServise.getQuestionsByAuthenticationUser();
@@ -77,6 +72,15 @@ public class TestController {
         model.addAttribute("types", types);
         return "testEdit";
     }
+
+    @PreAuthorize("@customSecurityExpression.canAccessTelegramUser(#tgUsersResult)")
+    @PostMapping("/test/{testId}")
+    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, Model model) {
+        Test test = testServise.getTestById(testId);
+        testingServise.startTest(tgUsersResult,test);
+        return "redirect:/test/" + testId;
+    }
+
 
     @PostMapping("/test/new")
     public String newTest(

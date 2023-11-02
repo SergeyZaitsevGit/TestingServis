@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.servise.TypeServise;
-
 import java.util.List;
-//import ru.fqw.TestingServis.site.repo.UserRepository;
+
 
 @Controller
 @AllArgsConstructor

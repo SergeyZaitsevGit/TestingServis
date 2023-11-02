@@ -9,12 +9,12 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
-    private Long id;
+    private final Long id;
     private final String username;
-    private String password;
-    private boolean activite;
-    private String email;
-    private Collection<? extends GrantedAuthority> authorities;
+    private final String password;
+    private final boolean activite;
+    private  String email;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Long id, String username, String password, boolean activite, String email, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;

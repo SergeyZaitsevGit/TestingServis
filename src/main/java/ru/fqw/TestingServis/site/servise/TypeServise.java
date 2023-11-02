@@ -6,9 +6,7 @@ import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TypeRepo;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

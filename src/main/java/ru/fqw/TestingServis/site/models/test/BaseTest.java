@@ -28,6 +28,10 @@ public class BaseTest {
     @Min(value = 3, message = "Время теста должно быть от 3 минут")
     protected int timeActiv;
 
+    protected boolean mixQuestions = true;
+
+    protected boolean mixAnswers = true;
+
     @Transient
     protected BaseUser baseUser;
 

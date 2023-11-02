@@ -16,27 +16,22 @@ private Map<Long, TestFromTelegramUser> testMap = new HashMap<>();
     public void save(Long chatId, TestFromTelegramUser testFromTelegramUser) {
         testMap.put(chatId,testFromTelegramUser);
     }
-
     @Override
     public void delite(Long chatId) {
         testMap.remove(chatId);
     }
-
     @Override
     public TestFromTelegramUser get(Long chatId) {
         return testMap.get(chatId);
     }
-
     @Override
     public boolean isUserHaveTest(Long chatId) {
         return testMap.get(chatId) != null;
     }
-
     @Override
     public List<TestFromTelegramUser> getAll(){
         return new ArrayList<>(testMap.values());
     }
-
     @Override
     public  List<Long> getChatIdsByTest(TestFromTelegramUser test){
        return testMap

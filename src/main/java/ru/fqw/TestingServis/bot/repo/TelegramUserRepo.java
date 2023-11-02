@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface TelegramUserRepo extends CrudRepository<TelegramUser, Long> {
     List<TelegramUser> findByuserSetInvited(User user);
     boolean existsByChatId(long chatId);
-
     Optional<TelegramUser> getTelegramUserByChatId(long chatId);
 }

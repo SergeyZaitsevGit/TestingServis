@@ -4,9 +4,11 @@ import lombok.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.repo.UserRepository;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +32,11 @@ public class UserServise {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")
         );
+    }
+
+    public boolean containsTelegramUser(User user, TelegramUser telegramUser) {
+        Set<TelegramUser> telegramUserSet = user.getTelegramUsers();
+        return telegramUserSet.contains(telegramUser);
     }
 
 }
