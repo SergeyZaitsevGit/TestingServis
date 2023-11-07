@@ -16,6 +16,7 @@ import ru.fqw.TestingServis.bot.servise.ResultTestServise;
 import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
+import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 import java.sql.Timestamp;
@@ -73,11 +74,18 @@ public class TelegramTestingServise {
                     }
 
                 }
-                else {
-                    parseAnswer(testFromTelegramUser, questionList, telegramBot, message);
-                    resultSave(testFromTelegramUser, message.getChatId());
-                    testingRepo.delite(message.getChatId());
-                    telegramBot.sendMessege(message.getChatId(), "Тест завершен");
+                else if (testFromTelegramUser.getCurrentQuestion() == testFromTelegramUser.getTest().getQuestionSet().size()){
+                    try {
+                        parseAnswer(testFromTelegramUser, questionList, telegramBot, message);
+                        resultSave(testFromTelegramUser, message.getChatId());
+                        testingRepo.delite(message.getChatId());
+                        telegramBot.sendMessege(message.getChatId(), "Тест завершен");
+                    }
+                    catch (NumberFormatException e) {
+                        telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. повторите попытку.");
+                    } catch (IndexOutOfBoundsException e) {
+                        telegramBot.sendMessege(message.getChatId(), "Вы введи несуществующий вариант ответа.");
+                    }
                 }
         }
     }
@@ -86,7 +94,8 @@ public class TelegramTestingServise {
        List<TestFromTelegramUser> testFromTelegramUsers = testingRepo.getAll();
        if (testFromTelegramUsers == null) return;
        for (TestFromTelegramUser testFromTelegramUser:testFromTelegramUsers) {
-           if (testFromTelegramUser.getTimeStart().getTime() + (testFromTelegramUser.getTest().getTimeActiv()*60000L) > System.currentTimeMillis()) return;
+           if (testFromTelegramUser.getTimeStart() == null) return;
+           if (testFromTelegramUser.getTimeStart().getTime() + (testFromTelegramUser.getTest().getTimeActiv()*60000L) > System.currentTimeMillis()) return; //Проверка не вышло ли время теста
             List<Long> chatIds = testingRepo.getChatIdsByTest(testFromTelegramUser);
 
            for (Long chatId:chatIds) {
@@ -111,6 +120,7 @@ public class TelegramTestingServise {
         resultTest.setAnswerFromTelegramUserList(testFromTelegramUser.getAnswerFromTelegramUserList());
         resultTest.setTimeStart(testFromTelegramUser.getTimeStart());
         resultTest.setTimeEnd(testFromTelegramUser.getTimeEnd());
+        resultTest.setTitle(testFromTelegramUser.getTitle());
         resultTestServise.save(resultTest);
     }
 
@@ -143,11 +153,11 @@ public class TelegramTestingServise {
             }
     }
 
-    public void startTest(List<Long> tgUsersChatIds, Test test) {
-        TestFromTelegramUser testFromTelegramUser = new TestFromTelegramUser(test);
+    public void startTest(List<Long> tgUsersChatIds, Test test, String title) {
+        if (resultTestServise.existByTitle(title)) throw new ObjectAlreadyExistsExeption("Тестирование с таким названием уже существует");
         for (long chatId : tgUsersChatIds) {
             if (testingRepo.isUserHaveTest(chatId)) continue;
-            testingRepo.save(chatId, testFromTelegramUser);
+            testingRepo.save(chatId, new TestFromTelegramUser(test,title));
             telegramBot.sendMessege(chatId, "Внимание!\nДля вас активирован следующий тест:\n" + test + "\nДля начала введите /go");
         }
     }

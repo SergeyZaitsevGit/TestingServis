@@ -37,13 +37,13 @@ public class CustomSecurityExpression {
         return typeServise.getTypeById(typeId).getCreator().getEmail().equals(user.getUsername());
     }
 
-    public boolean canAccessTest(long testId){ //Проверка является ли пользователь владельцом вопроса, с которым хочет взаимодействовать
+    public boolean canAccessTest(long testId){ //Проверка является ли пользователь владельцом теста, с которым хочет взаимодействовать
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
         return testServis.getTestById(testId).getCreator().getEmail().equals(user.getUsername());
     }
 
-    public boolean canAccessTelegramUser(List<Long> chatIds){
+    public boolean canAccessTelegramUser(List<Long> chatIds){ //Проверка может ли пользователь взаимодействовать с телеграмм пользователеми
         User user = userServise.getAuthenticationUser();
         for (long chatId:chatIds) {
             if (!userServise.containsTelegramUser(user,telegramUserServise.getTelegramUserByChatId(chatId))) return false;

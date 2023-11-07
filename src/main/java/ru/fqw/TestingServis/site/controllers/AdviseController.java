@@ -1,19 +1,24 @@
 package ru.fqw.TestingServis.site.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class AdviseController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBody handleResourceNotFound(final ResourceNotFoundException e) {
-        return new ExceptionBody(e.getMessage());
+    public String handleResourceNotFound(final ResourceNotFoundException e, Model model) {
+        model.addAttribute("error", new ExceptionBody(e.getMessage()));
+        return "error/errorNotFound";
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -24,14 +29,16 @@ public class AdviseController {
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionBody handleAccessDenied() {
-        return new ExceptionBody("Access denied.");
+    public String handleAccessDenied(Model model) {
+        model.addAttribute("error", new ExceptionBody("Доступ запрещен"));
+        return "error/errorAccessDenied";
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionBody handleException(final Exception e) {
         e.printStackTrace();
-        return new ExceptionBody("Internal error.");
+        return new ExceptionBody("Неизвестная ошибка");
     }
+
 }

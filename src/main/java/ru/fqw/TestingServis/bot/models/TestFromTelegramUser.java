@@ -19,7 +19,12 @@ public class TestFromTelegramUser {
     private Timestamp timeStart;
 
     private Timestamp timeEnd;
-    public TestFromTelegramUser(Test test) {
+
+    private String title;
+    public TestFromTelegramUser(Test test, String title) {
+
         this.test = test;
+        this.title = title;
     }
+
 }

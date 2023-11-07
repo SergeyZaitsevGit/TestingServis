@@ -28,7 +28,7 @@ public class TestServise {
     }
 
     public Test getTestById(Long testId){return testRepo.findById(testId).orElseThrow(
-            () -> new ResourceNotFoundException("Test not found")
+            () -> new ResourceNotFoundException("Тест не найден")
     );}
 
 }

@@ -11,6 +11,8 @@ import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
 import ru.fqw.TestingServis.bot.servise.bot.TelegramTestingServise;
 import ru.fqw.TestingServis.site.models.*;
+import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
+import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.servise.AnswerServise;
@@ -47,6 +49,7 @@ public class TestController {
         model.addAttribute("questions", questions);
         List<TelegramUser> telegramUsers = telegramUserServise.getTelegramUserByAuthenticationUser();
         model.addAttribute("telegramUsers", telegramUsers);
+        model.addAttribute("error", null);
         return "testCurred";
     }
 
@@ -75,9 +78,22 @@ public class TestController {
 
     @PreAuthorize("@customSecurityExpression.canAccessTelegramUser(#tgUsersResult)")
     @PostMapping("/test/{testId}")
-    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, Model model) {
-        Test test = testServise.getTestById(testId);
-        testingServise.startTest(tgUsersResult,test);
+    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, @RequestParam("title") String title,  Model model) {
+      try {
+          Test test = testServise.getTestById(testId);
+          testingServise.startTest(tgUsersResult, test, title);
+      }
+      catch (ObjectAlreadyExistsExeption objectAlreadyExistsExeption){
+          ExceptionBody error = new ExceptionBody(objectAlreadyExistsExeption.getMessage());
+          Test test = testServise.getTestById(testId);
+          List<Question> questions = questionServise.getQuestionsByTest(test);
+          model.addAttribute("test", test);
+          model.addAttribute("questions", questions);
+          List<TelegramUser> telegramUsers = telegramUserServise.getTelegramUserByAuthenticationUser();
+          model.addAttribute("telegramUsers", telegramUsers);
+          model.addAttribute("error", error);
+          return "testCurred";
+      }
         return "redirect:/test/" + testId;
     }
 
