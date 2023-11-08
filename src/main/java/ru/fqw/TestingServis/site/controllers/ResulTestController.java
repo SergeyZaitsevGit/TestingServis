@@ -22,8 +22,8 @@ public class ResulTestController {
     final ResultTestServise resultTestServise;
 
     @GetMapping("/result")
-    public String resultTest(Model model, @PageableDefault(sort = {"test"}, direction = Sort.Direction.DESC) Pageable pageable){
-        Map<String, List<ResultTest>> resultTests = resultTestServise.getResultTestByAuthenticationUserSortetByTesting(pageable);
+    public String resultTest(Model model, Pageable pageable){
+        Map<String, List<ResultTest>> resultTests = resultTestServise.getTestingResultsGroupedByTestName(pageable);
         model.addAttribute("resultTests",resultTests);
         return "result";
     }

@@ -35,5 +35,10 @@ public class BaseTest {
     @Transient
     protected BaseUser baseUser;
 
+    @Transient
+    protected int countQuestion;
+
+    @Transient
+    protected int maxBall;
 
 }

@@ -33,6 +33,9 @@
                                      data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
                                         <div class="accordion-body">
+                                            <p class="fs-6 "><b>Тест: </b><span th:text="${el.value.get(0).test.name}"/></p>
+                                            <p class="fs-6"><b>Время на тест: </b><span th:text="${el.value.get(0).test.timeActiv}"/></p>
+                                            <p class="fs-6"><b>Количество людей, прошедших тест: </b><span th:text="${el.value.size()}"/></p>
                                             <table class="table">
                                                 <thead>
                                                 <tr>
@@ -49,7 +52,7 @@
                                                             th:text="${resultTest.telegramUser.surname}"/></td>
                                                     <td th:text="${resultTest.getFormatedTimeStart()}"></td>
                                                     <td th:text="${resultTest.getFormatedTimeEnd()}"></td>
-                                                    <td th:text="${resultTest.ball}"></td>
+                                                    <td><span th:text="${resultTest.ball}"/> из <span th:text="${resultTest.test.maxBall}"></span></td>
                                                     <td><a th:href="|result/${resultTest.id}">Подробнее</a></td>
                                                 </tr>
                                                 </tbody>

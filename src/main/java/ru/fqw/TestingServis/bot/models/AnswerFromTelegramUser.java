@@ -8,7 +8,10 @@ import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
 import ru.fqw.TestingServis.site.models.question.Question;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +33,19 @@ public class  AnswerFromTelegramUser {
         this.freeAnswer = freeAnswer;
         this.ballBehindQuestion = ballBehindQuestion;
     }
+
+    public List<AnswerWhithSelect> getAnswerWhithSelect(){
+        List<AnswerWhithSelect> result = new ArrayList<>();
+        for (BaseAnswer answer:question.getBaseAnswerList()) {
+            result.add(new AnswerWhithSelect(answer,answers.contains(answer)));
+        }
+        return result;
+    }
+}
+
+@Data
+@AllArgsConstructor
+class AnswerWhithSelect{
+    private BaseAnswer answer;
+    boolean selected = false;
 }

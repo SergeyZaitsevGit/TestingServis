@@ -17,6 +17,12 @@
                         <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты пользователя <span
                                 th:text="${resultTest.telegramUser.name}"/> <span
                                 th:text="${resultTest.telegramUser.surname}"/></p>
+                        <p class="fs-5 "><b>Тест: </b><span th:text="${resultTest.test.name}"/></p>
+                        <p class="fs-5"><b>Время на тест: </b><span th:text="${resultTest.test.timeActiv}"/></p>
+                        <p class="fs-5"><b>Всего вопросов: </b><span th:text="${resultTest.test.countQuestion}"/></p>
+                        <p class="fs-5"><b>Набранно баллов: </b><span th:text="${resultTest.ball}"/> из <span th:text="${resultTest.test.maxBall}"/></p>
+                        <p class="fs-5"><b>Тест пройден за: </b><span th:text="${resultTest.getTimeOnTest()}"/></p>
+
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item" th:each="el, state : ${resultTest.answerFromTelegramUserList}"
                                  th:value="${state.index}">
@@ -41,26 +47,26 @@
                                     <div class="accordion-body">
                                         <div class="accordion-body">
                                             <ol class="list-group list-group-numbered">
-                                                    <span th:each="allAnswer : ${el.question.baseAnswerList}">
-                                                        <span th:each="selectedAnswer : ${el.answers}">
-                                                         <li th:if="${(allAnswer.id == selectedAnswer.id) && allAnswer.corrected}"
+                                                    <span th:each="allAnswer : ${el.getAnswerWhithSelect()}">
+                                                         <li th:if="${allAnswer.selected && allAnswer.answer.corrected}"
                                                              class="list-group-item"
                                                              style="background-color: #00BFFF; border-color: #dfdfec;"
-                                                             th:text="${allAnswer.text}"></li>
+                                                             th:text="${allAnswer.answer.text}"></li>
 
-                                                            <li th:if="${(allAnswer.id == selectedAnswer.id) && !allAnswer.corrected}"
+                                                            <li th:if="${allAnswer.selected && !allAnswer.answer.corrected}"
                                                                 class="list-group-item"
                                                                 style="background-color: #CC0011; border-color: #dfdfec;"
-                                                                th:text="${allAnswer.text}"></li>
+                                                                th:text="${allAnswer.answer.text}"></li>
 
-                                                             <li th:if="${(allAnswer.id != selectedAnswer.id) && allAnswer.corrected}"
+                                                             <li th:if="${!allAnswer.selected && allAnswer.answer.corrected}"
                                                                  class="list-group-item"
                                                                  style="background-color: #198754; border-color: #dfdfec;"
-                                                                 th:text="${allAnswer.text}"></li>
-                                                            <li th:if="${(allAnswer.id != selectedAnswer.id) && !allAnswer.corrected}"
+                                                                 th:text="${allAnswer.answer.text}"></li>
+
+                                                            <li th:if="${!allAnswer.selected && !allAnswer.answer.corrected}"
                                                                 class="list-group-item"
-                                                                th:text="${allAnswer.text}"></li>
-                                                        </span>
+                                                                th:text="${allAnswer.answer.text}"></li>
+
                                                     </span>
                                             </ol>
                                         </div>

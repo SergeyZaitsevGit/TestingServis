@@ -38,5 +38,9 @@ public class Test extends BaseTest{
     @PostLoad
     private void init(){
         baseUser = creator;
+        countQuestion = questionSet.size();
+        for (Question q:questionSet) {
+            maxBall += q.getBall();
+        }
     }
 }

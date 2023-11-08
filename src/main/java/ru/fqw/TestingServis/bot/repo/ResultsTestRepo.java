@@ -6,11 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.fqw.TestingServis.bot.models.ResultTest;
+import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 
 import java.util.List;
 
 public interface ResultsTestRepo extends MongoRepository<ResultTest, String> {
     Page<ResultTest> findResultTestByTestBaseUser(Pageable pageable, BaseUser user);
+    Page<ResultTest> findResultTestByTestBaseUserAndTest(Pageable pageable, BaseUser user, BaseTest test);
     boolean existsByTitle(String title);
 }

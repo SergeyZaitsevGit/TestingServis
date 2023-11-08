@@ -15,14 +15,18 @@ public class TelegramTestingHelper {
                if (selectedAnswers.get(0).isCorrected()) return  question.getBall();
            }
            case MANY_ANSWER -> {
-               final int ballBehindAnswer = question.getBall()/question.getBaseAnswerList().size();
-               int resultBall = 0;
+               int countCorrectAnswer = 0;
+               for (BaseAnswer answer: question.getBaseAnswerList()) {
+                   if (answer.isCorrected())countCorrectAnswer++;
+               }
+               final float ballBehindAnswer = (float) question.getBall()/countCorrectAnswer;
+               float resultBall = 0;
                for (BaseAnswer answer:selectedAnswers) {
                    if (answer.isCorrected()) resultBall += ballBehindAnswer;
                    else resultBall -= ballBehindAnswer;
                }
                if (resultBall<0) resultBall = 0;
-               return resultBall;
+               return Math.round(resultBall);
            }
        }
         return 0;
