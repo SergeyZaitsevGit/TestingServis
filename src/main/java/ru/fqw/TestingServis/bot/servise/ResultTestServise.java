@@ -1,10 +1,7 @@
 package ru.fqw.TestingServis.bot.servise;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -21,6 +18,7 @@ import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 import ru.fqw.TestingServis.site.servise.UserServise;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,37 +47,37 @@ public class ResultTestServise {
                return res;
     }
 
-    public Map<String, List<ResultTest>> getTestingResultsGroupedByTestName(Pageable pb) {
+    public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb, String keyword) {
         GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");
         BaseUser user = userServise.getAuthenticationUser();
         Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email").is(user.getEmail());
-        Aggregation aggregation = Aggregation.newAggregation(groupByTestName, Aggregation.match(matchUserCriteria));
-        Pageable pageable = PageRequest.of(pb.getPageNumber(), pb.getPageSize(), Sort.by("testName"));
-
+        Aggregation aggregation;
+        if (keyword == null){
+         aggregation = Aggregation.newAggregation(groupByTestName, Aggregation.match(matchUserCriteria),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")));
+        }
+        else {
+            aggregation = Aggregation.newAggregation(groupByTestName, Aggregation.match(matchUserCriteria),
+                    Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")),
+                    Aggregation.match(Criteria.where("resultTest.title").regex(".*" + keyword + ".*")));
+        }
         AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, "resultTest", Map.class);
+        Pageable pageable = PageRequest.of(pb.getPageNumber(), pb.getPageSize(), Sort.by("title"));
         List<Map> mappedResults = results.getMappedResults();
 
-
-        int start = (int) pageable.getOffset();  // Применение пагинации к списку сгруппированных результатов
+        int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), mappedResults.size());
 
         List<Map> paginatedResults = mappedResults.subList(start, end);
-
-
-        Page<Map> page = PageableExecutionUtils.getPage(paginatedResults, pageable, () -> mappedResults.size()); // Преобразование списка в объект Page для поддержки пагинации
-
         Map<String, List<ResultTest>> finalResultMap = new LinkedHashMap<>();
         for (Map entry : paginatedResults) {
             String testName = (String) entry.get("_id");
             List<ResultTest> testResults = (List<ResultTest>) entry.get("resultTest");
             finalResultMap.put(testName, testResults);
         }
-        finalResultMap = finalResultMap.entrySet().stream() //Сортировка по дате
-                .sorted(Map.Entry.comparingByValue(Comparator.comparing(list -> list.stream().map(ResultTest::getTimeStart).max(Date::compareTo)
-                        .orElse(new Date()),  Comparator.reverseOrder()))
-                )
-                .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        return finalResultMap;
+
+        List<Map.Entry<String, List<ResultTest>>> paginatedResult = new ArrayList<>(finalResultMap.entrySet());
+        return new PageImpl<>(paginatedResult, pageable, mappedResults.size());
     }
 
     public boolean existByTitle(String title){

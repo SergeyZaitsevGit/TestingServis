@@ -6,13 +6,18 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 @MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaseTest {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
@@ -41,4 +46,22 @@ public class BaseTest {
     @Transient
     protected int maxBall;
 
+    public String getFormatedDataCreated(){
+        SimpleDateFormat sdf =
+                new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return sdf.format(dateCreated);
+    }
+
+    public BaseTest(BaseTest baseTest) {
+        this.id = baseTest.getId();
+        this.name = baseTest.getName();
+        this.dateCreated = baseTest.dateCreated;
+        this.activ = baseTest.isActiv();
+        this.timeActiv = baseTest.timeActiv;
+        this.mixQuestions = baseTest.mixQuestions;
+        this.mixAnswers = baseTest.mixAnswers;
+        this.baseUser = baseTest.baseUser;
+        this.countQuestion = baseTest.countQuestion;
+        this.maxBall = baseTest.getMaxBall();
+    }
 }

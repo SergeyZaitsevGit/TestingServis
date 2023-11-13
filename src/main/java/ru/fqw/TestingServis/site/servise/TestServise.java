@@ -1,6 +1,8 @@
 package ru.fqw.TestingServis.site.servise;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.test.Test;
@@ -22,13 +24,18 @@ public class TestServise {
         return testRepo.save(test);
     }
 
-    public Iterable<Test>getTestsByAuthenticationUser(){
+    public Page<Test> getTestsByAuthenticationUser(Pageable pageable){
         User user = userServise.getAuthenticationUser();
-        return testRepo.findByCreator(user);
+        return testRepo.findByCreator(pageable,user);
     }
 
     public Test getTestById(Long testId){return testRepo.findById(testId).orElseThrow(
             () -> new ResourceNotFoundException("Тест не найден")
     );}
+
+    public Page<Test> getTestsByAuthenticationUserAndNameContaining(Pageable pageable, String keywordName){
+        User user = userServise.getAuthenticationUser();
+        return testRepo.findByCreatorAndNameContaining(pageable,user,keywordName);
+    }
 
 }

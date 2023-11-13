@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
+
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,6 +37,13 @@ public class Test extends BaseTest{
                 + "\n Создатель теста " + super.baseUser.getUsername();
         return result;
     }
+
+    public Test(Test test) {
+        super(test);
+        this.questionSet = Set.copyOf(test.questionSet);
+        this.creator = test.getCreator();
+    }
+
     @PostLoad
     private void init(){
         baseUser = creator;

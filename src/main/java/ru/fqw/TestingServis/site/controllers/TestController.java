@@ -1,7 +1,12 @@
 package ru.fqw.TestingServis.site.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
+import ru.fqw.TestingServis.bot.servise.bot.TelegramBot;
 import ru.fqw.TestingServis.bot.servise.bot.TelegramTestingServise;
 import ru.fqw.TestingServis.site.models.*;
 import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
@@ -21,6 +27,7 @@ import ru.fqw.TestingServis.site.servise.TestServise;
 import ru.fqw.TestingServis.site.servise.TypeServise;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping
 @Controller
@@ -34,9 +41,18 @@ public class TestController {
     TelegramTestingServise testingServise;
 
     @GetMapping("/test")
-    public String tests(Model model) {
-        Iterable<Test> tests = testServise.getTestsByAuthenticationUser();
-        model.addAttribute("tests", tests);
+    public String tests(Model model, @PageableDefault(sort = {"dateCreated"},
+            direction = Sort.Direction.DESC) Pageable pageable,
+                        @RequestParam("keyword") Optional<String> keyword) {
+        if (keyword.isPresent()){
+            model.addAttribute("keyword", keyword.get());
+            Page<Test> testPage = testServise.getTestsByAuthenticationUserAndNameContaining(pageable,keyword.get());
+            model.addAttribute("testPage", testPage);
+        }
+        else {
+        Page<Test> testPage = testServise.getTestsByAuthenticationUser(pageable);
+        model.addAttribute("testPage", testPage);
+        }
         return "test";
     }
 
@@ -78,22 +94,28 @@ public class TestController {
 
     @PreAuthorize("@customSecurityExpression.canAccessTelegramUser(#tgUsersResult)")
     @PostMapping("/test/{testId}")
-    public String testCurred(@PathVariable Long testId, @RequestParam("checked") List<Long> tgUsersResult, @RequestParam("title") String title,  Model model) {
-      try {
-          Test test = testServise.getTestById(testId);
-          testingServise.startTest(tgUsersResult, test, title);
-      }
-      catch (ObjectAlreadyExistsExeption objectAlreadyExistsExeption){
-          ExceptionBody error = new ExceptionBody(objectAlreadyExistsExeption.getMessage());
-          Test test = testServise.getTestById(testId);
-          List<Question> questions = questionServise.getQuestionsByTest(test);
-          model.addAttribute("test", test);
-          model.addAttribute("questions", questions);
-          List<TelegramUser> telegramUsers = telegramUserServise.getTelegramUserByAuthenticationUser();
-          model.addAttribute("telegramUsers", telegramUsers);
-          model.addAttribute("error", error);
-          return "testCurred";
-      }
+    public String testCurred(@PathVariable Long testId,
+                             @RequestParam("checked") List<Long> tgUsersResult,
+                             @RequestParam("title") String title,
+                             @RequestParam("mixQ") boolean mixQ,
+                             @RequestParam("mixA") boolean mixA,
+                             Model model) {
+        try {
+            Test test = testServise.getTestById(testId);
+            test.setMixQuestions(mixQ);
+            test.setMixAnswers(mixA);
+            testingServise.startTest(tgUsersResult, test, title);
+        } catch (ObjectAlreadyExistsExeption objectAlreadyExistsExeption) {
+            ExceptionBody error = new ExceptionBody(objectAlreadyExistsExeption.getMessage());
+            Test test = testServise.getTestById(testId);
+            List<Question> questions = questionServise.getQuestionsByTest(test);
+            model.addAttribute("test", test);
+            model.addAttribute("questions", questions);
+            List<TelegramUser> telegramUsers = telegramUserServise.getTelegramUserByAuthenticationUser();
+            model.addAttribute("telegramUsers", telegramUsers);
+            model.addAttribute("error", error);
+            return "testCurred";
+        }
         return "redirect:/test/" + testId;
     }
 

@@ -20,8 +20,8 @@ import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,25 +48,31 @@ public class TelegramTestingServise {
         boolean isUserHaveTest = testingRepo.isUserHaveTest(message.getChatId());
         if (isUserHaveTest) {
             TestFromTelegramUser testFromTelegramUser = testingRepo.get(message.getChatId()); //Получаем тест с дополнительными данными
-            List<Question> questionList = new ArrayList<>();
-            questionList.addAll(testFromTelegramUser.getTest().getQuestionSet()); //Список вопросов полученного теста
+            List<Question> questionList = new ArrayList<>(testFromTelegramUser.getTest().getQuestionSet()); //Список вопросов полученного теста
             boolean isTestDontStart = testFromTelegramUser.getTimeStart() == null;
-                if (isTestDontStart) {
+                if (isTestDontStart) { // Eсли тест не начат предлагаем пользователю его начать
                     if (message.getText().equals("/go")) {
+                        if (testFromTelegramUser.getTest().isMixQuestions()) {Collections.shuffle(questionList);
+                            testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
+                        }
                         testFromTelegramUser.setTimeStart(new Timestamp(System.currentTimeMillis()));
+                        Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
+                        if (testFromTelegramUser.getTest().isMixAnswers()) Collections.shuffle(question.getAnswerList());
                         telegramBot.sendMessege(
                                 message.getChatId(), "Вы начали тестирование\n"
-                                        + questionList.get(testFromTelegramUser.getCurrentQuestion())
+                                        + question
                         );
                         testFromTelegramUser.setCurrentQuestion(testFromTelegramUser.getCurrentQuestion() + 1);
                         return;
                     }
                     telegramBot.sendMessege(message.getChatId(), "Для начала тестирования введите комманду /go");
                 }
-                else if (testFromTelegramUser.getCurrentQuestion() < testFromTelegramUser.getTest().getQuestionSet().size()) {
+                else if (testFromTelegramUser.getCurrentQuestion() < testFromTelegramUser.getTest().getQuestionSet().size()) { //пока вопросы не кончатся выводим их и фиксируем ответ
                     try {
+                        Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
                         parseAnswer(testFromTelegramUser, questionList, telegramBot, message);
-                        goNextQuestion(telegramBot, message, testFromTelegramUser, questionList.get(testFromTelegramUser.getCurrentQuestion()));
+                        if (testFromTelegramUser.getTest().isMixAnswers())Collections.shuffle(question.getAnswerList());
+                        goNextQuestion(telegramBot, message, testFromTelegramUser, question);
                     } catch (NumberFormatException e) {
                         telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. повторите попытку.");
                     } catch (IndexOutOfBoundsException e) {
@@ -74,7 +80,7 @@ public class TelegramTestingServise {
                     }
 
                 }
-                else if (testFromTelegramUser.getCurrentQuestion() == testFromTelegramUser.getTest().getQuestionSet().size()){
+                else if (testFromTelegramUser.getCurrentQuestion() == testFromTelegramUser.getTest().getQuestionSet().size()){ //когда вопросы кончились фиксируем последний ответ и сохраняем тест
                     try {
                         parseAnswer(testFromTelegramUser, questionList, telegramBot, message);
                         resultSave(testFromTelegramUser, message.getChatId());
@@ -82,7 +88,7 @@ public class TelegramTestingServise {
                         telegramBot.sendMessege(message.getChatId(), "Тест завершен");
                     }
                     catch (NumberFormatException e) {
-                        telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. повторите попытку.");
+                        telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. Повторите попытку.");
                     } catch (IndexOutOfBoundsException e) {
                         telegramBot.sendMessege(message.getChatId(), "Вы введи несуществующий вариант ответа.");
                     }
@@ -127,7 +133,7 @@ public class TelegramTestingServise {
     private void parseAnswer(TestFromTelegramUser testFromTelegramUser, List<Question> questionList, TelegramBot telegramBot, Message message) {
         int currentQuestionIndex = testFromTelegramUser.getCurrentQuestion();
         Question lastQuestion = questionList.get(currentQuestionIndex - 1);
-            switch (lastQuestion.getTypeAnswerOptions()) {
+        switch (lastQuestion.getTypeAnswerOptions()) {
                 case MANY_ANSWER -> {
                     List<Integer> listAnswersInt = telegramTestingHelper.getIntListByAnswer(message.getText());
                     List<BaseAnswer> answersSelected = new ArrayList<>();
@@ -157,7 +163,7 @@ public class TelegramTestingServise {
         if (resultTestServise.existByTitle(title)) throw new ObjectAlreadyExistsExeption("Тестирование с таким названием уже существует");
         for (long chatId : tgUsersChatIds) {
             if (testingRepo.isUserHaveTest(chatId)) continue;
-            testingRepo.save(chatId, new TestFromTelegramUser(test,title));
+            testingRepo.save(chatId, new TestFromTelegramUser(new Test(test),title));
             telegramBot.sendMessege(chatId, "Внимание!\nДля вас активирован следующий тест:\n" + test + "\nДля начала введите /go");
         }
     }

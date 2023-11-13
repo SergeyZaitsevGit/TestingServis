@@ -20,7 +20,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Question extends BaseQuestion{
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "questionSet")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet", cascade  = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     private Set<Test> testSet = new LinkedHashSet<>();

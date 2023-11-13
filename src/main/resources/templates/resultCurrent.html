@@ -7,6 +7,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="../static/css/main.css" rel="stylesheet">
 </head>
+<header th:insert="~{blocks/header :: header}"></header>
 <body>
 <div class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -17,12 +18,13 @@
                         <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты пользователя <span
                                 th:text="${resultTest.telegramUser.name}"/> <span
                                 th:text="${resultTest.telegramUser.surname}"/></p>
-                        <p class="fs-5 "><b>Тест: </b><span th:text="${resultTest.test.name}"/></p>
+                        <p class="fs-5 "><b>Тест: </b><a th:href="|/test/${resultTest.test.id}" th:text="${resultTest.test.name}"/>
                         <p class="fs-5"><b>Время на тест: </b><span th:text="${resultTest.test.timeActiv}"/></p>
                         <p class="fs-5"><b>Всего вопросов: </b><span th:text="${resultTest.test.countQuestion}"/></p>
                         <p class="fs-5"><b>Набранно баллов: </b><span th:text="${resultTest.ball}"/> из <span th:text="${resultTest.test.maxBall}"/></p>
                         <p class="fs-5"><b>Тест пройден за: </b><span th:text="${resultTest.getTimeOnTest()}"/></p>
-
+                       <br> <hr class="mt-1 mb-1"/><br>
+                        <p class="text-center h3 fw-bold mb-5 mx-1 mx-md-4 mt-4">Ответы пользователя</p>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item" th:each="el, state : ${resultTest.answerFromTelegramUserList}"
                                  th:value="${state.index}">
@@ -79,6 +81,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
