@@ -17,9 +17,8 @@
                                        modal.find('#question-name').val(data.text)
                                        modal.find('#question-ball').val(data.ball)
                                        modal.find('#' + data.typeAnswerOptions).prop("checked", true)
+                                       console.log(data.typeAnswerOptions)
                                       if(data.type) modal.find('#selectTypeCreate').val(data.type.id)
-
-
                                        answers = data.answerList
                                        let ol = $('#listAnswers')
                                         for(var i =0; i<answers.length;i++){
@@ -53,6 +52,28 @@
                 ol.append('<li class="list-group-item">' + answer.text + '</li>');
          })
 
+          $('#delAnswerButton').click(function() { //Удаление вариантов ответа
+                  let modal = $('#questionDialog')
+                  let  li_last = $('#listAnswers li:last-child')
+                     let anwerDel = answers.pop();
+                     console.log(anwerDel);
+                     li_last.remove();
+                if(questionId){
+                    $.ajax({
+                            url: '/api/v1/answer/delete/' + anwerDel.id,
+                            type: 'DELETE',
+                          success: () => {
+
+                         },
+                         error: (err) => {
+                             console.log(err);
+                         }
+
+                        })
+                }
+
+                  })
+
         $('#saveQuestionButton').click(function() { //Создание нового вопроса
                let modal = $('#questionDialog')
                var textQuestion = modal.find('#question-name').val()
@@ -85,6 +106,7 @@
                if  (oneAnswerRadio.is(':checked')) typeAnswerOptions = oneAnswerRadio.val();
                if  (manyAnswerRadio.is(':checked')) typeAnswerOptions = manyAnswerRadio.val();
                if  (freeAnswerRadio.is(':checked')) typeAnswerOptions = freeAnswerRadio.val();
+               console.log(typeAnswerOptions)
                var typeId = $('#selectTypeCreate option:selected').val()
                let question = {
                    id: questionId,
@@ -129,7 +151,7 @@
                       for(var i = 0; i < answers.length; i++){
                           if (answers[i].corrected) count++;
                       }
-                 if (count ==0){
+                 if (count !=0){
                    $('#validAnswers').removeAttr("hidden")
                    return
                  }
@@ -163,16 +185,15 @@
        });
 
        $('.deleteButton').click(function() {
-        console.log()
          $.ajax({
-                               url: '/api/v1/question/delete/' + $(this).attr('value'),
-                               type: 'DELETE',
-                             success: () => {
-                                location.reload()
-                            },
-                            error: (err) => {
-                                console.log(err);
-                            }
+               url: '/api/v1/question/delete/' + $(this).attr('value'),
+               type: 'DELETE',
+             success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                console.log(err);
+            }
 
-                           })
+           })
        })

@@ -10,21 +10,23 @@ import java.util.List;
 @Data
 public class TestFromTelegramUser {
 
-    private Test test;
-    private int currentQuestion;
+  private Test test;
 
-    private List<AnswerFromTelegramUser> answerFromTelegramUserList = new ArrayList<>();
-    private int ball;
+  private int currentQuestion;
+  private int ball;
 
-    private Timestamp timeStart;
+  private List<AnswerFromTelegramUser> answerFromTelegramUserList = new ArrayList<>();
 
-    private Timestamp timeEnd;
+  private Timestamp timeStart;
+  private Timestamp timeEnd;
+  private Timestamp timeActiv;
 
-    private String title;
-    public TestFromTelegramUser(Test test, String title) {
+  private String title;
 
-        this.test = test;
-        this.title = title;
-    }
+  public TestFromTelegramUser(Test test, String title) {
+
+    this.test = test;
+    this.title = title;
+  }
 
 }

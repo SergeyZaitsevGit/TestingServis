@@ -11,14 +11,15 @@ import ru.fqw.TestingServis.site.repo.UserRepository;
 @Service
 @AllArgsConstructor
 public class UserDetailsServisImpl implements UserDetailsService {
-    UserRepository userRepo;
 
-    @Override
-    @Transactional
-    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User with email '" + username + "' not found"));
-        return UserDetailsImpl.build(user);
-    }
+  UserRepository userRepo;
+
+  @Override
+  @Transactional
+  public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepo.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException(
+            "User with email '" + username + "' not found"));
+    return UserDetailsImpl.build(user);
+  }
 }

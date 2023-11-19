@@ -49,20 +49,18 @@
                                     <div class="accordion-body">
                                         <div class="accordion-body">
                                             <ol class="list-group list-group-numbered">
+                                                <span th:if="!${#strings.equals(el.question.typeAnswerOptions, 'FREE_ANSWER')}">
                                                     <span th:each="allAnswer : ${el.getAnswerWhithSelect()}">
                                                          <li th:if="${allAnswer.selected && allAnswer.answer.corrected}"
-                                                             class="list-group-item"
-                                                             style="background-color: #00BFFF; border-color: #dfdfec;"
+                                                             class="list-group-item correct-select"
                                                              th:text="${allAnswer.answer.text}"></li>
 
                                                             <li th:if="${allAnswer.selected && !allAnswer.answer.corrected}"
-                                                                class="list-group-item"
-                                                                style="background-color: #CC0011; border-color: #dfdfec;"
+                                                                class="list-group-item uncorrect-select"
                                                                 th:text="${allAnswer.answer.text}"></li>
 
                                                              <li th:if="${!allAnswer.selected && allAnswer.answer.corrected}"
-                                                                 class="list-group-item"
-                                                                 style="background-color: #198754; border-color: #dfdfec;"
+                                                                 class="list-group-item correct-no-select"
                                                                  th:text="${allAnswer.answer.text}"></li>
 
                                                             <li th:if="${!allAnswer.selected && !allAnswer.answer.corrected}"
@@ -70,14 +68,24 @@
                                                                 th:text="${allAnswer.answer.text}"></li>
 
                                                     </span>
+                                                </span>
+                                                <span th:if="${#strings.equals(el.question.typeAnswerOptions, 'FREE_ANSWER')}">
+                                                    <span><b>Ответ пользователя: </b></span><span th:text="${el.freeAnswer}"/>
+                                                     <form th:action="@{/result/{id}(id = ${resultTest.id})}" method="post" class="row"
+                                                           id="formTest">
+                                                         <label class="form-label col-10 fs-6"><b>Обновите балл, если это необходимо: </b></label>
+                                                        <input name="ballFree"  type="number" min="0" th:max="${el.question.ball}"  class="form-control col"
+                                                               th:value="${el.ballBehindQuestion}" style="width: 20%"/>
+                                                          <input hidden name="index"  type="number"  class="form-control" th:value="${state.index}"
+                                                                 style="width: 20%"/>
+                                                         <button type="submit" class="btn btn-primary col">Обновить</button>
+                                                     </form>
+                                                </span>
                                             </ol>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -85,17 +93,18 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="../static/js/freeAnswerSaveBall.js"></script>
 </body>
 </html>

@@ -15,32 +15,35 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 public class MainController {
-   TypeServise typeServise;
 
-    @GetMapping("/")
-    public String greeting(Model model) {
-        model.addAttribute("title", "Главная страница");
-        return "home";
+  TypeServise typeServise;
+
+  @GetMapping("/")
+  public String greeting(Model model) {
+    model.addAttribute("title", "Главная страница");
+    return "home";
+  }
+
+  @GetMapping("/main")
+  public String greeting3(Model model) {
+    model.addAttribute("name", SecurityContextHolder.getContext().getAuthentication().getName());
+    return "main";
+  }
+
+  @GetMapping("/lk")
+  public String lk(Model model) {
+    List<Type> types = typeServise.getTypeByAuthenticationUser();
+    model.addAttribute("types", types);
+    model.addAttribute("type", new Type());
+    return "lk";
+  }
+
+  @PostMapping("/lk")
+  public String lk(Model model, @ModelAttribute Type type) {
+    if (type != null) {
+      typeServise.createType(type);
     }
 
-    @GetMapping("/main")
-    public String greeting3(Model model) {
-        model.addAttribute("name", SecurityContextHolder.getContext().getAuthentication().getName());
-        return "main";
-    }
-
-    @GetMapping("/lk")
-    public String lk(Model model) {
-        List<Type> types = typeServise.getTypeByAuthenticationUser();
-        model.addAttribute("types", types);
-        model.addAttribute("type", new Type());
-        return "lk";
-    }
-
-    @PostMapping("/lk")
-    public String lk(Model model, @ModelAttribute Type type){
-        if (type != null)typeServise.createType(type);
-
-        return "redirect:lk";
-    }
+    return "redirect:lk";
+  }
 }

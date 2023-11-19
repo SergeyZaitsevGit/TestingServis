@@ -1,5 +1,6 @@
 package ru.fqw.TestingServis.site.controllers;
 
+import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,9 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.servise.ResultTestServise;
 import ru.fqw.TestingServis.site.servise.UserServise;
@@ -43,6 +42,18 @@ public class ResulTestController {
         ResultTest resultTest = resultTestServise.getResultTestById(resultId);
         model.addAttribute("resultTest",resultTest);
         return "resultCurrent";
+    }
+    @PostMapping("/result/{resultId}")
+    public String resultTestById(Model model, @PathVariable String resultId,
+                                 @RequestParam("ballFree") int ballFree,
+                                 @RequestParam("index") int index
+    ){
+        ResultTest resultTest = resultTestServise.getResultTestById(resultId);
+        int oldBall = resultTest.getAnswerFromTelegramUserList().get(index).getBallBehindQuestion();
+        resultTest.getAnswerFromTelegramUserList().get(index).setBallBehindQuestion(ballFree);
+        resultTest.setBall(resultTest.getBall() + (ballFree - oldBall));
+        resultTestServise.save(resultTest);
+        return "redirect:/result/{resultId}";
     }
 
 }

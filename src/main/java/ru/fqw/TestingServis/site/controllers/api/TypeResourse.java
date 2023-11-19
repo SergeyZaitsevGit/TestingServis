@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.controllers;
+package ru.fqw.TestingServis.site.controllers.api;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

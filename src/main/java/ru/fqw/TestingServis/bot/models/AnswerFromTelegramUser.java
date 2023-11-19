@@ -16,36 +16,41 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class  AnswerFromTelegramUser {
-    private BaseQuestion question;
-    private String freeAnswer;
-    private List<BaseAnswer> answers;
-    private int ballBehindQuestion;
+public class AnswerFromTelegramUser {
 
-    public AnswerFromTelegramUser(BaseQuestion question, List<BaseAnswer> answers, int ballBehindQuestion) {
-        this.question = question;
-        this.answers = answers;
-        this.ballBehindQuestion = ballBehindQuestion;
+  private BaseQuestion question;
+  private String freeAnswer;
+  private List<BaseAnswer> answers;
+  private int ballBehindQuestion;
+
+  public AnswerFromTelegramUser(BaseQuestion question, List<BaseAnswer> answers,
+      int ballBehindQuestion) {
+    this.question = question;
+    this.answers = answers;
+    this.ballBehindQuestion = ballBehindQuestion;
+  }
+
+  public AnswerFromTelegramUser(BaseQuestion question, String freeAnswer, int ballBehindQuestion) {
+    this.question = question;
+    this.freeAnswer = freeAnswer;
+    this.ballBehindQuestion = ballBehindQuestion;
+  }
+
+  public List<AnswerWhithSelect> getAnswerWhithSelect() {
+    List<AnswerWhithSelect> result = new ArrayList<>();
+    for (BaseAnswer answer : question.getBaseAnswerList()) {
+      result.add(new AnswerWhithSelect(answer, answers.contains(answer)));
     }
+    return result;
+  }
 
-    public AnswerFromTelegramUser(BaseQuestion question, String freeAnswer, int ballBehindQuestion) {
-        this.question = question;
-        this.freeAnswer = freeAnswer;
-        this.ballBehindQuestion = ballBehindQuestion;
-    }
+  @Data
+  @AllArgsConstructor
+  private static class AnswerWhithSelect {
 
-    public List<AnswerWhithSelect> getAnswerWhithSelect(){
-        List<AnswerWhithSelect> result = new ArrayList<>();
-        for (BaseAnswer answer:question.getBaseAnswerList()) {
-            result.add(new AnswerWhithSelect(answer,answers.contains(answer)));
-        }
-        return result;
-    }
-}
-
-@Data
-@AllArgsConstructor
-class AnswerWhithSelect{
     private BaseAnswer answer;
     boolean selected = false;
+  }
 }
+
+

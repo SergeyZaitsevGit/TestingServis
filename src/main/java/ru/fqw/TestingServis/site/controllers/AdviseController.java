@@ -14,31 +14,31 @@ import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
 @ControllerAdvice
 public class AdviseController {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleResourceNotFound(final ResourceNotFoundException e, Model model) {
-        model.addAttribute("error", new ExceptionBody(e.getMessage()));
-        return "error/errorNotFound";
-    }
+  @ExceptionHandler(ResourceNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public String handleResourceNotFound(final ResourceNotFoundException e, Model model) {
+    model.addAttribute("error", new ExceptionBody(e.getMessage()));
+    return "error/errorNotFound";
+  }
 
-    @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleIllegalState(final IllegalStateException e) {
-        return new ExceptionBody(e.getMessage());
-    }
+  @ExceptionHandler(IllegalStateException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionBody handleIllegalState(final IllegalStateException e) {
+    return new ExceptionBody(e.getMessage());
+  }
 
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleAccessDenied(Model model) {
-        model.addAttribute("error", new ExceptionBody("Доступ запрещен"));
-        return "error/errorAccessDenied";
-    }
+  @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public String handleAccessDenied(Model model) {
+    model.addAttribute("error", new ExceptionBody("Доступ запрещен"));
+    return "error/errorAccessDenied";
+  }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBody handleException(final Exception e) {
-        e.printStackTrace();
-        return new ExceptionBody("Неизвестная ошибка");
-    }
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ExceptionBody handleException(final Exception e) {
+    e.printStackTrace();
+    return new ExceptionBody("Неизвестная ошибка");
+  }
 
 }

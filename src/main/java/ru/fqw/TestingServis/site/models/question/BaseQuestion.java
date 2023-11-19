@@ -13,17 +13,18 @@ import java.util.List;
 @Data
 @MappedSuperclass
 public class BaseQuestion {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    @NotBlank(message = "Вопрос не может быть пустым")
-    protected String text;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    @Min(value = 1, message = "Ошибка ввода балла")
-    protected int ball;
-    protected TypeAnswerOptions typeAnswerOptions = TypeAnswerOptions.ONE_ANSWER;
+  @NotBlank(message = "Вопрос не может быть пустым")
+  protected String text;
 
-    @Transient
-    protected List<BaseAnswer> baseAnswerList = new ArrayList<>();
+  @Min(value = 1, message = "Ошибка ввода балла")
+  protected int ball;
+  protected TypeAnswerOptions typeAnswerOptions = TypeAnswerOptions.ONE_ANSWER;
+
+  @Transient
+  protected List<BaseAnswer> baseAnswerList = new ArrayList<>();
 }

@@ -9,39 +9,43 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class QuestionServise {
-    QuestionRepo questionRepo;
-    UserServise userServise;
 
-    public List<Question> getQuestionsByAuthenticationUser() {
-        return questionRepo.findByCreator(userServise.getAuthenticationUser());
-    }
+  QuestionRepo questionRepo;
+  UserServise userServise;
 
-    public Question saveQuestion(Question question) {
-        User user =  userServise.getAuthenticationUser();
-        question.setCreator(user);
-        question.getBaseAnswerList().addAll(question.getAnswerList());
-        return questionRepo.save(question);
-    }
+  public List<Question> getQuestionsByAuthenticationUser() {
+    return questionRepo.findByCreator(userServise.getAuthenticationUser());
+  }
 
-    public List<Question> getQuestionsByType(Type type) {
-        return questionRepo.findByType(type);
-    }
+  public Question saveQuestion(Question question) {
+    User user = userServise.getAuthenticationUser();
+    question.setCreator(user);
+    question.getBaseAnswerList().addAll(question.getAnswerList());
+    return questionRepo.save(question);
+  }
 
-    public List<Question> getQuestionsByTest(Test test) {
-        return questionRepo.getQuestionByTestSet(test);
-    }
+  public List<Question> getQuestionsByType(Type type) {
+    return questionRepo.findByType(type);
+  }
 
-    public Question getQuestionById(long questionId) {
-        return questionRepo.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found"));
-    }
+  public List<Question> getQuestionsByTest(Test test) {
+    return new ArrayList<>(test.getQuestionSet());
 
-    public void deliteQuestionById(long questionId){
-         questionRepo.deleteById(questionId);
-    }
+  }
+
+  public Question getQuestionById(long questionId) {
+    return questionRepo.findById(questionId)
+        .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+  }
+
+  public void deliteQuestionById(long questionId) {
+    questionRepo.deleteById(questionId);
+  }
 
 }

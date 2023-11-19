@@ -12,15 +12,18 @@ import ru.fqw.TestingServis.site.servise.UserServise;
 @Controller
 @AllArgsConstructor
 public class RegistrationController {
-    UserServise userServise;
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("user", new User());
-        return "registration";
-    }
-    @PostMapping ("/registration")
-    public String registration(@ModelAttribute("user") User user, Model model){
-        userServise.saveUser(user);
-        return "redirect:/login";
-    }
+
+  UserServise userServise;
+
+  @GetMapping("/registration")
+  public String registration(Model model) {
+    model.addAttribute("user", new User());
+    return "registration";
+  }
+
+  @PostMapping("/registration")
+  public String registration(@ModelAttribute("user") User user, Model model) {
+    userServise.saveUser(user);
+    return "redirect:/login";
+  }
 }

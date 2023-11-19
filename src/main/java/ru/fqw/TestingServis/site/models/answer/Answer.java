@@ -14,10 +14,11 @@ import ru.fqw.TestingServis.site.models.question.Question;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Answer extends BaseAnswer {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    private Question question;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "question_id")
+  @JsonIgnore
+  @org.springframework.data.annotation.Transient
+  private Question question;
 
 }

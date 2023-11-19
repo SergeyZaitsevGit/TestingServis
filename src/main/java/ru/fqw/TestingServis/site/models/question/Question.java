@@ -36,14 +36,6 @@ public class Question extends BaseQuestion{
     @org.springframework.data.annotation.Transient
     private Type type;
 
-    @PreRemove
-    private void removeQuestionAssociations() {
-        for (Test test: this.testSet) {
-            test.getQuestionSet().remove(this);
-        }
-       this.creator.getQuestionList().remove(this);
-        if (this.type != null)this.type.getQuestionList().remove(this);
-    }
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "question",  cascade = {CascadeType.MERGE}, orphanRemoval=true)
     @org.springframework.data.annotation.Transient
     private List<Answer> answerList = new ArrayList<>();
@@ -63,6 +55,14 @@ public class Question extends BaseQuestion{
             result.append((i + 1)).append(". ").append(answerList.get(i).getText()).append("\n");
         }
         return result.toString();
+    }
+    @PreRemove
+    private void removeQuestionAssociations() {
+        for (Test test: this.testSet) {
+            test.getQuestionSet().remove(this);
+        }
+        this.creator.getQuestionList().remove(this);
+        if (this.type != null)this.type.getQuestionList().remove(this);
     }
 
     @PostLoad

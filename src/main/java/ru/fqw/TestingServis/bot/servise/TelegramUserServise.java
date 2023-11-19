@@ -12,20 +12,25 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TelegramUserServise {
-    TelegramUserRepo telegramUserRepo;
-    UserServise userServise;
-    public TelegramUser saveTelegramUser(TelegramUser telegramUser){
-        return telegramUserRepo.save(telegramUser);
-    }
-    public List<TelegramUser> getTelegramUserByAuthenticationUser(){
-        return telegramUserRepo.findByuserSetInvited(userServise.getAuthenticationUser());
-    }
-    public boolean telegramUserExistsByChatId(long chatId){
-        return  telegramUserRepo.existsByChatId(chatId);
-    }
-    public TelegramUser getTelegramUserByChatId(long chatId){
-        return telegramUserRepo.getTelegramUserByChatId(chatId).orElseThrow(
-            () -> new ResourceNotFoundException("TelegramUser not found")
-        );
-    }
+
+  TelegramUserRepo telegramUserRepo;
+  UserServise userServise;
+
+  public TelegramUser saveTelegramUser(TelegramUser telegramUser) {
+    return telegramUserRepo.save(telegramUser);
+  }
+
+  public List<TelegramUser> getTelegramUserByAuthenticationUser() {
+    return telegramUserRepo.findByuserSetInvited(userServise.getAuthenticationUser());
+  }
+
+  public boolean telegramUserExistsByChatId(long chatId) {
+    return telegramUserRepo.existsByChatId(chatId);
+  }
+
+  public TelegramUser getTelegramUserByChatId(long chatId) {
+    return telegramUserRepo.getTelegramUserByChatId(chatId).orElseThrow(
+        () -> new ResourceNotFoundException("TelegramUser not found")
+    );
+  }
 }

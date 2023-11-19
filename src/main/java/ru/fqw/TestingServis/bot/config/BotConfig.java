@@ -11,8 +11,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Data
 @EnableScheduling
 public class BotConfig {
-    @Value("${bot.name}")
-    String botName;
-    @Value("${bot.token}")
-    String botToken;
+
+  @Value("${bot.name}")
+  String botName;
+  @Value("${bot.token}")
+  String botToken;
 }

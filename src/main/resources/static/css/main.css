@@ -1,5 +1,23 @@
-.list-group-item[aria-current="true"]{
-     background-color: #198754;
-  border-color: #dfdfec;
+body{
+    background-color: #eeeeee;
+}
 
+.list-group-item[aria-current="true"]{
+  background-color: #198754;
+  border-color: #dfdfec;
+}
+
+.correct-no-select {
+    background-color: #198754;
+    border-color: #dfdfec;
+}
+
+.uncorrect-select {
+    background-color: #CC0011;
+    border-color: #dfdfec;
+}
+
+.correct-select {
+    background-color: #00BFFF;
+    border-color: #dfdfec;
 }

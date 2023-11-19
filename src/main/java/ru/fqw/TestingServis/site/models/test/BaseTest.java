@@ -1,5 +1,6 @@
 package ru.fqw.TestingServis.site.models.test;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -16,52 +17,54 @@ import java.util.Date;
 
 @Data
 @MappedSuperclass
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class BaseTest {
-    @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
-    protected Long id;
 
-    @NotBlank(message = "Имя теста не может быть пустым")
-    protected String name;
+  @Id
+  @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
+  protected Long id;
 
-    protected Date dateCreated;
+  @NotBlank(message = "Имя теста не может быть пустым")
+  protected String name;
 
-    protected boolean activ = false;
+  protected Date dateCreated;
 
-    @Min(value = 3, message = "Время теста должно быть от 3 минут")
-    protected int timeActiv;
+  protected boolean activ = false;
 
-    protected boolean mixQuestions = true;
+  @Min(value = 3, message = "Время теста должно быть от 3 минут")
+  protected int timeActiv;
 
-    protected boolean mixAnswers = true;
+  protected boolean mixQuestions = true;
 
-    @Transient
-    protected BaseUser baseUser;
+  protected boolean mixAnswers = true;
 
-    @Transient
-    protected int countQuestion;
+  @Transient
+  protected BaseUser baseUser;
 
-    @Transient
-    protected int maxBall;
+  @Transient
+  protected int countQuestion;
 
-    public String getFormatedDataCreated(){
-        SimpleDateFormat sdf =
-                new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm");
-        return sdf.format(dateCreated);
-    }
+  @Transient
+  protected int maxBall;
 
-    public BaseTest(BaseTest baseTest) {
-        this.id = baseTest.getId();
-        this.name = baseTest.getName();
-        this.dateCreated = baseTest.dateCreated;
-        this.activ = baseTest.isActiv();
-        this.timeActiv = baseTest.timeActiv;
-        this.mixQuestions = baseTest.mixQuestions;
-        this.mixAnswers = baseTest.mixAnswers;
-        this.baseUser = baseTest.baseUser;
-        this.countQuestion = baseTest.countQuestion;
-        this.maxBall = baseTest.getMaxBall();
-    }
+  public String getFormatedDataCreated() {
+    SimpleDateFormat sdf =
+        new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm");
+    return sdf.format(dateCreated);
+  }
+
+
+  public BaseTest(BaseTest baseTest) {
+    this.id = baseTest.getId();
+    this.name = baseTest.getName();
+    this.dateCreated = baseTest.dateCreated;
+    this.activ = baseTest.isActiv();
+    this.timeActiv = baseTest.timeActiv;
+    this.mixQuestions = baseTest.mixQuestions;
+    this.mixAnswers = baseTest.mixAnswers;
+    this.baseUser = baseTest.baseUser;
+    this.countQuestion = baseTest.countQuestion;
+    this.maxBall = baseTest.getMaxBall();
+  }
 }

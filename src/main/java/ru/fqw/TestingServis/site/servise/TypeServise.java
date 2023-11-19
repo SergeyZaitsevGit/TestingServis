@@ -11,21 +11,24 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TypeServise {
-    TypeRepo typeRepo;
-    UserServise userServise;
 
-    public List<Type> getTypeByAuthenticationUser(){
-        User user = userServise.getAuthenticationUser();
-        return typeRepo.findByCreator(user);
-    }
+  TypeRepo typeRepo;
+  UserServise userServise;
 
-    public Type createType(Type type){
-        User user = userServise.getAuthenticationUser();
-        type.setCreator(user);
-        return typeRepo.save(type);
-    }
+  public List<Type> getTypeByAuthenticationUser() {
+    User user = userServise.getAuthenticationUser();
+    return typeRepo.findByCreator(user);
+  }
 
-    public Type getTypeById(long id){
-        return typeRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Type not found"));
-    }
+  public Type createType(Type type) {
+    User user = userServise.getAuthenticationUser();
+    type.setCreator(user);
+    return typeRepo.save(type);
+  }
+
+  public Type getTypeById(long id) {
+    return typeRepo.findById(id).orElseThrow(
+        () -> new ResourceNotFoundException("Type not found")
+    );
+  }
 }

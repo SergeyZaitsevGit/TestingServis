@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import ru.fqw.TestingServis.bot.models.telegramUser.BaseTelegramUser;
 import ru.fqw.TestingServis.site.models.test.BaseTest;
 
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class ResultTest {
     @Id
     private ObjectId id;
+    @Field(targetType = FieldType.OBJECT_ID)
     private BaseTest test;
     private BaseTelegramUser telegramUser;
     private List<AnswerFromTelegramUser> answerFromTelegramUserList = new ArrayList<>();

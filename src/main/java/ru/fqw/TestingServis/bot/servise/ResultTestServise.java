@@ -25,63 +25,72 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ResultTestServise {
-    ResultsTestRepo resultsTestRepo;
-    UserServise userServise;
-    MongoTemplate mongoTemplate;
-    public void save(ResultTest resultTest){
-        resultsTestRepo.save(resultTest);
+
+  ResultsTestRepo resultsTestRepo;
+  UserServise userServise;
+  MongoTemplate mongoTemplate;
+
+  public void save(ResultTest resultTest) {
+    resultsTestRepo.save(resultTest);
+  }
+
+  public ResultTest getResultTestById(String id) {
+    return resultsTestRepo.findById(id).orElseThrow(
+        () -> new ResourceNotFoundException("Результат тестирования не найден")
+    );
+  }
+
+  public Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable) {
+    BaseUser user = userServise.getAuthenticationUser();
+    return resultsTestRepo.findResultTestByTestBaseUser(pageable, user);
+  }
+
+  public Map<String, List<ResultTest>> getResultTestByAuthenticationUserSortetByTesting(
+      Pageable pageable) {
+    Map<String, List<ResultTest>> res = getResultTestByAuthenticationUser(pageable).stream()
+        .collect(Collectors.groupingBy(ResultTest::getTitle));
+    return res;
+  }
+
+  public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb,
+      String keyword) {
+    GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");
+    BaseUser user = userServise.getAuthenticationUser();
+    Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email")
+        .is(user.getEmail());
+    Aggregation aggregation;
+    if (keyword == null) {
+      aggregation = Aggregation.newAggregation(groupByTestName,
+          Aggregation.match(matchUserCriteria),
+          Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")));
+    } else {
+      aggregation = Aggregation.newAggregation(groupByTestName,
+          Aggregation.match(matchUserCriteria),
+          Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")),
+          Aggregation.match(Criteria.where("resultTest.title").regex(".*" + keyword + ".*")));
     }
-    public ResultTest getResultTestById(String id){
-        return resultsTestRepo.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Результат тестирования не найден")
-        );
+    AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, "resultTest", Map.class);
+    Pageable pageable = PageRequest.of(pb.getPageNumber(), pb.getPageSize(), Sort.by("title"));
+    List<Map> mappedResults = results.getMappedResults();
+
+    int start = (int) pageable.getOffset();
+    int end = Math.min((start + pageable.getPageSize()), mappedResults.size());
+
+    List<Map> paginatedResults = mappedResults.subList(start, end);
+    Map<String, List<ResultTest>> finalResultMap = new LinkedHashMap<>();
+    for (Map entry : paginatedResults) {
+      String testName = (String) entry.get("_id");
+      List<ResultTest> testResults = (List<ResultTest>) entry.get("resultTest");
+      finalResultMap.put(testName, testResults);
     }
 
-    public Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable){
-        BaseUser user = userServise.getAuthenticationUser();
-        return resultsTestRepo.findResultTestByTestBaseUser(pageable,user);
-    }
-    public Map<String, List<ResultTest>> getResultTestByAuthenticationUserSortetByTesting(Pageable pageable){
-        Map<String, List<ResultTest>> res = getResultTestByAuthenticationUser(pageable).stream()
-                .collect(Collectors.groupingBy(ResultTest::getTitle));
-               return res;
-    }
+    List<Map.Entry<String, List<ResultTest>>> paginatedResult = new ArrayList<>(
+        finalResultMap.entrySet());
+    return new PageImpl<>(paginatedResult, pageable, mappedResults.size());
+  }
 
-    public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb, String keyword) {
-        GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");
-        BaseUser user = userServise.getAuthenticationUser();
-        Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email").is(user.getEmail());
-        Aggregation aggregation;
-        if (keyword == null){
-         aggregation = Aggregation.newAggregation(groupByTestName, Aggregation.match(matchUserCriteria),
-                Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")));
-        }
-        else {
-            aggregation = Aggregation.newAggregation(groupByTestName, Aggregation.match(matchUserCriteria),
-                    Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart")),
-                    Aggregation.match(Criteria.where("resultTest.title").regex(".*" + keyword + ".*")));
-        }
-        AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, "resultTest", Map.class);
-        Pageable pageable = PageRequest.of(pb.getPageNumber(), pb.getPageSize(), Sort.by("title"));
-        List<Map> mappedResults = results.getMappedResults();
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), mappedResults.size());
-
-        List<Map> paginatedResults = mappedResults.subList(start, end);
-        Map<String, List<ResultTest>> finalResultMap = new LinkedHashMap<>();
-        for (Map entry : paginatedResults) {
-            String testName = (String) entry.get("_id");
-            List<ResultTest> testResults = (List<ResultTest>) entry.get("resultTest");
-            finalResultMap.put(testName, testResults);
-        }
-
-        List<Map.Entry<String, List<ResultTest>>> paginatedResult = new ArrayList<>(finalResultMap.entrySet());
-        return new PageImpl<>(paginatedResult, pageable, mappedResults.size());
-    }
-
-    public boolean existByTitle(String title){
-        return resultsTestRepo.existsByTitle(title);
-    }
+  public boolean existByTitle(String title) {
+    return resultsTestRepo.existsByTitle(title);
+  }
 
 }

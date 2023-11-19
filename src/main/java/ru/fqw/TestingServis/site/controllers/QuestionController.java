@@ -13,19 +13,20 @@ import ru.fqw.TestingServis.site.servise.TypeServise;
 @RequestMapping
 @AllArgsConstructor
 public class QuestionController {
-    QuestionServise questionServise;
-    TypeServise typeServise;
 
-    @GetMapping("/question")
-    public String questions(Model model) {
-        Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
-        Iterable<Type> types = typeServise.getTypeByAuthenticationUser();
-        model.addAttribute("types", types);
-        model.addAttribute("questions", questions);
-        long questionId = -1;
-        model.addAttribute("idQuestionDelete", questionId);
+  QuestionServise questionServise;
+  TypeServise typeServise;
 
-        return "question";
-    }
+  @GetMapping("/question")
+  public String questions(Model model) {
+    Iterable<Question> questions = questionServise.getQuestionsByAuthenticationUser();
+    Iterable<Type> types = typeServise.getTypeByAuthenticationUser();
+    model.addAttribute("types", types);
+    model.addAttribute("questions", questions);
+    long questionId = -1;
+    model.addAttribute("idQuestionDelete", questionId);
+
+    return "question";
+  }
 
 }
