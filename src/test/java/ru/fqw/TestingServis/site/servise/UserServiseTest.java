@@ -35,7 +35,7 @@ public class UserServiseTest {
   @Test
   void getAuthenticationUser_AuthenticatedUser_ReturnsUser() {
     User expectedUser = new User();
-    String userEmail = "test@example.com1";
+    String userEmail = "test@example.com";
     expectedUser.setEmail(userEmail);
 
     Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
