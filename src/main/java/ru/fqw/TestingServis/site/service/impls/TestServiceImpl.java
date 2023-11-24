@@ -10,21 +10,21 @@ import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TestRepo;
 
 import java.sql.Timestamp;
-import ru.fqw.TestingServis.site.service.TestServiсe;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.TestService;
+import ru.fqw.TestingServis.site.service.UserService;
 
 
 @Service
 @AllArgsConstructor
-public class TestServiсeImpl implements TestServiсe {
+public class TestServiceImpl implements TestService {
 
   TestRepo testRepo;
-  UserServiсe userServiсe;
+  UserService userService;
 
   @Override
   public Test saveTest(Test test) {
     if (!testRepo.existsById(test.getId())) {
-      User user = userServiсe.getAuthenticationUser();
+      User user = userService.getAuthenticationUser();
       test.setCreator(user);
       test.setDateCreated(new Timestamp(System.currentTimeMillis()));
     }
@@ -33,7 +33,7 @@ public class TestServiсeImpl implements TestServiсe {
 
   @Override
   public Page<Test> getTestsByAuthenticationUser(Pageable pageable) {
-    User user = userServiсe.getAuthenticationUser();
+    User user = userService.getAuthenticationUser();
     return testRepo.findByCreator(pageable, user);
   }
 
@@ -47,7 +47,7 @@ public class TestServiсeImpl implements TestServiсe {
   @Override
   public Page<Test> getTestsByAuthenticationUserAndNameContaining(Pageable pageable,
       String keywordName) {
-    User user = userServiсe.getAuthenticationUser();
+    User user = userService.getAuthenticationUser();
     return testRepo.findByCreatorAndNameContaining(pageable, user, keywordName);
   }
 

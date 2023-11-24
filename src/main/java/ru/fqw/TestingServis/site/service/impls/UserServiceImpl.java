@@ -11,11 +11,11 @@ import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.repo.UserRepository;
 import java.util.Set;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.UserService;
 
 @Service
 @AllArgsConstructor
-public class UserServiсeImpl implements UserServiсe {
+public class UserServiceImpl implements UserService {
 
   UserRepository userRepository;
 

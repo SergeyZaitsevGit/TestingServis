@@ -4,7 +4,7 @@ import java.util.List;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.question.Question;
 
-public interface AnswerServiсe {
+public interface AnswerService {
 
   Answer saveAnswer(Answer answer, Question question);
 

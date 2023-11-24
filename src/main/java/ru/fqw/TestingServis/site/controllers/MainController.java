@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.fqw.TestingServis.site.models.Type;
-import ru.fqw.TestingServis.site.service.TypeServiсe;
+import ru.fqw.TestingServis.site.service.TypeService;
 import java.util.List;
 
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
 
-  final TypeServiсe typeServiсe;
+  final TypeService typeService;
 
   @GetMapping("/")
   public String greeting(Model model) {
@@ -32,7 +32,7 @@ public class MainController {
 
   @GetMapping("/lk")
   public String lk(Model model) {
-    List<Type> types = typeServiсe.getTypeByAuthenticationUser();
+    List<Type> types = typeService.getTypeByAuthenticationUser();
     model.addAttribute("types", types);
     model.addAttribute("type", new Type());
     return "lk";
@@ -41,7 +41,7 @@ public class MainController {
   @PostMapping("/lk")
   public String lk(Model model, @ModelAttribute Type type) {
     if (type != null) {
-      typeServiсe.saveType(type);
+      typeService.saveType(type);
     }
 
     return "redirect:lk";

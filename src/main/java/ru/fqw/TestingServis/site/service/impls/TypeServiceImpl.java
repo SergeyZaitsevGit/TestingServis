@@ -7,26 +7,26 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TypeRepo;
 import java.util.List;
-import ru.fqw.TestingServis.site.service.TypeServiсe;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.TypeService;
+import ru.fqw.TestingServis.site.service.UserService;
 
 
 @Service
 @AllArgsConstructor
-public class TypeServiсeImpl implements TypeServiсe {
+public class TypeServiceImpl implements TypeService {
 
   TypeRepo typeRepo;
-  UserServiсe userServiсe;
+  UserService userService;
 
   @Override
   public List<Type> getTypeByAuthenticationUser() {
-    User user = userServiсe.getAuthenticationUser();
+    User user = userService.getAuthenticationUser();
     return typeRepo.findByCreator(user);
   }
 
   @Override
   public Type saveType(Type type) {
-    User user = userServiсe.getAuthenticationUser();
+    User user = userService.getAuthenticationUser();
     type.setCreator(user);
     return typeRepo.save(type);
   }

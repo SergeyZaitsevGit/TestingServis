@@ -18,19 +18,19 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import ru.fqw.TestingServis.site.service.impls.UserServiсeImpl;
+import ru.fqw.TestingServis.site.service.impls.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiсeImplTest {
+public class UserServiceImplTest {
 
   @Mock
   private UserRepository userRepository;
 
   @InjectMocks
-  private UserServiсeImpl userServise;
+  private UserServiceImpl userServise;
 
   @Test
   void getAuthenticationUser_AuthenticatedUser_ReturnsUser() {

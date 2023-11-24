@@ -8,11 +8,11 @@ import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.repo.AnswerRepo;
 
 import java.util.List;
-import ru.fqw.TestingServis.site.service.AnswerServiсe;
+import ru.fqw.TestingServis.site.service.AnswerService;
 
 @Service
 @AllArgsConstructor
-public class AnswerServiсeImpl implements AnswerServiсe {
+public class AnswerServiceImpl implements AnswerService {
 
   AnswerRepo answerRepo;
 

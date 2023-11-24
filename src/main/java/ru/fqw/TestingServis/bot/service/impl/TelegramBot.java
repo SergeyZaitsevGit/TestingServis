@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.serviсe.impl;
+package ru.fqw.TestingServis.bot.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,8 +10,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.config.BotConfig;
-import ru.fqw.TestingServis.bot.serviсe.RegistrationServiсe;
-import ru.fqw.TestingServis.bot.serviсe.TelegramTestingServiсe;
+import ru.fqw.TestingServis.bot.service.RegistrationService;
+import ru.fqw.TestingServis.bot.service.TelegramTestingService;
 
 
 @Service
@@ -20,14 +20,14 @@ import ru.fqw.TestingServis.bot.serviсe.TelegramTestingServiсe;
 public class TelegramBot extends TelegramLongPollingBot {
 
   BotConfig botConfig;
-  TelegramTestingServiсe telegramTestingServiсe;
-  RegistrationServiсe registrationServise;
+  TelegramTestingService telegramTestingService;
+  RegistrationService registrationServise;
 
   @Override
   public void onUpdateReceived(Update update) {
     logUserMessege(update);
     registrationServise.registration(update);
-    telegramTestingServiсe.testing(update);
+    telegramTestingService.testing(update);
 
   }
 

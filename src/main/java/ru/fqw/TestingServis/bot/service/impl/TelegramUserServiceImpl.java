@@ -1,27 +1,27 @@
-package ru.fqw.TestingServis.bot.serviсe.impl;
+package ru.fqw.TestingServis.bot.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.repo.TelegramUserRepo;
-import ru.fqw.TestingServis.bot.serviсe.TelegramUserServiсe;
+import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.UserService;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TelegramUserServiсeImpl implements TelegramUserServiсe {
+public class TelegramUserServiceImpl implements TelegramUserService {
 
   final TelegramUserRepo telegramUserRepo;
-  final UserServiсe userServiсe;
+  final UserService userService;
 
   public TelegramUser saveTelegramUser(TelegramUser telegramUser) {
     return telegramUserRepo.save(telegramUser);
   }
 
   public List<TelegramUser> getTelegramUserByAuthenticationUser() {
-    return telegramUserRepo.findByuserSetInvited(userServiсe.getAuthenticationUser());
+    return telegramUserRepo.findByuserSetInvited(userService.getAuthenticationUser());
   }
 
   public boolean telegramUserExistsByChatId(long chatId) {

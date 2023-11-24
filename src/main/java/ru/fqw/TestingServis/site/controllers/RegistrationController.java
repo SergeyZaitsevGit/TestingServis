@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.fqw.TestingServis.site.models.user.User;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.UserService;
 
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
 
-  final UserServiсe userServiсe;
+  final UserService userService;
 
   @GetMapping("/registration")
   public String registration(Model model) {
@@ -23,7 +23,7 @@ public class RegistrationController {
 
   @PostMapping("/registration")
   public String registration(@ModelAttribute("user") User user, Model model) {
-    userServiсe.saveUser(user);
+    userService.saveUser(user);
     return "redirect:/login";
   }
 }

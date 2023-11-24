@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.serviсe.impl;
+package ru.fqw.TestingServis.bot.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
@@ -10,19 +10,19 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.repo.ResultsTestRepo;
-import ru.fqw.TestingServis.bot.serviсe.ResultTestServiсe;
+import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.UserService;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class ResultTestServiсeImpl implements ResultTestServiсe {
+public class ResultTestServiceImpl implements ResultTestService {
 
   ResultsTestRepo resultsTestRepo;
-  UserServiсe userServiсe;
+  UserService userService;
   MongoTemplate mongoTemplate;
 
   public void saveResult(ResultTest resultTest) {
@@ -37,7 +37,7 @@ public class ResultTestServiсeImpl implements ResultTestServiсe {
   }
   @Override
   public Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable) {
-    BaseUser user = userServiсe.getAuthenticationUser();
+    BaseUser user = userService.getAuthenticationUser();
     return resultsTestRepo.findResultTestByTestBaseUser(pageable, user);
   }
 
@@ -45,7 +45,7 @@ public class ResultTestServiсeImpl implements ResultTestServiсe {
   public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb,
       String keyword) {
     GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");
-    BaseUser user = userServiсe.getAuthenticationUser();
+    BaseUser user = userService.getAuthenticationUser();
     Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email")
         .is(user.getEmail());
     Aggregation aggregation;

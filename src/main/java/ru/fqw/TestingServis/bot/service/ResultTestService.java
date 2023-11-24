@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.serviсe;
+package ru.fqw.TestingServis.bot.service;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 
-public interface ResultTestServiсe {
+public interface ResultTestService {
    void saveResult(ResultTest resultTest);
   ResultTest getResultTestById(String id);
   Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable);

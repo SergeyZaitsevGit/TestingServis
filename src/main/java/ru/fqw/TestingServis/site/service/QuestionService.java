@@ -5,7 +5,7 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 
-public interface QuestionServiсe {
+public interface QuestionService {
 
   List<Question> getQuestionsByAuthenticationUser();
 

@@ -24,20 +24,20 @@ import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
-import ru.fqw.TestingServis.site.service.UserServiсe;
-import ru.fqw.TestingServis.site.service.impls.QuestionServiсeImpl;
+import ru.fqw.TestingServis.site.service.UserService;
+import ru.fqw.TestingServis.site.service.impls.QuestionServiceImpl;
 
 
 @ExtendWith(MockitoExtension.class)
-public class QuestionServiсeImplTest {
+public class QuestionServiceImplTest {
   @Mock
   private QuestionRepo questionRepo;
 
   @Mock
-  private UserServiсe userServiсe;
+  private UserService userService;
 
   @InjectMocks
-  private QuestionServiсeImpl questionServise;
+  private QuestionServiceImpl questionServise;
 
 
   @Test
@@ -52,7 +52,7 @@ public class QuestionServiсeImplTest {
 
     List<Question> questions = Stream.of(question1,question2).toList();
 
-    when(userServiсe.getAuthenticationUser()).thenReturn(user);
+    when(userService.getAuthenticationUser()).thenReturn(user);
     when(questionRepo.findByCreator(user)).thenReturn(questions);
 
    List<Question> result = questionServise.getQuestionsByAuthenticationUser();
@@ -73,14 +73,14 @@ public class QuestionServiсeImplTest {
 
     when(questionRepo.existsById(0L)).thenReturn(false);
     when(questionRepo.save(question)).thenReturn(question);
-    when(userServiсe.getAuthenticationUser()).thenReturn(user);
+    when(userService.getAuthenticationUser()).thenReturn(user);
 
     Question res = questionServise.saveQuestion(question);
 
     assertEquals(res, question);
     assertEquals(res.getCreator(), user);
     verify(questionRepo, times(1)).save(question);
-    verify(userServiсe, times(1)).getAuthenticationUser();
+    verify(userService, times(1)).getAuthenticationUser();
   }
 
   @Test
@@ -97,7 +97,7 @@ public class QuestionServiсeImplTest {
 
     assertEquals(res, question);
     verify(questionRepo, times(1)).save(question);
-    verify(userServiсe, times(0)).getAuthenticationUser();
+    verify(userService, times(0)).getAuthenticationUser();
   }
 
   @Test

@@ -6,16 +6,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.fqw.TestingServis.site.models.Type;
-import ru.fqw.TestingServis.site.service.TypeServiсe;
+import ru.fqw.TestingServis.site.service.TypeService;
 
 @RestController
 @RequestMapping("/api/v1/type")
 @AllArgsConstructor
 public class TypeResourse {
-    TypeServiсe typeServiсe;
+    TypeService typeService;
     @GetMapping("/{typeId}")
     public Type findTypeById(@PathVariable long typeId) {
-        return typeServiсe.getTypeById(typeId);
+        return typeService.getTypeById(typeId);
     }
 
 }

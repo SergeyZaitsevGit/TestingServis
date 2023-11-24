@@ -15,20 +15,20 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TypeRepo;
-import ru.fqw.TestingServis.site.service.UserServiсe;
-import ru.fqw.TestingServis.site.service.impls.TypeServiсeImpl;
+import ru.fqw.TestingServis.site.service.UserService;
+import ru.fqw.TestingServis.site.service.impls.TypeServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TypeServiсeImplTest {
+public class TypeServiceImplTest {
 
   @Mock
   private TypeRepo typeRepo;
 
   @Mock
-  private UserServiсe userServiсe;
+  private UserService userService;
 
   @InjectMocks
-  private TypeServiсeImpl typeService;
+  private TypeServiceImpl typeService;
 
   @Test
   public void getTypeByAuthenticationUser_ShouldReturnListOfTypes() {
@@ -43,7 +43,7 @@ public class TypeServiсeImplTest {
     type2.setCreator(user);
     List<Type> types = Arrays.asList(type1, type2);
 
-    when(userServiсe.getAuthenticationUser()).thenReturn(user);
+    when(userService.getAuthenticationUser()).thenReturn(user);
     when(typeRepo.findByCreator(user)).thenReturn(types);
 
     List<Type> result = typeService.getTypeByAuthenticationUser();
@@ -60,7 +60,7 @@ public class TypeServiсeImplTest {
     type.setName("Test");
     type.setName("Test description");
 
-    when(userServiсe.getAuthenticationUser()).thenReturn(user);
+    when(userService.getAuthenticationUser()).thenReturn(user);
     when(typeRepo.save(type)).thenReturn(type);
 
     Type result = typeService.saveType(type);

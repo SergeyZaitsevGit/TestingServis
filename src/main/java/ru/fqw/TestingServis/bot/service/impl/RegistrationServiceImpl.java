@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.serviсe.impl;
+package ru.fqw.TestingServis.bot.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,24 +8,24 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.repo.RegistrationRepo;
-import ru.fqw.TestingServis.bot.serviсe.RegistrationServiсe;
-import ru.fqw.TestingServis.bot.serviсe.TelegramUserServiсe;
+import ru.fqw.TestingServis.bot.service.RegistrationService;
+import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.UserService;
 
 @AllArgsConstructor
 @Service
-public class RegistrationServiсeImpl implements RegistrationServiсe {
+public class RegistrationServiceImpl implements RegistrationService {
 
   @Autowired
-  UserServiсe userServiсe;
+  UserService userService;
   @Autowired
-  TelegramUserServiсe telegramUserServiсe;
+  TelegramUserService telegramUserService;
   @Autowired
   RegistrationRepo registrationRepo; //Хранилище пользователей, который проходят регистрацию
   @Autowired
-  public RegistrationServiсeImpl(
+  public RegistrationServiceImpl(
       @Lazy TelegramBot telegramBot) { // используем ленивую подгрузку, чтобы избежать зацикленности
     this.telegramBot = telegramBot;
   }
@@ -34,7 +34,7 @@ public class RegistrationServiсeImpl implements RegistrationServiсe {
 
   public void registration(Update update) { //Обработка регистрации в телеграмм боте
     Message message = update.getMessage();
-    boolean isUserReg = telegramUserServiсe.telegramUserExistsByChatId(message.getChatId());
+    boolean isUserReg = telegramUserService.telegramUserExistsByChatId(message.getChatId());
     boolean isCommandReg = message.getText().equals("/reg");
     boolean isUserNowReg = registrationRepo.isUserpassesRegistration(message.getChatId());
     if (!isUserReg && !isCommandReg && !isUserNowReg) {
@@ -42,7 +42,7 @@ public class RegistrationServiсeImpl implements RegistrationServiсe {
           "Для продолжения работы вам необходимо зарегистрироваться. (/reg)");
 
     } else if (isCommandReg && !isUserNowReg) {
-      if (telegramUserServiсe.telegramUserExistsByChatId(message.getChatId())) {
+      if (telegramUserService.telegramUserExistsByChatId(message.getChatId())) {
         telegramBot.sendMessege(message.getChatId(), "Вы уже зарегестрированны.");
         return;
       }
@@ -59,10 +59,10 @@ public class RegistrationServiсeImpl implements RegistrationServiсe {
             "Введите почту человека, который будет иметь возможность отправлять вам тесты");
       } else if (telegramUser.getUserSetInvited().isEmpty()) {
         try {
-          User user = userServiсe.getUserByEmail(message.getText());
+          User user = userService.getUserByEmail(message.getText());
           telegramUser.getUserSetInvited().add(user);
           telegramUser.setChatId(message.getChatId());
-          telegramUserServiсe.saveTelegramUser(telegramUser);
+          telegramUserService.saveTelegramUser(telegramUser);
           telegramBot.sendMessege(message.getChatId(),
               telegramUser.getName() + ", вы успешно зарегестрировались.");
           registrationRepo.delite(message.getChatId());

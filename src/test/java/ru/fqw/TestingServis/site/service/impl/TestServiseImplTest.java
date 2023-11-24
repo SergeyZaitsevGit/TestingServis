@@ -23,8 +23,8 @@ import org.springframework.data.domain.Pageable;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TestRepo;
-import ru.fqw.TestingServis.site.service.UserServiсe;
-import ru.fqw.TestingServis.site.service.impls.TestServiсeImpl;
+import ru.fqw.TestingServis.site.service.UserService;
+import ru.fqw.TestingServis.site.service.impls.TestServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class TestServiseImplTest {
@@ -32,10 +32,10 @@ public class TestServiseImplTest {
     private TestRepo testRepo;
 
     @Mock
-    private UserServiсe userServiсe;
+    private UserService userService;
 
     @InjectMocks
-    private TestServiсeImpl testServise;
+    private TestServiceImpl testServise;
 
     @Test
     public void saveTest_WhenTestNotExists_SaveTest(){
@@ -45,14 +45,14 @@ public class TestServiseImplTest {
 
         when(testRepo.existsById(0L)).thenReturn(false);
         when(testRepo.save(test)).thenReturn(test);
-        when(userServiсe.getAuthenticationUser()).thenReturn(user);
+        when(userService.getAuthenticationUser()).thenReturn(user);
 
         ru.fqw.TestingServis.site.models.test.Test res = testServise.saveTest(test);
 
         assertEquals(res, test);
         assertEquals(res.getCreator(), user);
         verify(testRepo, times(1)).save(test);
-        verify(userServiсe, times(1)).getAuthenticationUser();
+        verify(userService, times(1)).getAuthenticationUser();
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestServiseImplTest {
 
         assertEquals(res, test);
         verify(testRepo, times(1)).save(test);
-        verify(userServiсe, times(0)).getAuthenticationUser();
+        verify(userService, times(0)).getAuthenticationUser();
     }
 
     @Test
@@ -85,7 +85,7 @@ public class TestServiseImplTest {
         List<ru.fqw.TestingServis.site.models.test.Test> tests = Stream.of(test1,test2).toList();
         Pageable pageable = PageRequest.of(0,10);
 
-        when(userServiсe.getAuthenticationUser()).thenReturn(testOwnerUser);
+        when(userService.getAuthenticationUser()).thenReturn(testOwnerUser);
         when(testRepo.findByCreator(pageable, testOwnerUser)).thenReturn(new PageImpl<>(tests,pageable,tests.size()));
 
         Page<ru.fqw.TestingServis.site.models.test.Test> result = testServise.getTestsByAuthenticationUser(pageable);
@@ -136,7 +136,7 @@ public class TestServiseImplTest {
         Page<ru.fqw.TestingServis.site.models.test.Test> testPage = new PageImpl<>(testList);
 
 
-        when(userServiсe.getAuthenticationUser()).thenReturn(user);
+        when(userService.getAuthenticationUser()).thenReturn(user);
         when(testRepo.findByCreatorAndNameContaining(pageable, user, "Test")).thenReturn(testPage);
 
         Page<ru.fqw.TestingServis.site.models.test.Test> result = testServise.getTestsByAuthenticationUserAndNameContaining(pageable, "Test");

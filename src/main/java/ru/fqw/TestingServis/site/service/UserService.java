@@ -3,7 +3,7 @@ package ru.fqw.TestingServis.site.service;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.site.models.user.User;
 
-public interface UserServiсe {
+public interface UserService {
 
   User saveUser(User user);
 

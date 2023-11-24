@@ -10,25 +10,25 @@ import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
 import java.util.ArrayList;
 import java.util.List;
-import ru.fqw.TestingServis.site.service.QuestionServiсe;
-import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.QuestionService;
+import ru.fqw.TestingServis.site.service.UserService;
 
 @Service
 @AllArgsConstructor
-public class QuestionServiсeImpl implements QuestionServiсe {
+public class QuestionServiceImpl implements QuestionService {
 
   QuestionRepo questionRepo;
-  UserServiсe userServiсe;
+  UserService userService;
 
   @Override
   public List<Question> getQuestionsByAuthenticationUser() {
-    return questionRepo.findByCreator(userServiсe.getAuthenticationUser());
+    return questionRepo.findByCreator(userService.getAuthenticationUser());
   }
 
   @Override
   public Question saveQuestion(Question question) {
     if (!questionRepo.existsById(question.getId())) {
-      User user = userServiсe.getAuthenticationUser();
+      User user = userService.getAuthenticationUser();
       question.setCreator(user);
     }
     return questionRepo.save(question);

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.repo.AnswerRepo;
-import ru.fqw.TestingServis.site.service.impls.AnswerServiсeImpl;
+import ru.fqw.TestingServis.site.service.impls.AnswerServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,7 +25,7 @@ public class AnswerServiceImplTest {
   private AnswerRepo answerRepo;
 
   @InjectMocks
-  private AnswerServiсeImpl answerService;
+  private AnswerServiceImpl answerService;
 
   @Test
   public void saveAnswerTest() {
