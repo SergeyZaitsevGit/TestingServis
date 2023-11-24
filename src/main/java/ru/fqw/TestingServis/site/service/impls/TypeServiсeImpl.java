@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.servise;
+package ru.fqw.TestingServis.site.service.impls;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,25 +7,31 @@ import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TypeRepo;
 import java.util.List;
+import ru.fqw.TestingServis.site.service.TypeServiсe;
+import ru.fqw.TestingServis.site.service.UserServiсe;
+
 
 @Service
 @AllArgsConstructor
-public class TypeServise {
+public class TypeServiсeImpl implements TypeServiсe {
 
   TypeRepo typeRepo;
-  UserServise userServise;
+  UserServiсe userServiсe;
 
+  @Override
   public List<Type> getTypeByAuthenticationUser() {
-    User user = userServise.getAuthenticationUser();
+    User user = userServiсe.getAuthenticationUser();
     return typeRepo.findByCreator(user);
   }
 
-  public Type createType(Type type) {
-    User user = userServise.getAuthenticationUser();
+  @Override
+  public Type saveType(Type type) {
+    User user = userServiсe.getAuthenticationUser();
     type.setCreator(user);
     return typeRepo.save(type);
   }
 
+  @Override
   public Type getTypeById(long id) {
     return typeRepo.findById(id).orElseThrow(
         () -> new ResourceNotFoundException("Type not found")

@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.servise.bot;
+package ru.fqw.TestingServis.bot.serviсe.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,45 +12,44 @@ import ru.fqw.TestingServis.bot.models.AnswerFromTelegramUser;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
 import ru.fqw.TestingServis.bot.repo.TestingRepo;
-import ru.fqw.TestingServis.bot.servise.ResultTestServise;
-import ru.fqw.TestingServis.bot.servise.TelegramUserServise;
+import ru.fqw.TestingServis.bot.serviсe.ResultTestServiсe;
+import ru.fqw.TestingServis.bot.serviсe.TelegramTestingServiсe;
+import ru.fqw.TestingServis.bot.serviсe.TelegramUserServiсe;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
-import ru.fqw.TestingServis.site.servise.TestServise;
+import ru.fqw.TestingServis.site.service.TestServiсe;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 
 @Service
-public class TelegramTestingServise {
+public class TelegramTestingServiсeImpl implements TelegramTestingServiсe {
 
   @Autowired
-  TelegramUserServise telegramUserServise;
+  TelegramUserServiсe telegramUserServiсe;
   @Qualifier("testingMapRepo") //Уточнение для возможности масштабирования
   @Autowired
   TestingRepo testingRepo;
   @Autowired
-  ResultTestServise resultTestServise;
+  ResultTestServiсe resultTestServiсe;
   @Autowired
   TelegramTestingHelper telegramTestingHelper;
 
   @Autowired
-  TestServise testServise;
+  TestServiсe testServiсe;
 
   @Autowired
-  public TelegramTestingServise(
+  public TelegramTestingServiсeImpl(
       @Lazy TelegramBot telegramBot) { // используем ленивую подгрузку, чтобы избежать зацикленности
     this.telegramBot = telegramBot;
   }
 
   private final TelegramBot telegramBot;
-
+  @Override
   public void testing(Update update) { //Обработка прохождения теста
 
     Message message = update.getMessage();
@@ -106,7 +105,7 @@ public class TelegramTestingServise {
           telegramBot.sendMessege(message.getChatId(), "Тест завершен");
           if (testingRepo.getChatIdsByTest(testFromTelegramUser).isEmpty()) {
             Test test = testFromTelegramUser.getTest();
-            testServise.updateTestActivById(test.getId(), false);
+            testServiсe.updateTestActivById(test.getId(), false);
           }
         } catch (NumberFormatException e) {
           telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. Повторите попытку.");
@@ -114,6 +113,23 @@ public class TelegramTestingServise {
           telegramBot.sendMessege(message.getChatId(), "Вы введи несуществующий вариант ответа.");
         }
       }
+    }
+  }
+
+  @Override
+  public void startTest(List<Long> tgUsersChatIds, Test test, String title) {
+    if (resultTestServiсe.existByTitle(title)) {
+      throw new ObjectAlreadyExistsExeption("Тестирование с таким названием уже существует");
+    }
+    for (long chatId : tgUsersChatIds) {
+      if (testingRepo.isUserHaveTest(chatId)) {
+        continue;
+      }
+      testingRepo.save(chatId, new TestFromTelegramUser(new Test(test), title));
+      telegramBot.sendMessege(
+          chatId,
+          "Внимание!\nДля вас активирован следующий тест:\n" + test + "\nДля начала введите /go"
+      );
     }
   }
 
@@ -134,7 +150,7 @@ public class TelegramTestingServise {
         return;                                              //Проверка не вышло ли время теста
       }
       Test test = testFromTelegramUser.getTest();
-      testServise.updateTestActivById(test.getId(), false);
+      testServiсe.updateTestActivById(test.getId(), false);
       List<Long> chatIds = testingRepo.getChatIdsByTest(testFromTelegramUser);
       for (Long chatId : chatIds) {
         resultSave(testFromTelegramUser, chatId);
@@ -159,12 +175,12 @@ public class TelegramTestingServise {
     ResultTest resultTest = new ResultTest();
     resultTest.setBall(testFromTelegramUser.getBall());
     resultTest.setTest(test);
-    resultTest.setTelegramUser(telegramUserServise.getTelegramUserByChatId(chatId));
+    resultTest.setTelegramUser(telegramUserServiсe.getTelegramUserByChatId(chatId));
     resultTest.setAnswerFromTelegramUserList(testFromTelegramUser.getAnswerFromTelegramUserList());
     resultTest.setTimeStart(testFromTelegramUser.getTimeStart());
     resultTest.setTimeEnd(testFromTelegramUser.getTimeEnd());
     resultTest.setTitle(testFromTelegramUser.getTitle());
-    resultTestServise.save(resultTest);
+    resultTestServiсe.saveResult(resultTest);
   }
 
   private void parseAnswer(TestFromTelegramUser testFromTelegramUser,
@@ -201,20 +217,5 @@ public class TelegramTestingServise {
     }
   }
 
-  public void startTest(List<Long> tgUsersChatIds, Test test, String title) {
-    if (resultTestServise.existByTitle(title)) {
-      throw new ObjectAlreadyExistsExeption("Тестирование с таким названием уже существует");
-    }
-    for (long chatId : tgUsersChatIds) {
-      if (testingRepo.isUserHaveTest(chatId)) {
-        continue;
-      }
-      testingRepo.save(chatId, new TestFromTelegramUser(new Test(test), title));
-      telegramBot.sendMessege(
-          chatId,
-          "Внимание!\nДля вас активирован следующий тест:\n" + test + "\nДля начала введите /go"
-      );
-    }
-  }
 
 }

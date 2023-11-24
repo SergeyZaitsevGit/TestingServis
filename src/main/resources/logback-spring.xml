@@ -20,7 +20,6 @@
 
     <root level="info">
         <appender-ref ref="STDOUT"/> <!-- Добавляем вывод в консоль -->
-        <appender-ref ref="SIFT"/>
         <appender-ref ref="OTHER_LOG_FILE"/>
     </root>
 

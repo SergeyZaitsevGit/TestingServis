@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.servise;
+package ru.fqw.TestingServis.site.service.impl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,28 +14,28 @@ import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.UserRepository;
-import ru.fqw.TestingServis.site.servise.UserServise;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import ru.fqw.TestingServis.site.service.impls.UserServiсeImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiseTest {
+public class UserServiсeImplTest {
 
   @Mock
   private UserRepository userRepository;
 
   @InjectMocks
-  private UserServise userServise;
+  private UserServiсeImpl userServise;
 
   @Test
   void getAuthenticationUser_AuthenticatedUser_ReturnsUser() {
     User expectedUser = new User();
-    String userEmail = "test@example.com1";
+    String userEmail = "test@example.com";
     expectedUser.setEmail(userEmail);
 
     Authentication authentication = org.mockito.Mockito.mock(Authentication.class);

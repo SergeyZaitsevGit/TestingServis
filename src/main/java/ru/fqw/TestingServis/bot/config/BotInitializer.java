@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.fqw.TestingServis.bot.servise.bot.TelegramBot;
+import ru.fqw.TestingServis.bot.serviсe.impl.TelegramBot;
 
 @Component
 public class BotInitializer {

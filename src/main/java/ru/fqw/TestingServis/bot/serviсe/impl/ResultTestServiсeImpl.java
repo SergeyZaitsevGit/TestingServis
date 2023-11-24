@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.servise;
+package ru.fqw.TestingServis.bot.serviсe.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
@@ -6,56 +6,46 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
-import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.repo.ResultsTestRepo;
-import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
+import ru.fqw.TestingServis.bot.serviсe.ResultTestServiсe;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
-import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
-import ru.fqw.TestingServis.site.servise.UserServise;
+import ru.fqw.TestingServis.site.service.UserServiсe;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class ResultTestServise {
+public class ResultTestServiсeImpl implements ResultTestServiсe {
 
   ResultsTestRepo resultsTestRepo;
-  UserServise userServise;
+  UserServiсe userServiсe;
   MongoTemplate mongoTemplate;
 
-  public void save(ResultTest resultTest) {
+  public void saveResult(ResultTest resultTest) {
     resultsTestRepo.save(resultTest);
   }
 
+  @Override
   public ResultTest getResultTestById(String id) {
     return resultsTestRepo.findById(id).orElseThrow(
         () -> new ResourceNotFoundException("Результат тестирования не найден")
     );
   }
-
+  @Override
   public Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable) {
-    BaseUser user = userServise.getAuthenticationUser();
+    BaseUser user = userServiсe.getAuthenticationUser();
     return resultsTestRepo.findResultTestByTestBaseUser(pageable, user);
   }
 
-  public Map<String, List<ResultTest>> getResultTestByAuthenticationUserSortetByTesting(
-      Pageable pageable) {
-    Map<String, List<ResultTest>> res = getResultTestByAuthenticationUser(pageable).stream()
-        .collect(Collectors.groupingBy(ResultTest::getTitle));
-    return res;
-  }
-
+  @Override
   public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb,
       String keyword) {
     GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");
-    BaseUser user = userServise.getAuthenticationUser();
+    BaseUser user = userServiсe.getAuthenticationUser();
     Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email")
         .is(user.getEmail());
     Aggregation aggregation;
@@ -88,7 +78,7 @@ public class ResultTestServise {
         finalResultMap.entrySet());
     return new PageImpl<>(paginatedResult, pageable, mappedResults.size());
   }
-
+  @Override
   public boolean existByTitle(String title) {
     return resultsTestRepo.existsByTitle(title);
   }

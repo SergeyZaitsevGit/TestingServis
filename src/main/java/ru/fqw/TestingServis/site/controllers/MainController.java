@@ -1,6 +1,6 @@
 package ru.fqw.TestingServis.site.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.fqw.TestingServis.site.models.Type;
-import ru.fqw.TestingServis.site.servise.TypeServise;
+import ru.fqw.TestingServis.site.service.TypeServiсe;
 import java.util.List;
 
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MainController {
 
-  TypeServise typeServise;
+  final TypeServiсe typeServiсe;
 
   @GetMapping("/")
   public String greeting(Model model) {
@@ -32,7 +32,7 @@ public class MainController {
 
   @GetMapping("/lk")
   public String lk(Model model) {
-    List<Type> types = typeServise.getTypeByAuthenticationUser();
+    List<Type> types = typeServiсe.getTypeByAuthenticationUser();
     model.addAttribute("types", types);
     model.addAttribute("type", new Type());
     return "lk";
@@ -41,7 +41,7 @@ public class MainController {
   @PostMapping("/lk")
   public String lk(Model model, @ModelAttribute Type type) {
     if (type != null) {
-      typeServise.createType(type);
+      typeServiсe.saveType(type);
     }
 
     return "redirect:lk";

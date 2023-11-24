@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.servise;
+package ru.fqw.TestingServis.site.service.impls;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,42 +8,49 @@ import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
-
 import java.util.ArrayList;
 import java.util.List;
+import ru.fqw.TestingServis.site.service.QuestionServiсe;
+import ru.fqw.TestingServis.site.service.UserServiсe;
 
 @Service
 @AllArgsConstructor
-public class QuestionServise {
+public class QuestionServiсeImpl implements QuestionServiсe {
 
   QuestionRepo questionRepo;
-  UserServise userServise;
+  UserServiсe userServiсe;
 
+  @Override
   public List<Question> getQuestionsByAuthenticationUser() {
-    return questionRepo.findByCreator(userServise.getAuthenticationUser());
+    return questionRepo.findByCreator(userServiсe.getAuthenticationUser());
   }
 
+  @Override
   public Question saveQuestion(Question question) {
-    User user = userServise.getAuthenticationUser();
-    question.setCreator(user);
-    question.getBaseAnswerList().addAll(question.getAnswerList());
+    if (!questionRepo.existsById(question.getId())) {
+      User user = userServiсe.getAuthenticationUser();
+      question.setCreator(user);
+    }
     return questionRepo.save(question);
   }
 
+  @Override
   public List<Question> getQuestionsByType(Type type) {
     return questionRepo.findByType(type);
   }
 
+  @Override
   public List<Question> getQuestionsByTest(Test test) {
     return new ArrayList<>(test.getQuestionSet());
-
   }
 
+  @Override
   public Question getQuestionById(long questionId) {
     return questionRepo.findById(questionId)
         .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
   }
 
+  @Override
   public void deliteQuestionById(long questionId) {
     questionRepo.deleteById(questionId);
   }

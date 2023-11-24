@@ -45,11 +45,14 @@ public class AnswerFromTelegramUser {
   }
 
   @Data
-  @AllArgsConstructor
-  private static class AnswerWhithSelect {
+  private static class AnswerWhithSelect extends BaseAnswer{
 
-    private BaseAnswer answer;
     boolean selected = false;
+
+    public AnswerWhithSelect(BaseAnswer baseAnswer, boolean selected) {
+      super(baseAnswer);
+      this.selected = selected;
+    }
   }
 }
 

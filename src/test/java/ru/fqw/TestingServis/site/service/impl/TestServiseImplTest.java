@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.servise;
+package ru.fqw.TestingServis.site.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,17 +23,19 @@ import org.springframework.data.domain.Pageable;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TestRepo;
+import ru.fqw.TestingServis.site.service.UserServiсe;
+import ru.fqw.TestingServis.site.service.impls.TestServiсeImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class TestServiseTest {
+public class TestServiseImplTest {
     @Mock
     private TestRepo testRepo;
 
     @Mock
-    private UserServise userServise;
+    private UserServiсe userServiсe;
 
     @InjectMocks
-    private TestServise testServise;
+    private TestServiсeImpl testServise;
 
     @Test
     public void saveTest_WhenTestNotExists_SaveTest(){
@@ -43,14 +45,14 @@ public class TestServiseTest {
 
         when(testRepo.existsById(0L)).thenReturn(false);
         when(testRepo.save(test)).thenReturn(test);
-        when(userServise.getAuthenticationUser()).thenReturn(user);
+        when(userServiсe.getAuthenticationUser()).thenReturn(user);
 
         ru.fqw.TestingServis.site.models.test.Test res = testServise.saveTest(test);
 
         assertEquals(res, test);
         assertEquals(res.getCreator(), user);
         verify(testRepo, times(1)).save(test);
-        verify(userServise, times(1)).getAuthenticationUser();
+        verify(userServiсe, times(1)).getAuthenticationUser();
     }
 
     @Test
@@ -67,11 +69,11 @@ public class TestServiseTest {
 
         assertEquals(res, test);
         verify(testRepo, times(1)).save(test);
-        verify(userServise, times(0)).getAuthenticationUser();
+        verify(userServiсe, times(0)).getAuthenticationUser();
     }
 
     @Test
-    public void testgetTestsByAuthenticationUser_WhenUserAuthentication_ReturnTest(){
+    public void testGetTestsByAuthenticationUser_WhenUserAuthentication_ReturnTestPage(){
         User testOwnerUser = new User();
         testOwnerUser.setUsername("testUser");
 
@@ -83,7 +85,7 @@ public class TestServiseTest {
         List<ru.fqw.TestingServis.site.models.test.Test> tests = Stream.of(test1,test2).toList();
         Pageable pageable = PageRequest.of(0,10);
 
-        when(userServise.getAuthenticationUser()).thenReturn(testOwnerUser);
+        when(userServiсe.getAuthenticationUser()).thenReturn(testOwnerUser);
         when(testRepo.findByCreator(pageable, testOwnerUser)).thenReturn(new PageImpl<>(tests,pageable,tests.size()));
 
         Page<ru.fqw.TestingServis.site.models.test.Test> result = testServise.getTestsByAuthenticationUser(pageable);
@@ -113,6 +115,32 @@ public class TestServiseTest {
         when(testRepo.findById(testId)).thenReturn(Optional.empty());
 
         assertThrowsExactly(ResourceNotFoundException.class, () -> testServise.getTestById(testId));
+    }
+
+    @Test
+    public void testGetTestsByAuthenticationUserAndNameContaining() {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUser");
+
+        ru.fqw.TestingServis.site.models.test.Test test1 = new ru.fqw.TestingServis.site.models.test.Test();
+        test1.setCreator(user);
+        test1.setName("Test1");
+        ru.fqw.TestingServis.site.models.test.Test test2 = new ru.fqw.TestingServis.site.models.test.Test();
+        test2.setCreator(user);
+        test2.setName("Test2");
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<ru.fqw.TestingServis.site.models.test.Test> testList =  Stream.of(test1,test2).toList();
+        Page<ru.fqw.TestingServis.site.models.test.Test> testPage = new PageImpl<>(testList);
+
+
+        when(userServiсe.getAuthenticationUser()).thenReturn(user);
+        when(testRepo.findByCreatorAndNameContaining(pageable, user, "Test")).thenReturn(testPage);
+
+        Page<ru.fqw.TestingServis.site.models.test.Test> result = testServise.getTestsByAuthenticationUserAndNameContaining(pageable, "Test");
+        assertEquals(2, result.getTotalElements());
     }
 
 }

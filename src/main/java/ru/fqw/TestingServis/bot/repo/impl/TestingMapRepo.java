@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.bot.repo;
+package ru.fqw.TestingServis.bot.repo.impl;
 
 import org.springframework.stereotype.Component;
 import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import ru.fqw.TestingServis.bot.repo.TestingRepo;
 
 @Component
-public class TestingMapRepo implements TestingRepo{
+public class TestingMapRepo implements TestingRepo {
 private Map<Long, TestFromTelegramUser> testMap = new HashMap<>();
     @Override
     public void save(Long chatId, TestFromTelegramUser testFromTelegramUser) {

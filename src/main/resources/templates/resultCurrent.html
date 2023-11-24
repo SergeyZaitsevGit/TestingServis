@@ -51,21 +51,21 @@
                                             <ol class="list-group list-group-numbered">
                                                 <span th:if="!${#strings.equals(el.question.typeAnswerOptions, 'FREE_ANSWER')}">
                                                     <span th:each="allAnswer : ${el.getAnswerWhithSelect()}">
-                                                         <li th:if="${allAnswer.selected && allAnswer.answer.corrected}"
+                                                         <li th:if="${allAnswer.selected && allAnswer.corrected}"
                                                              class="list-group-item correct-select"
-                                                             th:text="${allAnswer.answer.text}"></li>
+                                                             th:text="${allAnswer.text}"></li>
 
-                                                            <li th:if="${allAnswer.selected && !allAnswer.answer.corrected}"
+                                                            <li th:if="${allAnswer.selected && !allAnswer.corrected}"
                                                                 class="list-group-item uncorrect-select"
-                                                                th:text="${allAnswer.answer.text}"></li>
+                                                                th:text="${allAnswer.text}"></li>
 
-                                                             <li th:if="${!allAnswer.selected && allAnswer.answer.corrected}"
+                                                             <li th:if="${!allAnswer.selected && allAnswer.corrected}"
                                                                  class="list-group-item correct-no-select"
-                                                                 th:text="${allAnswer.answer.text}"></li>
+                                                                 th:text="${allAnswer.text}"></li>
 
-                                                            <li th:if="${!allAnswer.selected && !allAnswer.answer.corrected}"
+                                                            <li th:if="${!allAnswer.selected && !allAnswer.corrected}"
                                                                 class="list-group-item"
-                                                                th:text="${allAnswer.answer.text}"></li>
+                                                                th:text="${allAnswer.text}"></li>
 
                                                     </span>
                                                 </span>
@@ -73,9 +73,9 @@
                                                     <span><b>Ответ пользователя: </b></span><span th:text="${el.freeAnswer}"/>
                                                      <form th:action="@{/result/{id}(id = ${resultTest.id})}" method="post" class="row"
                                                            id="formTest">
-                                                         <label class="form-label col-10 fs-6"><b>Обновите балл, если это необходимо: </b></label>
+                                                         <label class="form-label col-9 fs-6"><b>Обновите балл, если это необходимо: </b></label>
                                                         <input name="ballFree"  type="number" min="0" th:max="${el.question.ball}"  class="form-control col"
-                                                               th:value="${el.ballBehindQuestion}" style="width: 20%"/>
+                                                               th:value="${el.ballBehindQuestion}"/>
                                                           <input hidden name="index"  type="number"  class="form-control" th:value="${state.index}"
                                                                  style="width: 20%"/>
                                                          <button type="submit" class="btn btn-primary col">Обновить</button>

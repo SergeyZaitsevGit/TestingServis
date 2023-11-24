@@ -1,4 +1,4 @@
-package ru.fqw.TestingServis.site.servise;
+package ru.fqw.TestingServis.site.service.impls;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,28 +8,33 @@ import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.repo.AnswerRepo;
 
 import java.util.List;
+import ru.fqw.TestingServis.site.service.AnswerServiсe;
 
 @Service
 @AllArgsConstructor
-public class AnswerServise {
+public class AnswerServiсeImpl implements AnswerServiсe {
 
   AnswerRepo answerRepo;
 
+  @Override
   public Answer saveAnswer(Answer answer, Question question) {
     answer.setQuestion(question);
     return answerRepo.save(answer);
   }
 
+  @Override
   public void delAnswerById(long answerId) {
     answerRepo.deleteById(answerId);
   }
 
+  @Override
   public Answer getAnswerById(long answerId) {
     return answerRepo.findById(answerId).orElseThrow(
         () -> new ResourceNotFoundException("Вариант ответа не найден")
     );
   }
 
+  @Override
   public List<Answer> getAnswersByQuestion(Question question) {
     return answerRepo.findByQuestion(question);
   }
