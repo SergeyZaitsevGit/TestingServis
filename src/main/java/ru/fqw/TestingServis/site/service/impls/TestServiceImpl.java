@@ -23,7 +23,7 @@ public class TestServiceImpl implements TestService {
 
   @Override
   public Test saveTest(Test test) {
-    if (!testRepo.existsById(test.getId())) {
+    if (test.getId() == null || !testRepo.existsById(test.getId())) {
       User user = userService.getAuthenticationUser();
       test.setCreator(user);
       test.setDateCreated(new Timestamp(System.currentTimeMillis()));
