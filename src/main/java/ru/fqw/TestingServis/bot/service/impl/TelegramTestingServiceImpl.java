@@ -44,7 +44,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
 
   @Autowired
   public TelegramTestingServiceImpl(
-      @Lazy TelegramBot telegramBot) { // используем ленивую подгрузку, чтобы избежать зацикленности
+      @Lazy TelegramBot telegramBot) { //Используем ленивую подгрузку, чтобы избежать зацикленности
     this.telegramBot = telegramBot;
   }
 
@@ -135,7 +135,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
 
   @Scheduled(cron = "0 * * * * *")
   // Вызываем метод раз в минуту
-  private void endTestByTime() {                                                                                      // Пробегаем по всем активным тестам, и закрываем их если время на них вышло
+  private void endTestByTime() {// Пробегаем по всем активным тестам, и закрываем их если время на них вышло
     List<TestFromTelegramUser> testsFromTelegramUsers = testingRepo.getAll();
     if (testsFromTelegramUsers == null) {
       return;
@@ -146,8 +146,8 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
       }
       long timeStart = testFromTelegramUser.getTimeStart().getTime();
       long timeEnd = (testFromTelegramUser.getTest().getTimeActiv() * 60000L);
-      if (timeStart + timeEnd > System.currentTimeMillis()) {
-        return;                                              //Проверка не вышло ли время теста
+      if (timeStart + timeEnd > System.currentTimeMillis()) { //Проверка не вышло ли время теста
+        return;
       }
       Test test = testFromTelegramUser.getTest();
       testService.updateTestActivById(test.getId(), false);

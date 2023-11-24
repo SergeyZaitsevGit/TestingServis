@@ -19,13 +19,13 @@ public class MainController {
   final TypeService typeService;
 
   @GetMapping("/")
-  public String greeting(Model model) {
+  public String home(Model model) {
     model.addAttribute("title", "Главная страница");
     return "home";
   }
 
   @GetMapping("/main")
-  public String greeting3(Model model) {
+  public String mainPage(Model model) {
     model.addAttribute("name", SecurityContextHolder.getContext().getAuthentication().getName());
     return "main";
   }

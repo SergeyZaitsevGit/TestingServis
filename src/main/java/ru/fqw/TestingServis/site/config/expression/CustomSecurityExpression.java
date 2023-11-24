@@ -33,8 +33,6 @@ public class CustomSecurityExpression {
 
   public boolean canAccessAnswer(
       long answerId) { //Проверка является ли пользователь владельцом вопроса, с которым хочет взаимодействовать
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
     long questionId = answerService.getAnswerById(answerId).getQuestion().getId();
     return canAccessQuestion(questionId);
   }
