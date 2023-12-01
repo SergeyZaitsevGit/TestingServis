@@ -14,5 +14,7 @@ public interface ResultTestService {
       String keyword);
   boolean existByTitle(String title);
 
+  List<ResultTest> getResultsByAuthenticationUserAndTitle(String title);
+
 
 }

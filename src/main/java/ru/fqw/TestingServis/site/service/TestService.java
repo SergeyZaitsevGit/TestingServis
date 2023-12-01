@@ -17,4 +17,6 @@ public interface TestService {
 
   void updateTestActivById(Long testId, boolean newActivValue);
 
+  boolean existTestById(Long testId);
+
 }

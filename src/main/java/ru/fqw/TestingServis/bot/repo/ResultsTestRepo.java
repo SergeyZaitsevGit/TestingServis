@@ -13,7 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface ResultsTestRepo extends MongoRepository<ResultTest, String> {
-    Page<ResultTest> findResultTestByTestBaseUser(Pageable pageable, BaseUser user);
-    Page<ResultTest> findResultTestByTestBaseUserAndTest(Pageable pageable, BaseUser user, BaseTest test);
-    boolean existsByTitle(String title);
+
+  Page<ResultTest> findResultTestByTestBaseUser(Pageable pageable, BaseUser user);
+
+  boolean existsByTitle(String title);
+
+  List<ResultTest> findResultTestsByTestBaseUserAndTitle(BaseUser baseUser, String title);
+
+  List<ResultTest> findResultTestsByTest(BaseTest baseTest);
 }

@@ -41,16 +41,6 @@ public class AnswerFromTelegramUser {
     return result;
   }
 
-  @Data
-  private static class AnswerWhithSelect extends BaseAnswer{
-
-    boolean selected = false;
-
-    public AnswerWhithSelect(BaseAnswer baseAnswer, boolean selected) {
-      super(baseAnswer);
-      this.selected = selected;
-    }
-  }
 }
 
 
