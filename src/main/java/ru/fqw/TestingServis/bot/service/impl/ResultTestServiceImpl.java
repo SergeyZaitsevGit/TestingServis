@@ -83,4 +83,8 @@ public class ResultTestServiceImpl implements ResultTestService {
     return resultsTestRepo.existsByTitle(title);
   }
 
+  public List<ResultTest> getResultsByAuthenticationUserAndTitle(String title){
+    BaseUser baseUser = userService.getAuthenticationUser();
+    return resultsTestRepo.findResultTestsByTestBaseUserAndTitle(baseUser,title);
+  }
 }

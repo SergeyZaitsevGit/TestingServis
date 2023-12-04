@@ -56,4 +56,8 @@ public class TestServiceImpl implements TestService {
     testRepo.updateTestActivById(testId, newActivValue);
   }
 
+  @Override
+  public boolean existTestById(Long testId) {
+    return testRepo.existsById(testId);
+  }
 }

@@ -1,106 +1,147 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="../static/css/main.css" rel="stylesheet">
-    <script>
-        function clearSearch() {
-        window.location = "[[@{/result}]]";
-    }
-    </script>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+  <link href="../static/css/main.css" rel="stylesheet">
+  <script>
+    function clearSearch() {
+    window.location = "[[@{/result}]]";
+}
+  </script>
 </head>
 <header th:insert="~{blocks/header :: header}"></header>
 <body>
 <div class="container h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-            <div class="card text-black" style="border-radius: 25px;">
-                <div class="card-body p-md-5">
-                    <div class="row justify-content-center">
-                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты тестирований</p>
-                        <form th:action="@{result}" class="row pb-3">
-                            <label class="form-label h4">Поиск:</label>
-                            <input class="form-control col" type="text" name="keyword" id="keyword" size="50"
-                                   th:value="${keyword}" required/>
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-lg-12 col-xl-11">
+      <div class="card text-black" style="border-radius: 25px;">
+        <div class="card-body p-md-5">
+          <div class="row justify-content-center">
+            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты тестирований</p>
+            <form th:action="@{result}" class="row pb-3">
+              <label class="form-label h4">Поиск:</label>
+              <input class="form-control col" type="text" name="keyword" id="keyword" size="50"
+                     th:value="${keyword}" required/>
 
-                            <input class="btn btn-primary col-1" type="submit" value="Искать"/>
+              <input class="btn btn-primary col-1" type="submit" value="Искать"/>
 
-                            <input type="text" name="page" id="page" th:value="0" hidden/>
-                            <input type="text" name="size" id="size" th:value="${resultsGroupedByTestName.getSize()}" hidden/>
+              <input type="text" name="page" id="page" th:value="0" hidden/>
+              <input type="text" name="size" id="size"
+                     th:value="${resultsGroupedByTestName.getSize()}" hidden/>
 
 
-                        </form>
-                        <div class="row pb-3">
-                            <input class="btn btn-primary col-md-2 mx-auto" type="button" value="Показать все" id="btnClear"
-                                   onclick="clearSearch()"/>
-                        </div>
-                        <div class="accordion accordion-flush" id="accordionFlushExample">
-                            <div class="accordion-item" th:each="el,state : ${resultsGroupedByTestName}">
-                                <h2 class="accordion-header" th:id="flush-heading + ${state.index}">
-                                    <div class="row">
-                                        <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse"
-                                                th:data-bs-target="|#flush-collapse${state.index}|"
-                                                aria-expanded="false"
-                                                th:aria-controls="flush-collapse + ${state.index}">
-                                            <div th:text="${el.key}"/>
-                                        </button>
-                                    </div>
-                                </h2>
-                                <div th:id="flush-collapse + ${state.index}" class="accordion-collapse collapse"
-                                     data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <div class="accordion-body">
-                                            <p class="fs-6 "><b>Тест: </b><a th:href="|/test/${el.value.get(0).test.id}" th:text="${el.value.get(0).test.name}"/></p>
-                                            <p class="fs-6"><b>Время на тест: </b><span th:text="${el.value.get(0).test.timeActiv}"/></p>
-                                            <p class="fs-6"><b>Количество людей, прошедших тест: </b><span th:text="${el.value.size()}"/></p>
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th scope="col">Пользователь</th>
-                                                    <th scope="col">Время начала</th>
-                                                    <th scope="col">Время окончания</th>
-                                                    <th scope="col">Балл</th>
-                                                    <th scope="col">Подробнее</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="resultTest : ${el.value}">
-                                                    <td><span th:text="${resultTest.telegramUser.name}"/> <span
-                                                            th:text="${resultTest.telegramUser.surname}"/></td>
-                                                    <td th:text="${resultTest.getFormatedTimeStart()}"></td>
-                                                    <td th:text="${resultTest.getFormatedTimeEnd()}"></td>
-                                                    <td><span th:text="${resultTest.ball}"/> из <span th:text="${resultTest.test.maxBall}"></span></td>
-                                                    <td><a th:href="|result/${resultTest.id}">Подробнее</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div th:replace="~{blocks/pagination :: pagination(url = 'result',  page = ${resultsGroupedByTestName}, keyword = ${keyword}==null ? '' : '&keyword=' + ${keyword})}"></div>
-                    </div>
-                     </div>
-                </div>
+            </form>
+            <div class="row pb-3">
+              <input class="btn btn-primary col-md-2 mx-auto" type="button" value="Показать все"
+                     id="btnClear"
+                     onclick="clearSearch()"/>
             </div>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion-item" th:each="el,state : ${resultsGroupedByTestName}">
+                <h2 class="accordion-header" th:id="flush-heading + ${state.index}">
+                  <div class="row">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse"
+                            th:data-bs-target="|#flush-collapse${state.index}|"
+                            aria-expanded="false"
+                            th:aria-controls="flush-collapse + ${state.index}">
+                      <div th:text="${el.key}"/>
+                    </button>
+                  </div>
+                </h2>
+                <div th:id="flush-collapse + ${state.index}" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body">
+                    <div class="accordion-body">
+                      <p class="fs-6 "><b>Тест: </b><a th:href="|/test/${el.value.get(0).test.id}"
+                                                       th:text="${el.value.get(0).test.name}"/></p>
+                      <p class="fs-6"><b>Время на тест: </b><span
+                          th:text="${el.value.get(0).test.timeActiv}"/></p>
+                      <p class="fs-6"><b>Количество людей, прошедших тест: </b><span
+                          th:text="${el.value.size()}"/></p>
+                      <p class="text-center h4 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты
+                        тестирования</p>
+                      <table class="table">
+                        <thead>
+                        <tr>
+                          <th scope="col">Пользователь</th>
+                          <th scope="col">Время начала</th>
+                          <th scope="col">Время окончания</th>
+                          <th scope="col">Балл</th>
+                          <th scope="col">Подробнее</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="resultTest : ${el.value}">
+                          <td><span th:text="${resultTest.telegramUser.name}"/> <span
+                              th:text="${resultTest.telegramUser.surname}"/></td>
+                          <td th:text="${resultTest.getFormatedTimeStart()}"></td>
+                          <td th:text="${resultTest.getFormatedTimeEnd()}"></td>
+                          <td><span th:text="${resultTest.ball}"/> из <span
+                              th:text="${resultTest.test.maxBall}"></span></td>
+                          <td><a th:href="|result/${resultTest.id}">Подробнее</a></td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+                      <p class="text-center h4 fw-bold mb-5 mx-1 mx-md-4 mt-4">Анализ
+                        результатов</p>
+                      <table th:if="${analysisQuestionMap.get(el.key).size} > 0" class="table">
+                        <thead>
+                        <tr>
+                          <th scope="col">Вопрос</th>
+                          <th scope="col">Средний балл</th>
+                          <th scope="col">Процент выполнения</th>
+                          <th scope="col">Самые частые ответы</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="analiysisQuestion : ${analysisQuestionMap.get(el.key)}">
+                          <td th:text="${analiysisQuestion.baseQuestion.text}"></td>
+                          <td th:text="${analiysisQuestion.avgBall}"></td>
+                          <td th:text="${analiysisQuestion.percentCorrected}"></td>
+                          <td>
+                                                        <span
+                                                            th:each="answer, state:${analiysisQuestion.mostFrequentAnswers}">
+                                                        <span th:text="${answer.text}"/>
+                                                        <span
+                                                            th:if="${state.index} !=  ${analiysisQuestion.mostFrequentAnswers.size}-1">,</span>
+                                                    </span>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      <span th:if="${analysisQuestionMap.get(el.key).size} == 0"
+                            class="text-danger">Данные об аналитике невозможно получить, поскольку тест был удален</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+                th:replace="~{blocks/pagination :: pagination(url = 'result',  page = ${resultsGroupedByTestName}, keyword = ${keyword}==null ? '' : '&keyword=' + ${keyword})}"></div>
+          </div>
         </div>
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -43,7 +43,7 @@ public class MainController {
     if (type != null) {
       typeService.saveType(type);
     }
-
     return "redirect:lk";
   }
+
 }
