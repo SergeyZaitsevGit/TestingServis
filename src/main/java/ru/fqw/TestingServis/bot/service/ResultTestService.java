@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.fqw.TestingServis.bot.models.ResultTest;
+import ru.fqw.TestingServis.site.models.test.BaseTest;
 
 public interface ResultTestService {
    void saveResult(ResultTest resultTest);
@@ -16,5 +17,6 @@ public interface ResultTestService {
 
   List<ResultTest> getResultsByAuthenticationUserAndTitle(String title);
 
+  public List<ResultTest> getResultsByTest(BaseTest baseTest);
 
 }

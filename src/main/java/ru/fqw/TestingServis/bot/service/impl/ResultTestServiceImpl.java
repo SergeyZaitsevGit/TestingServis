@@ -12,6 +12,7 @@ import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.repo.ResultsTestRepo;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
+import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 import ru.fqw.TestingServis.site.service.UserService;
 
@@ -86,5 +87,9 @@ public class ResultTestServiceImpl implements ResultTestService {
   public List<ResultTest> getResultsByAuthenticationUserAndTitle(String title){
     BaseUser baseUser = userService.getAuthenticationUser();
     return resultsTestRepo.findResultTestsByTestBaseUserAndTitle(baseUser,title);
+  }
+
+  public List<ResultTest> getResultsByTest(BaseTest baseTest){
+    return resultsTestRepo.findResultTestsByTest(baseTest);
   }
 }

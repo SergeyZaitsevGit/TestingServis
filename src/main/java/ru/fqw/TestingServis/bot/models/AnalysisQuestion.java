@@ -6,7 +6,6 @@ import lombok.Data;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
 
-//TODO фабрицный метод
 @Data
 public class AnalysisQuestion {
 

@@ -20,6 +20,7 @@ import ru.fqw.TestingServis.bot.service.ResultAnalysisServise;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
+import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.service.AnswerService;
 import ru.fqw.TestingServis.site.service.TestService;
@@ -41,6 +42,11 @@ public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
     List<ResultTest> resultTests = resultTestService.getResultsByAuthenticationUserAndTitle(
         titleTesting);
     return analysisQuestionByResult(resultTests);
+  }
+
+  @Override
+  public List<AnalysisQuestion> getQusetionsAnalysesByTest(BaseTest test) {
+    return analysisQuestionByResult(resultTestService.getResultsByTest(test));
   }
 
   /**

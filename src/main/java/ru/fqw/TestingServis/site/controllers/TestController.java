@@ -11,13 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import ru.fqw.TestingServis.bot.models.AnalysisQuestion;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
+import ru.fqw.TestingServis.bot.service.ResultAnalysisServise;
 import ru.fqw.TestingServis.bot.service.TelegramTestingService;
 import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.models.*;
 import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
 import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
+import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.repo.TestRepo;
 import ru.fqw.TestingServis.site.service.AnswerService;
@@ -40,6 +43,7 @@ public class TestController {
   final TelegramUserService telegramUserService;
   final TelegramTestingService testingServise;
   final TestRepo testRepo;
+  final ResultAnalysisServise resultAnalysisServise;
 
   @GetMapping("/test")
   public String tests(Model model, @PageableDefault(
@@ -69,6 +73,15 @@ public class TestController {
     model.addAttribute("telegramUsers", telegramUsers);
     model.addAttribute("error", null);
     return "testCurred";
+  }
+
+  @PreAuthorize("@customSecurityExpression.canAccessTest(#testId)")
+  @GetMapping("/test/analysis/{testId}")
+  public String testCurredAnalysis(@PathVariable Long testId, Model model) {
+    BaseTest baseTest = testService.getTestById(testId);
+    List<AnalysisQuestion> analysisQuestionList = resultAnalysisServise.getQusetionsAnalysesByTest(baseTest);
+    model.addAttribute("analysisQuestionList", analysisQuestionList);
+    return "testAnalysis";
   }
 
   @GetMapping("/test/new")
