@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
@@ -19,9 +20,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "test")
+
 public class Test extends BaseTest {
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
       name = "TestLikeQuestion",
       joinColumns = @JoinColumn(name = "test_id"),

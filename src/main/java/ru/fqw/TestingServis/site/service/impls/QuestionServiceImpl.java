@@ -1,5 +1,7 @@
 package ru.fqw.TestingServis.site.service.impls;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
@@ -19,6 +21,7 @@ public class QuestionServiceImpl implements QuestionService {
 
   QuestionRepo questionRepo;
   UserService userService;
+  EntityManager entityManager;
 
   @Override
   public List<Question> getQuestionsByAuthenticationUser() {
@@ -27,7 +30,7 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   public Question saveQuestion(Question question) {
-    if (!questionRepo.existsById(question.getId())) {
+    if (question.getId() == null) {
       User user = userService.getAuthenticationUser();
       question.setCreator(user);
     }
@@ -53,6 +56,16 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public void deliteQuestionById(long questionId) {
     questionRepo.deleteById(questionId);
+  }
+
+  @Override
+  @Transactional
+  public Question updateQuestion(Question question){
+    Question updatedQuestion = getQuestionById(question.getId());
+      if (question.getText() != null) updatedQuestion.setText(question.getText());
+      if (question.getType() != null) updatedQuestion.setType(question.getType());
+      if (question.getBall() != 0) updatedQuestion.setBall(question.getBall());
+   return questionRepo.save(updatedQuestion);
   }
 
 }

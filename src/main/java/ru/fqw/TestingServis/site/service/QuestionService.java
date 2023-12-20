@@ -19,4 +19,6 @@ public interface QuestionService {
 
   Question saveQuestion(Question question);
 
+  Question updateQuestion(Question question);
+
 }
