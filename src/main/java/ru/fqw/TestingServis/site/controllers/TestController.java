@@ -24,6 +24,7 @@ import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.repo.TestRepo;
 import ru.fqw.TestingServis.site.service.AnswerService;
+import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.service.QuestionService;
 import ru.fqw.TestingServis.site.service.TestService;
 import ru.fqw.TestingServis.site.service.TypeService;
@@ -44,6 +45,7 @@ public class TestController {
   final TelegramTestingService testingServise;
   final TestRepo testRepo;
   final ResultAnalysisServise resultAnalysisServise;
+  final GroupService groupService;
 
   @GetMapping("/test")
   public String tests(Model model, @PageableDefault(
@@ -69,8 +71,8 @@ public class TestController {
     List<Question> questions = questionService.getQuestionsByTest(test);
     model.addAttribute("test", test);
     model.addAttribute("questions", questions);
-    List<TelegramUser> telegramUsers = telegramUserService.getTelegramUserByAuthenticationUser();
-    model.addAttribute("telegramUsers", telegramUsers);
+    List<Group> groupList = groupService.getByAuthenticationUser();
+    model.addAttribute("groupList", groupList);
     model.addAttribute("error", null);
     return "testCurred";
   }

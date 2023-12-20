@@ -29,7 +29,7 @@ public class Type {
     @org.springframework.data.annotation.Transient
     private List<Question> questionList;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User creator;
