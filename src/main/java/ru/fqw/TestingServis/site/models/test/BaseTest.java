@@ -42,11 +42,11 @@ public class BaseTest {
   @Transient
   protected BaseUser baseUser;
 
-  @Transient
-  protected int countQuestion;
-
-  @Transient
-  protected int maxBall;
+//  @Transient
+//  protected int countQuestion;
+//
+//  @Transient
+//  protected int maxBall;
 
   public String getFormatedDataCreated() {
     SimpleDateFormat sdf =
@@ -64,7 +64,5 @@ public class BaseTest {
     this.mixQuestions = baseTest.mixQuestions;
     this.mixAnswers = baseTest.mixAnswers;
     this.baseUser = baseTest.baseUser;
-    this.countQuestion = baseTest.countQuestion;
-    this.maxBall = baseTest.getMaxBall();
   }
 }

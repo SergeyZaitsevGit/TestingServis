@@ -26,7 +26,7 @@ public class Question extends BaseQuestion{
     @org.springframework.data.annotation.Transient
     private Set<Test> testSet = new LinkedHashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     @org.springframework.data.annotation.Transient
@@ -37,7 +37,7 @@ public class Question extends BaseQuestion{
     @org.springframework.data.annotation.Transient
     private Type type;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",  cascade = {CascadeType.MERGE}, orphanRemoval=true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",  cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
     @org.springframework.data.annotation.Transient
     @BatchSize(size = 10)
     private List<Answer> answerList = new ArrayList<>();

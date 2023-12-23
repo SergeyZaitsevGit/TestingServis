@@ -27,12 +27,17 @@ public class QuestionResource {
   @PreAuthorize("@customSecurityExpression.canAccessType(#typeId)")
   public Question createQuestion(@RequestBody Question question,
       @RequestParam("typeId") Long typeId) {
+
       if (typeId != -1) {
           question.setType(typeService.getTypeById(typeId));
       }
     List<Answer> answerList = new ArrayList<>(question.getAnswerList());
     question.getAnswerList().clear();
-    questionService.updateQuestion(question);
+    if (question.getId() == null){
+       questionService.saveQuestion(question);
+    }
+    else questionService.updateQuestion(question);
+
     for (Answer a : answerList) {
       answerService.saveAnswer(a, question);
     }

@@ -24,15 +24,15 @@ import java.util.Set;
 @NoArgsConstructor
 public class User extends BaseUser{
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator", cascade = CascadeType.ALL)
     @org.springframework.data.annotation.Transient
     private List<Test> testList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator", cascade = CascadeType.ALL)
     @org.springframework.data.annotation.Transient
     private List<Question> questionList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator", cascade = CascadeType.ALL)
     @org.springframework.data.annotation.Transient
     private List<Type> typeList;
 

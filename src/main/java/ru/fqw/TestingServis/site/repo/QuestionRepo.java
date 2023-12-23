@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepo extends CrudRepository<Question, Long> {
+    @EntityGraph(attributePaths = "answerList")
     List<Question> findByCreator(User user);
+    @EntityGraph(attributePaths = "answerList")
     List<Question> findByType(Type type);
-    List<Question> getQuestionByTestSet(Test test);
+    List<Question> getQuestionByTest(Test test);
 
 }
