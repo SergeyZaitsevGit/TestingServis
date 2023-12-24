@@ -55,9 +55,10 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
     boolean isUserHaveTest = testingRepo.isUserHaveTest(message.getChatId());
     if (isUserHaveTest) {
       TestFromTelegramUser testFromTelegramUser = testingRepo.get(
-          message.getChatId());                           //Получаем тест с дополнительными данными
-      List<Question> questionList = new ArrayList<>(testFromTelegramUser.getTest()
-          .getQuestionSet());             //Список вопросов полученного теста
+          message.getChatId());
+      List<Question> questionList = new ArrayList<>(
+          testService.getTestById(testFromTelegramUser.getTest().getId()).getQuestionSet()
+      );
       boolean isTestDontStart = testFromTelegramUser.getTimeStart() == null;
       if (isTestDontStart) { // Eсли тест не начат предлагаем пользователю его начать
         if (message.getText().equals("/go")) {

@@ -26,13 +26,18 @@ public class QuestionResource {
   @PostMapping
   @PreAuthorize("@customSecurityExpression.canAccessType(#typeId)")
   public Question createQuestion(@RequestBody Question question,
-      @RequestParam("typeId") Long typeId) {               //Создание нового вопроса
+      @RequestParam("typeId") Long typeId) {
+
       if (typeId != -1) {
           question.setType(typeService.getTypeById(typeId));
       }
     List<Answer> answerList = new ArrayList<>(question.getAnswerList());
     question.getAnswerList().clear();
-    questionService.saveQuestion(question);
+    if (question.getId() == null){
+       questionService.saveQuestion(question);
+    }
+    else questionService.updateQuestion(question);
+
     for (Answer a : answerList) {
       answerService.saveAnswer(a, question);
     }
@@ -60,7 +65,7 @@ public class QuestionResource {
 
   @PreAuthorize("@customSecurityExpression.canAccessQuestion(#id)")
   @DeleteMapping("/delete/{id}")
-  public void deliteQuestion(@PathVariable long id) {
+  public void deleteQuestion(@PathVariable long id) {
     questionService.deliteQuestionById(id);
   }
 }

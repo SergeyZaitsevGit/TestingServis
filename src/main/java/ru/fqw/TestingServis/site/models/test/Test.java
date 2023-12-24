@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Formula;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
@@ -19,9 +22,20 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "test")
+
 public class Test extends BaseTest {
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @Formula("(SELECT COUNT(*) FROM test_like_question q WHERE q.test_id = id)")
+  @Lazy
+  private Long countQuestion;
+
+  @Formula("(SELECT coalesce(SUM(q.ball), 0)"
+      + " FROM test_like_question tlq"
+      + " JOIN Question q on tlq.question_id = q.id where tlq.test_id = id)")
+  @Lazy
+  private Integer maxBall;
+
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
       name = "TestLikeQuestion",
       joinColumns = @JoinColumn(name = "test_id"),
@@ -29,7 +43,7 @@ public class Test extends BaseTest {
   @org.springframework.data.annotation.Transient
   private Set<Question> questionSet = new LinkedHashSet<>();
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "user_id", nullable = false)
   @org.springframework.data.annotation.Transient
   private User creator;
@@ -56,9 +70,8 @@ public class Test extends BaseTest {
   @PostLoad
   private void init() {
     baseUser = creator;
-    countQuestion = questionSet.size();
-    for (Question q : questionSet) {
-      maxBall += q.getBall();
-    }
+//    for (Question q : questionSet) {
+//      maxBall += q.getBall();
+//    }
   }
 }

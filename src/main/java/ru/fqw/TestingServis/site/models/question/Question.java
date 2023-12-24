@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
@@ -25,19 +26,22 @@ public class Question extends BaseQuestion{
     @org.springframework.data.annotation.Transient
     private Set<Test> testSet = new LinkedHashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     private User creator;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
     @JoinColumn(name = "type_id", nullable = true)
     @org.springframework.data.annotation.Transient
     private Type type;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question",  cascade = {CascadeType.MERGE}, orphanRemoval=true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",  cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
     @org.springframework.data.annotation.Transient
+    @BatchSize(size = 10)
     private List<Answer> answerList = new ArrayList<>();
 
     @Override

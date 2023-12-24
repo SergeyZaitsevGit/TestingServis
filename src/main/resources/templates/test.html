@@ -46,7 +46,7 @@
                                     <text class="fs-3" x="50%" y="10%" fill="#eceeef" dy=".5em"><span th:text="${el.name}"/><span class="text-success" th:if="${el.activ}"> - активирован</span></text>
                                     <br>
                                     <p class="card-text"><b>Всего вопросов:</b> <span
-                                            th:text="${el.questionSet.size()}"/></p>
+                                            th:text="${el.countQuestion}"/></p>
                                     <p class="card-text"><b>Время на тест:</b> <span th:text="${el.timeActiv}"/> минут
                                     </p>
 
