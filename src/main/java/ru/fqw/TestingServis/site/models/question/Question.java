@@ -21,7 +21,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Question extends BaseQuestion{
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet", cascade  = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "questionSet")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     private Set<Test> testSet = new LinkedHashSet<>();
@@ -32,7 +32,9 @@ public class Question extends BaseQuestion{
     @org.springframework.data.annotation.Transient
     private User creator;
 
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
     @JoinColumn(name = "type_id", nullable = true)
     @org.springframework.data.annotation.Transient
     private Type type;

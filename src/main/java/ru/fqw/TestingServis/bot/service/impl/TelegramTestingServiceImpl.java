@@ -31,7 +31,6 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
 
   @Autowired
   TelegramUserService telegramUserService;
-  @Qualifier("testingMapRepo") //Уточнение для возможности масштабирования
   @Autowired
   TestingRepo testingRepo;
   @Autowired
