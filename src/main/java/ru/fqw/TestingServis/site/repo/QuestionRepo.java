@@ -15,6 +15,6 @@ public interface QuestionRepo extends CrudRepository<Question, Long> {
     List<Question> findByCreator(User user);
     @EntityGraph(attributePaths = "answerList")
     List<Question> findByType(Type type);
-    List<Question> getQuestionByTest(Test test);
+    List<Question> getQuestionByTestSet(Test test);
 
 }
