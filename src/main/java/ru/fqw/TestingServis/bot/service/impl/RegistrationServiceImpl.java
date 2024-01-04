@@ -11,12 +11,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.repo.RegistrationRepo;
-import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.bot.service.RegistrationService;
 import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.models.Group;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
+import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.service.UserService;
 
 @AllArgsConstructor
@@ -73,8 +73,8 @@ public class RegistrationServiceImpl implements RegistrationService {
           telegramUser.setChatId(message.getChatId());
           List<Group> groups = groupService.getByUser(user);
           String groupOut = IntStream.range(0, groups.size())
-                  .mapToObj(i -> i+1 + "." + groups.get(i).getName())
-                      .collect(Collectors.joining("\n"));
+              .mapToObj(i -> i + 1 + "." + groups.get(i).getName())
+              .collect(Collectors.joining("\n"));
 
           telegramBot.sendMessege(message.getChatId(),
               "Введите группу из списка:\n" + groupOut);
@@ -83,8 +83,9 @@ public class RegistrationServiceImpl implements RegistrationService {
               "Пользователь с указанной почтой не найден. Повторите ввод");
         }
       } else if (telegramUser.getGroupSet().isEmpty()) {
-        int groupIndex = Integer.parseInt(message.getText())-1;
-        List<Group> groups = groupService.getByUser(telegramUser.getUserSetInvited().iterator().next());
+        int groupIndex = Integer.parseInt(message.getText()) - 1;
+        List<Group> groups = groupService.getByUser(
+            telegramUser.getUserSetInvited().iterator().next());
         Group group = groups.get(groupIndex);
         telegramUser.getGroupSet().add(groupService.getById(group.getId()));
         telegramUserService.saveTelegramUser(telegramUser);

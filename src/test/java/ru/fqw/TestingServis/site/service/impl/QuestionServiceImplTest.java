@@ -28,6 +28,7 @@ import ru.fqw.TestingServis.site.service.impls.QuestionServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class QuestionServiceImplTest {
+
   @Mock
   private QuestionRepo questionRepo;
 
@@ -39,7 +40,7 @@ public class QuestionServiceImplTest {
 
 
   @Test
-  public void tesrGetQuestionByAuthenticationUser_WhenUserAuthentication_ReturnQuestionList(){
+  public void tesrGetQuestionByAuthenticationUser_WhenUserAuthentication_ReturnQuestionList() {
     User user = new User();
     user.setUsername("testUser");
 
@@ -48,12 +49,12 @@ public class QuestionServiceImplTest {
     Question question2 = new Question();
     question2.setCreator(user);
 
-    List<Question> questions = Stream.of(question1,question2).toList();
+    List<Question> questions = Stream.of(question1, question2).toList();
 
     when(userService.getAuthenticationUser()).thenReturn(user);
     when(questionRepo.findByCreator(user)).thenReturn(questions);
 
-   List<Question> result = questionServise.getQuestionsByAuthenticationUser();
+    List<Question> result = questionServise.getQuestionsByAuthenticationUser();
 
     assertEquals(result.get(0), question1);
     assertEquals(result.get(1), question2);
@@ -63,7 +64,7 @@ public class QuestionServiceImplTest {
   }
 
   @Test
-  public void testSaveQuestion_WhenQuestionNotExists_CreateQuestion(){
+  public void testSaveQuestion_WhenQuestionNotExists_CreateQuestion() {
     User user = new User();
     user.setUsername("testUser");
     Question question = new Question();
@@ -82,7 +83,7 @@ public class QuestionServiceImplTest {
   }
 
   @Test
-  public void testSaveQuestion_WhenQuestionExists_UpdateQuestion(){
+  public void testSaveQuestion_WhenQuestionExists_UpdateQuestion() {
     User user = new User();
     user.setUsername("testUser");
     Question question = new Question();
@@ -99,14 +100,14 @@ public class QuestionServiceImplTest {
   }
 
   @Test
-  public void  testGetQuestionsByTest_WhenQuestionByTypeExists_ReturnQuestionList() {
+  public void testGetQuestionsByTest_WhenQuestionByTypeExists_ReturnQuestionList() {
     Type type = new Type();
     Question question1 = new Question();
     Question question2 = new Question();
-    List<Question> expectedQuestions = Stream.of(question1,question2).toList();
+    List<Question> expectedQuestions = Stream.of(question1, question2).toList();
 
-   when(questionRepo.findByType(type)).thenReturn(expectedQuestions);
-   List<Question> res = questionServise.getQuestionsByType(type);
+    when(questionRepo.findByType(type)).thenReturn(expectedQuestions);
+    List<Question> res = questionServise.getQuestionsByType(type);
 
     assertEquals(expectedQuestions, res);
   }

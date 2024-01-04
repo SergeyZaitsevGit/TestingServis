@@ -1,5 +1,6 @@
 package ru.fqw.TestingServis.site.config.expression;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,9 +8,11 @@ import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.config.UserDetailsImpl;
 import ru.fqw.TestingServis.site.models.user.User;
-import ru.fqw.TestingServis.site.service.*;
-
-import java.util.List;
+import ru.fqw.TestingServis.site.service.AnswerService;
+import ru.fqw.TestingServis.site.service.QuestionService;
+import ru.fqw.TestingServis.site.service.TestService;
+import ru.fqw.TestingServis.site.service.TypeService;
+import ru.fqw.TestingServis.site.service.UserService;
 
 
 @Service("customSecurityExpression")
@@ -39,9 +42,9 @@ public class CustomSecurityExpression {
 
   public boolean canAccessType(
       long typeId) { //Проверка является ли пользователь владельцом типа  вопроса, с которым хочет взаимодействовать
-      if (typeId == -1) {
-          return true;
-      }
+    if (typeId == -1) {
+      return true;
+    }
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
     return typeService.getTypeById(typeId).getCreator().getEmail().equals(user.getUsername());
@@ -58,10 +61,10 @@ public class CustomSecurityExpression {
       List<Long> chatIds) { //Проверка может ли пользователь взаимодействовать с телеграмм пользователеми
     User user = userService.getAuthenticationUser();
     for (long chatId : chatIds) {
-        if (!userService.containsTelegramUser(user,
-            telegramUserService.getTelegramUserByChatId(chatId))) {
-            return false;
-        }
+      if (!userService.containsTelegramUser(user,
+          telegramUserService.getTelegramUserByChatId(chatId))) {
+        return false;
+      }
     }
     return true;
   }

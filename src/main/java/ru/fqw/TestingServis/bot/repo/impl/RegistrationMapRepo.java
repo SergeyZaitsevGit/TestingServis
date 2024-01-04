@@ -1,9 +1,9 @@
 package ru.fqw.TestingServis.bot.repo.impl;
 
-import org.springframework.stereotype.Component;
-import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
+import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.repo.RegistrationRepo;
 
 @Component

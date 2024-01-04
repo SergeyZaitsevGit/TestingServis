@@ -3,11 +3,11 @@ package ru.fqw.TestingServis.site.service.impls;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.models.Group;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.GroupRepo;
+import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.service.UserService;
 
 @Service
@@ -36,7 +36,9 @@ public class GroupServiceImpl implements GroupService {
 
   @Override
   public Group save(Group group) {
-    if (group.getId() == null) group.setCreator(userService.getAuthenticationUser());
+    if (group.getId() == null) {
+      group.setCreator(userService.getAuthenticationUser());
+    }
     return groupRepo.save(group);
   }
 }

@@ -1,7 +1,15 @@
 package ru.fqw.TestingServis.bot.service.impl;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -15,8 +23,6 @@ import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.test.BaseTest;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 import ru.fqw.TestingServis.site.service.UserService;
-
-import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +42,7 @@ public class ResultTestServiceImpl implements ResultTestService {
         () -> new ResourceNotFoundException("Результат тестирования не найден")
     );
   }
+
   @Override
   public Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable) {
     BaseUser user = userService.getAuthenticationUser();
@@ -79,17 +86,18 @@ public class ResultTestServiceImpl implements ResultTestService {
         finalResultMap.entrySet());
     return new PageImpl<>(paginatedResult, pageable, mappedResults.size());
   }
+
   @Override
   public boolean existByTitle(String title) {
     return resultsTestRepo.existsByTitle(title);
   }
 
-  public List<ResultTest> getResultsByAuthenticationUserAndTitle(String title){
+  public List<ResultTest> getResultsByAuthenticationUserAndTitle(String title) {
     BaseUser baseUser = userService.getAuthenticationUser();
-    return resultsTestRepo.findResultTestsByTestBaseUserAndTitle(baseUser,title);
+    return resultsTestRepo.findResultTestsByTestBaseUserAndTitle(baseUser, title);
   }
 
-  public List<ResultTest> getResultsByTest(BaseTest baseTest){
+  public List<ResultTest> getResultsByTest(BaseTest baseTest) {
     return resultsTestRepo.findResultTestsByTest(baseTest);
   }
 }

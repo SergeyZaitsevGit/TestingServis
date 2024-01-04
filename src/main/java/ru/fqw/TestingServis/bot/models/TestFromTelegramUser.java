@@ -1,11 +1,10 @@
 package ru.fqw.TestingServis.bot.models;
 
-import lombok.Data;
-import ru.fqw.TestingServis.site.models.test.Test;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import ru.fqw.TestingServis.site.models.test.Test;
 
 @Data
 public class TestFromTelegramUser {

@@ -12,10 +12,12 @@ import ru.fqw.TestingServis.site.service.TypeService;
 @RequestMapping("/api/v1/type")
 @AllArgsConstructor
 public class TypeResourse {
-    TypeService typeService;
-    @GetMapping("/{typeId}")
-    public Type findTypeById(@PathVariable long typeId) {
-        return typeService.getTypeById(typeId);
-    }
+
+  TypeService typeService;
+
+  @GetMapping("/{typeId}")
+  public Type findTypeById(@PathVariable long typeId) {
+    return typeService.getTypeById(typeId);
+  }
 
 }

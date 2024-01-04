@@ -1,49 +1,55 @@
-<div  th:block th:fragment="pagination(url, page,keyword)" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:if="${page.totalPages > 1}">
-        <ul class="pagination">
-            <li th:if="${page.number > 0}" class="page-item">
-                <a th:href="|/${url}?page=0&amp;size=${page.size}|" class="page-link">&laquo;</a>
-            </li>
-            <li th:if="${page.hasPrevious}" class="page-item">
-                <a th:href="|/${url}?page=${page.number - 1}&amp;size=${page.size}|" class="page-link">&lt;</a>
-            </li>
-            <!-- Если страниц больше 6, то показываем 3 ближайшие страницы с каждой стороны -->
-            <th:block th:if="${page.totalPages > 6}">
-                <!-- Если текущая страница больше или равна 3, показываем первую страницу -->
-                <li th:if="${page.number >= 3}" class="page-item">
-                    <a th:href="|/${url}?page=0&amp;size=${page.size}${keyword}|" class="page-link">1</a>
-                </li>
-                <!-- Показываем многоточие, если текущая страница больше 3 -->
-                <th:block th:if="${page.number >= 3}">
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
-                    </li>
-                </th:block>
+<div th:block th:fragment="pagination(url, page,keyword)" xmlns:th="http://www.w3.org/1999/xhtml">
+  <div th:if="${page.totalPages > 1}">
+    <ul class="pagination">
+      <li th:if="${page.number > 0}" class="page-item">
+        <a th:href="|/${url}?page=0&amp;size=${page.size}|" class="page-link">&laquo;</a>
+      </li>
+      <li th:if="${page.hasPrevious}" class="page-item">
+        <a th:href="|/${url}?page=${page.number - 1}&amp;size=${page.size}|"
+           class="page-link">&lt;</a>
+      </li>
+      <!-- Если страниц больше 6, то показываем 3 ближайшие страницы с каждой стороны -->
+      <th:block th:if="${page.totalPages > 6}">
+        <!-- Если текущая страница больше или равна 3, показываем первую страницу -->
+        <li th:if="${page.number >= 3}" class="page-item">
+          <a th:href="|/${url}?page=0&amp;size=${page.size}${keyword}|" class="page-link">1</a>
+        </li>
+        <!-- Показываем многоточие, если текущая страница больше 3 -->
+        <th:block th:if="${page.number >= 3}">
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+        </th:block>
 
 
-                </th:block>
-            </th:block>
-            <li th:each="i : ${#numbers.sequence((page.number - 3 < 0 ? 0 : (page.number - 3)), (page.number + 3 >= page.totalPages ? (page.totalPages - 1) : (page.number + 3)))}" th:class="${i} == ${page.number} ? 'page-item active' : 'page-item'">
-                <a th:href="|/${url}?page=${i}&amp;size=${page.size}${keyword}|" th:text="${i + 1}" class="page-link"></a>
-            </li>
-            <th:block th:if="${page.totalPages > 6}">
-                <!-- Если текущая страница меньше или равна (page.totalPages - 4), показываем многоточие -->
-                <!-- Показываем многоточие, если до конца остаётся больше 3 страниц -->
-                <th:block th:if="${page.totalPages - page.number > 3}">
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
-                    </li>
-                <!-- Если текущая страница меньше или равна (page.totalPages - 3), показываем последнюю страницу -->
-                <li th:if="${page.number <= (page.totalPages - 3)}" class="page-item">
-                    <a th:href="|/${url}?page=${page.totalPages - 1}&amp;size=${page.size}${keyword}|" class="page-link" th:text="${page.totalPages}"></a>
-                </li>
-            </th:block>
-            <li th:if="${page.hasNext}" class="page-item">
-                <a th:href="|/${url}?page=${page.number + 1}&amp;size=${page.size}${keyword}|" class="page-link">&gt;</a>
-            </li>
-            <li th:if="${page.number + 1 < page.totalPages}" class="page-item">
-                <a th:href="|/${url}?page=${page.totalPages - 1}&amp;size=${page.size}${keyword}|" class="page-link">&raquo;</a>
-            </li>
-        </ul>
-    </div>
+      </th:block>
+      </th:block>
+      <li th:each="i : ${#numbers.sequence((page.number - 3 < 0 ? 0 : (page.number - 3)), (page.number + 3 >= page.totalPages ? (page.totalPages - 1) : (page.number + 3)))}"
+          th:class="${i} == ${page.number} ? 'page-item active' : 'page-item'">
+        <a th:href="|/${url}?page=${i}&amp;size=${page.size}${keyword}|" th:text="${i + 1}"
+           class="page-link"></a>
+      </li>
+      <th:block th:if="${page.totalPages > 6}">
+        <!-- Если текущая страница меньше или равна (page.totalPages - 4), показываем многоточие -->
+        <!-- Показываем многоточие, если до конца остаётся больше 3 страниц -->
+        <th:block th:if="${page.totalPages - page.number > 3}">
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+          <!-- Если текущая страница меньше или равна (page.totalPages - 3), показываем последнюю страницу -->
+          <li th:if="${page.number <= (page.totalPages - 3)}" class="page-item">
+            <a th:href="|/${url}?page=${page.totalPages - 1}&amp;size=${page.size}${keyword}|"
+               class="page-link" th:text="${page.totalPages}"></a>
+          </li>
+        </th:block>
+        <li th:if="${page.hasNext}" class="page-item">
+          <a th:href="|/${url}?page=${page.number + 1}&amp;size=${page.size}${keyword}|"
+             class="page-link">&gt;</a>
+        </li>
+        <li th:if="${page.number + 1 < page.totalPages}" class="page-item">
+          <a th:href="|/${url}?page=${page.totalPages - 1}&amp;size=${page.size}${keyword}|"
+             class="page-link">&raquo;</a>
+        </li>
+    </ul>
+  </div>
 </div>

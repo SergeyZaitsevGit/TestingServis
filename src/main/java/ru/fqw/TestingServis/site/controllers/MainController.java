@@ -1,5 +1,6 @@
 package ru.fqw.TestingServis.site.controllers;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -7,11 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.models.Group;
 import ru.fqw.TestingServis.site.models.Type;
+import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.service.TypeService;
-import java.util.List;
 
 
 @Controller

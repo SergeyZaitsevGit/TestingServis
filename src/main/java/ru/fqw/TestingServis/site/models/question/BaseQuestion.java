@@ -1,15 +1,18 @@
 package ru.fqw.TestingServis.site.models.question;
 
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.emuns.TypeAnswerOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @MappedSuperclass

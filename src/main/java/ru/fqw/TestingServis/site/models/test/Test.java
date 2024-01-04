@@ -1,20 +1,25 @@
 package ru.fqw.TestingServis.site.models.test;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PreRemove;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.question.Question;
-
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import ru.fqw.TestingServis.site.models.user.User;
 
 @Entity
 @Getter

@@ -1,4 +1,6 @@
 package ru.fqw.TestingServis.bot.service.impl;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
@@ -6,8 +8,6 @@ import ru.fqw.TestingServis.bot.repo.TelegramUserRepo;
 import ru.fqw.TestingServis.bot.service.TelegramUserService;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.service.UserService;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

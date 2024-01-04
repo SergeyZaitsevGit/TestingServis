@@ -1,78 +1,82 @@
 <div class="modal fade" id="questionDialog" tabindex="-1" role="dialog"
      aria-labelledby="questionAddDialogLabel" aria-hidden="true" th:fragment="questionModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="questionDialogLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="questionDialogLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 
-                <input type="hidden" id="question-id">
-                <select class="form-select" aria-label="Default select example"
-                        id="selectTypeCreate">
-                    <option id="nullSelected" value="-1"  selected></option>
-                    <option th:each="tp : ${types}" th:text="${tp.name}"
-                            th:value="${tp.id}"/>
-                </select>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" checked name="typeAnswerOptions" id="ONE_ANSWER" value="ONE_ANSWER">
-                    <label class="form-check-label" for="ONE_ANSWER" >Один вариант ответа</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typeAnswerOptions" id="MANY_ANSWER" value="MANY_ANSWER">
-                    <label class="form-check-label" for="MANY_ANSWER">Несколько вариантов ответа</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typeAnswerOptions" id="FREE_ANSWER" value="FREE_ANSWER">
-                    <label class="form-check-label" for="FREE_ANSWER">Свободный ответ</label>
-                </div>
-                <div class="form-group">
-                    <label for="question-name" class="col-form-label">Введите
-                        вопрос</label>
-                    <input type="text" class="form-control" id="question-name">
-                    <span hidden class ="text-danger" id="validNameQuestion">Вопрос не может быть пустой</span>
-                </div>
-                <div class="form-group">
-                    <label for="question-name" class="col-form-label">Введите балл за
-                        вопрос</label>
-                    <input type="number" class="form-control" id="question-ball">
-                    <span hidden class ="text-danger" id="validBallQuestion">Балл введен некорректно</span>
-                </div>
-                <div class="form-group">
-                    <label for="question-name" class="col-form-label">Введите вариант
-                        ответа</label>
-                    <input type="text" class="form-control" id="question-newAnswer">
-                    <input class="form-check-input" type="checkbox"
-                           name="inlineRadioOptions" id="corrected"
-                           value="option1"><span>  Отмьетьте, если вариант ответа правильный</span><br><br>
-                    <div class="d-flex justify-content-center">
-                        <button id="saveAnswerButton" type="button"
-                                class="btn btn-primary me-2">Добавть вариант ответа
-                        </button>
-                        <button id="delAnswerButton" type="button"
-                                class="btn btn-primary me-2">Удалить вариант ответа
-                        </button>
-                    </div>
-                    <br>
-                    <h6>Варианты ответа:</h6>
-                    <span hidden class ="text-danger" id="validAnswers">Варианты ответов не соответствуют выбранному типу</span>
-
-                    <ol id="listAnswers" class="list-group list-group-numbered"></ol>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button id="closeQuestionButton" type="button" class="btn btn-secondary" data-dismiss="modal">
-                    Закрыть
-                </button>
-                <button id="saveQuestionButton" type="button" class="btn btn-primary">
-                    Сохранить
-                </button>
-            </div>
+        <input type="hidden" id="question-id">
+        <select class="form-select" aria-label="Default select example"
+                id="selectTypeCreate">
+          <option id="nullSelected" value="-1" selected></option>
+          <option th:each="tp : ${types}" th:text="${tp.name}"
+                  th:value="${tp.id}"/>
+        </select>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" checked name="typeAnswerOptions"
+                 id="ONE_ANSWER" value="ONE_ANSWER">
+          <label class="form-check-label" for="ONE_ANSWER">Один вариант ответа</label>
         </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="typeAnswerOptions" id="MANY_ANSWER"
+                 value="MANY_ANSWER">
+          <label class="form-check-label" for="MANY_ANSWER">Несколько вариантов ответа</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="typeAnswerOptions" id="FREE_ANSWER"
+                 value="FREE_ANSWER">
+          <label class="form-check-label" for="FREE_ANSWER">Свободный ответ</label>
+        </div>
+        <div class="form-group">
+          <label for="question-name" class="col-form-label">Введите
+            вопрос</label>
+          <input type="text" class="form-control" id="question-name">
+          <span hidden class="text-danger" id="validNameQuestion">Вопрос не может быть пустой</span>
+        </div>
+        <div class="form-group">
+          <label for="question-name" class="col-form-label">Введите балл за
+            вопрос</label>
+          <input type="number" class="form-control" id="question-ball">
+          <span hidden class="text-danger" id="validBallQuestion">Балл введен некорректно</span>
+        </div>
+        <div class="form-group">
+          <label for="question-name" class="col-form-label">Введите вариант
+            ответа</label>
+          <input type="text" class="form-control" id="question-newAnswer">
+          <input class="form-check-input" type="checkbox"
+                 name="inlineRadioOptions" id="corrected"
+                 value="option1"><span>  Отмьетьте, если вариант ответа правильный</span><br><br>
+          <div class="d-flex justify-content-center">
+            <button id="saveAnswerButton" type="button"
+                    class="btn btn-primary me-2">Добавть вариант ответа
+            </button>
+            <button id="delAnswerButton" type="button"
+                    class="btn btn-primary me-2">Удалить вариант ответа
+            </button>
+          </div>
+          <br>
+          <h6>Варианты ответа:</h6>
+          <span hidden class="text-danger" id="validAnswers">Варианты ответов не соответствуют выбранному типу</span>
+
+          <ol id="listAnswers" class="list-group list-group-numbered"></ol>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="closeQuestionButton" type="button" class="btn btn-secondary"
+                data-dismiss="modal">
+          Закрыть
+        </button>
+        <button id="saveQuestionButton" type="button" class="btn btn-primary">
+          Сохранить
+        </button>
+      </div>
     </div>
+  </div>
 </div>

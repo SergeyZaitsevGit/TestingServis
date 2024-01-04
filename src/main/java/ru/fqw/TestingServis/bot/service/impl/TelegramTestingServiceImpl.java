@@ -1,7 +1,11 @@
 package ru.fqw.TestingServis.bot.service.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,9 +25,6 @@ import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.service.TestService;
-
-import java.sql.Timestamp;
-import java.util.*;
 
 
 @Service
@@ -48,6 +49,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
   private final TelegramBot telegramBot;
+
   @Override
   public void testing(Update update) { //Обработка прохождения теста
 

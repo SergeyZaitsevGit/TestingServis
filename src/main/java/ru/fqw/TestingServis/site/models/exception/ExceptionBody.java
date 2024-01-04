@@ -1,9 +1,8 @@
 package ru.fqw.TestingServis.site.models.exception;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Map;
 
 @Data
 @AllArgsConstructor

@@ -1,19 +1,17 @@
 package ru.fqw.TestingServis.site.models.test;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Data
 @MappedSuperclass

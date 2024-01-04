@@ -140,16 +140,16 @@ public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
     return analysisQuestionList;
   }
 
-  private List<ResultTest> getBestsResult(List<ResultTest> resultTests){
-     int  maxBall = resultTests.stream()
-         .max(Comparator.comparingInt(ResultTest::getBall))
-         .get().getBall();
+  private List<ResultTest> getBestsResult(List<ResultTest> resultTests) {
+    int maxBall = resultTests.stream()
+        .max(Comparator.comparingInt(ResultTest::getBall))
+        .get().getBall();
 
     return resultTests.stream().filter(resultTest -> resultTest.getBall() == maxBall).toList();
   }
 
-  private List<ResultTest> getBadResult(List<ResultTest> resultTests){
-    int  minBall = resultTests.stream()
+  private List<ResultTest> getBadResult(List<ResultTest> resultTests) {
+    int minBall = resultTests.stream()
         .min(Comparator.comparingInt(ResultTest::getBall))
         .get().getBall();
 

@@ -1,22 +1,24 @@
 package ru.fqw.TestingServis.site.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.fqw.TestingServis.bot.models.AnalysisQuestion;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.service.ResultAnalysisServise;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.site.service.UserService;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Controller
@@ -41,7 +43,8 @@ public class ResulTestController {
     } else {
       Page<Map.Entry<String, List<ResultTest>>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
           pageable, null);
-      analysisQuestionMap = resultAnalysisServise.getAnalysisQuestionMapByPage(resultsGroupedByTestName);
+      analysisQuestionMap = resultAnalysisServise.getAnalysisQuestionMapByPage(
+          resultsGroupedByTestName);
       model.addAttribute("resultsGroupedByTestName", resultsGroupedByTestName);
     }
     model.addAttribute("analysisQuestionMap", analysisQuestionMap);

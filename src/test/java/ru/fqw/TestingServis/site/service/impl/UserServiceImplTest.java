@@ -1,5 +1,19 @@
 package ru.fqw.TestingServis.site.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,14 +28,7 @@ import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.UserRepository;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import ru.fqw.TestingServis.site.service.impls.UserServiceImpl;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -92,7 +99,7 @@ public class UserServiceImplTest {
     when(userRepository.save(user)).thenReturn(user);
     User savedUser = userServise.saveUser(user);
 
-    assertEquals(user,savedUser);
+    assertEquals(user, savedUser);
     verify(userRepository, times(1)).save(user);
   }
 

@@ -1,16 +1,22 @@
 package ru.fqw.TestingServis.site.controllers.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.service.AnswerService;
 import ru.fqw.TestingServis.site.service.QuestionService;
 import ru.fqw.TestingServis.site.service.TypeService;
-
-import java.util.ArrayList;
-import java.util.List;
 import ru.fqw.TestingServis.site.service.UserService;
 
 @RestController
@@ -28,15 +34,16 @@ public class QuestionResource {
   public Question createQuestion(@RequestBody Question question,
       @RequestParam("typeId") Long typeId) {
 
-      if (typeId != -1) {
-          question.setType(typeService.getTypeById(typeId));
-      }
+    if (typeId != -1) {
+      question.setType(typeService.getTypeById(typeId));
+    }
     List<Answer> answerList = new ArrayList<>(question.getAnswerList());
     question.getAnswerList().clear();
-    if (question.getId() == null){
-       questionService.saveQuestion(question);
+    if (question.getId() == null) {
+      questionService.saveQuestion(question);
+    } else {
+      questionService.updateQuestion(question);
     }
-    else questionService.updateQuestion(question);
 
     for (Answer a : answerList) {
       answerService.saveAnswer(a, question);

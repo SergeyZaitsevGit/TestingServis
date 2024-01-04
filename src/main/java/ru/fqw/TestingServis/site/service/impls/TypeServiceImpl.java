@@ -1,12 +1,12 @@
 package ru.fqw.TestingServis.site.service.impls;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.Type;
+import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TypeRepo;
-import java.util.List;
 import ru.fqw.TestingServis.site.service.TypeService;
 import ru.fqw.TestingServis.site.service.UserService;
 

@@ -1,16 +1,16 @@
 package ru.fqw.TestingServis.site.service.impls;
 
-import lombok.*;
+import java.util.Set;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
-import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
+import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.UserRepository;
-import java.util.Set;
 import ru.fqw.TestingServis.site.service.UserService;
 
 @Service

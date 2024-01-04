@@ -1,13 +1,12 @@
 package ru.fqw.TestingServis.bot.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor

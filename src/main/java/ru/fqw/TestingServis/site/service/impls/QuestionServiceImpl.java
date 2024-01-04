@@ -2,16 +2,16 @@ package ru.fqw.TestingServis.site.service.impls;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
-import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.QuestionRepo;
-import java.util.ArrayList;
-import java.util.List;
 import ru.fqw.TestingServis.site.service.QuestionService;
 import ru.fqw.TestingServis.site.service.UserService;
 
@@ -60,12 +60,18 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   @Transactional
-  public Question updateQuestion(Question question){
+  public Question updateQuestion(Question question) {
     Question updatedQuestion = getQuestionById(question.getId());
-      if (question.getText() != null) updatedQuestion.setText(question.getText());
-      if (question.getType() != null) updatedQuestion.setType(question.getType());
-      if (question.getBall() != 0) updatedQuestion.setBall(question.getBall());
-   return questionRepo.save(updatedQuestion);
+    if (question.getText() != null) {
+      updatedQuestion.setText(question.getText());
+    }
+    if (question.getType() != null) {
+      updatedQuestion.setType(question.getType());
+    }
+    if (question.getBall() != 0) {
+      updatedQuestion.setBall(question.getBall());
+    }
+    return questionRepo.save(updatedQuestion);
   }
 
 }

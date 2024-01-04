@@ -1,15 +1,12 @@
 package ru.fqw.TestingServis.site.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
-import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.exception.ExceptionBody;
+import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 
 @ControllerAdvice
 public class AdviseController {

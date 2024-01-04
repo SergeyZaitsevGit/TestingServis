@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="../static/css/main.css" rel="stylesheet">
-    <script>
-        function clearSearch() {
-        window.location = "[[@{/test}]]";
-    }
-    </script>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+  <link href="../static/css/main.css" rel="stylesheet">
+  <script>
+    function clearSearch() {
+    window.location = "[[@{/test}]]";
+}
+  </script>
 </head>
 <header th:insert="~{blocks/header :: header}"></header>
 <body>
 <div class="container h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-            <div class="card text-black" style="border-radius: 25px;">
-                <div class="card-body p-md-5">
-                    <div class="row justify-content-center">
-                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Список тестов</p>
-                        <form th:action="@{test}" class="row pb-3">
-                             <label class="form-label h4">Поиск:</label>
-                             <input class="form-control col" type="text" name="keyword" id="keyword" size="50"
-                                          th:value="${keyword}" required/>
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-lg-12 col-xl-11">
+      <div class="card text-black" style="border-radius: 25px;">
+        <div class="card-body p-md-5">
+          <div class="row justify-content-center">
+            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Список тестов</p>
+            <form th:action="@{test}" class="row pb-3">
+              <label class="form-label h4">Поиск:</label>
+              <input class="form-control col" type="text" name="keyword" id="keyword" size="50"
+                     th:value="${keyword}" required/>
 
-                            <input class="btn btn-primary col-1" type="submit" value="Искать"/>
+              <input class="btn btn-primary col-1" type="submit" value="Искать"/>
 
-                            <input type="text" name="page" id="page" th:value="0" hidden/>
-                            <input type="text" name="size" id="size" th:value="${testPage.getSize()}" hidden/>
-
-
-                        </form>
-                        <div class="row pb-3">
-                            <input class="btn btn-primary col-md-2 mx-auto" type="button" value="Показать все" id="btnClear"
-                                   onclick="clearSearch()"/>
-                        </div>
-                        <br><hr class="mt-1 mb-1"/><br>
-                        <a class="btn btn-primary col-md-2 mx-auto" href="test/new" role="button">Новый тест</a>
-                        <div style="margin: 20px;" th:each="el : ${testPage}">
-                            <div class="card shadow-sm">
-
-                                <div class="card-body">
-                                    <text class="fs-3" x="50%" y="10%" fill="#eceeef" dy=".5em"><span th:text="${el.name}"/><span class="text-success" th:if="${el.activ}"> - активирован</span></text>
-                                    <br>
-                                    <p class="card-text"><b>Всего вопросов:</b> <span
-                                            th:text="${el.countQuestion}"/></p>
-                                    <p class="card-text"><b>Время на тест:</b> <span th:text="${el.timeActiv}"/> минут
-                                    </p>
+              <input type="text" name="page" id="page" th:value="0" hidden/>
+              <input type="text" name="size" id="size" th:value="${testPage.getSize()}" hidden/>
 
 
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group">
-                                            <a th:href="|test/${el.id}">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">
-                                                    Подробнее
-                                                </button>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">
-                                                Редактировать
-                                            </button>
-                                        </div>
-                                        <small th:text="${el.getFormatedDataCreated()}" class="text-muted"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 mx-auto" th:replace="~{blocks/pagination :: pagination(url = 'test', page = ${testPage}, keyword = ${keyword}==null ? '' : '&keyword=' + ${keyword})}"></div>
-                </div>
+            </form>
+            <div class="row pb-3">
+              <input class="btn btn-primary col-md-2 mx-auto" type="button" value="Показать все"
+                     id="btnClear"
+                     onclick="clearSearch()"/>
             </div>
+            <br>
+            <hr class="mt-1 mb-1"/>
+            <br>
+            <a class="btn btn-primary col-md-2 mx-auto" href="test/new" role="button">Новый тест</a>
+            <div style="margin: 20px;" th:each="el : ${testPage}">
+              <div class="card shadow-sm">
+
+                <div class="card-body">
+                  <text class="fs-3" x="50%" y="10%" fill="#eceeef" dy=".5em"><span
+                      th:text="${el.name}"/><span class="text-success" th:if="${el.activ}"> - активирован</span>
+                  </text>
+                  <br>
+                  <p class="card-text"><b>Всего вопросов:</b> <span
+                      th:text="${el.countQuestion}"/></p>
+                  <p class="card-text"><b>Время на тест:</b> <span th:text="${el.timeActiv}"/> минут
+                  </p>
+
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <a th:href="|test/${el.id}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                          Подробнее
+                        </button>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-outline-secondary">
+                        Редактировать
+                      </button>
+                    </div>
+                    <small th:text="${el.getFormatedDataCreated()}" class="text-muted"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 mx-auto"
+               th:replace="~{blocks/pagination :: pagination(url = 'test', page = ${testPage}, keyword = ${keyword}==null ? '' : '&keyword=' + ${keyword})}"></div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 </body>
 </html>

@@ -8,11 +8,16 @@ import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.site.models.test.BaseTest;
 
 public interface ResultTestService {
-   void saveResult(ResultTest resultTest);
+
+  void saveResult(ResultTest resultTest);
+
   ResultTest getResultTestById(String id);
+
   Page<ResultTest> getResultTestByAuthenticationUser(Pageable pageable);
+
   Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb,
       String keyword);
+
   boolean existByTitle(String title);
 
   List<ResultTest> getResultsByAuthenticationUserAndTitle(String title);
