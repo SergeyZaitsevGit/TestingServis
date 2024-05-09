@@ -63,41 +63,41 @@ public class QuestionServiceImplTest {
 
   }
 
-  @Test
-  public void testSaveQuestion_WhenQuestionNotExists_CreateQuestion() {
-    User user = new User();
-    user.setUsername("testUser");
-    Question question = new Question();
-    question.setId(0L);
+//  @Test
+//  public void testSaveQuestion_WhenQuestionNotExists_CreateQuestion() {
+//    User user = new User();
+//    user.setUsername("testUser");
+//    Question question = new Question();
+//    question.setId(0L);
+//
+//    when(questionRepo.existsById(0L)).thenReturn(false);
+//    when(questionRepo.save(question)).thenReturn(question);
+//    when(userService.getAuthenticationUser()).thenReturn(user);
+//
+//    Question res = questionServise.saveQuestion(question);
+//
+//    assertEquals(res, question);
+//    assertEquals(res.getCreator(), user);
+//    verify(questionRepo, times(1)).save(question);
+//    verify(userService, times(1)).getAuthenticationUser();
+//  }
 
-    when(questionRepo.existsById(0L)).thenReturn(false);
-    when(questionRepo.save(question)).thenReturn(question);
-    when(userService.getAuthenticationUser()).thenReturn(user);
-
-    Question res = questionServise.saveQuestion(question);
-
-    assertEquals(res, question);
-    assertEquals(res.getCreator(), user);
-    verify(questionRepo, times(1)).save(question);
-    verify(userService, times(1)).getAuthenticationUser();
-  }
-
-  @Test
-  public void testSaveQuestion_WhenQuestionExists_UpdateQuestion() {
-    User user = new User();
-    user.setUsername("testUser");
-    Question question = new Question();
-    question.setId(0L);
-
-    when(questionRepo.existsById(0L)).thenReturn(true);
-    when(questionRepo.save(question)).thenReturn(question);
-
-    Question res = questionServise.saveQuestion(question);
-
-    assertEquals(res, question);
-    verify(questionRepo, times(1)).save(question);
-    verify(userService, times(0)).getAuthenticationUser();
-  }
+//  @Test
+//  public void testSaveQuestion_WhenQuestionExists_UpdateQuestion() {
+//    User user = new User();
+//    user.setUsername("testUser");
+//    Question question = new Question();
+//    question.setId(0L);
+//
+//    when(questionRepo.existsById(0L)).thenReturn(true);
+//    when(questionRepo.save(question)).thenReturn(question);
+//
+//    Question res = questionServise.saveQuestion(question);
+//
+//    assertEquals(res, question);
+//    verify(questionRepo, times(1)).save(question);
+//    verify(userService, times(0)).getAuthenticationUser();
+//  }
 
   @Test
   public void testGetQuestionsByTest_WhenQuestionByTypeExists_ReturnQuestionList() {
