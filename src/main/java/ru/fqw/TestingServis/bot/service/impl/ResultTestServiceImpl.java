@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.repo.ResultsTestRepo;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
@@ -25,12 +27,12 @@ import ru.fqw.TestingServis.site.models.user.BaseUser;
 import ru.fqw.TestingServis.site.service.UserService;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ResultTestServiceImpl implements ResultTestService {
 
-  ResultsTestRepo resultsTestRepo;
-  UserService userService;
-  MongoTemplate mongoTemplate;
+  private  final ResultsTestRepo resultsTestRepo;
+  private  final UserService userService;
+  private  final MongoTemplate mongoTemplate;
 
   public void saveResult(ResultTest resultTest) {
     resultsTestRepo.save(resultTest);
@@ -50,6 +52,7 @@ public class ResultTestServiceImpl implements ResultTestService {
   }
 
   @Override
+  @Transactional
   public Page<Map.Entry<String, List<ResultTest>>> getTestingResultsGroupedByTestName(Pageable pb,
       String keyword) {
     GroupOperation groupByTestName = Aggregation.group("title").push("$$ROOT").as("resultTest");

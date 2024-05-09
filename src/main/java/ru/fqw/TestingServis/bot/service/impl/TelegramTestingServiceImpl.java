@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.healpers.TelegramTestingHelper;
 import ru.fqw.TestingServis.bot.models.AnswerFromTelegramUser;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
+import ru.fqw.TestingServis.bot.models.enums.Command;
 import ru.fqw.TestingServis.bot.repo.TestingRepo;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.bot.service.TelegramTestingService;
@@ -31,13 +33,13 @@ import ru.fqw.TestingServis.site.service.TestService;
 public class TelegramTestingServiceImpl implements TelegramTestingService {
 
   @Autowired
-  TelegramUserService telegramUserService;
+  private TelegramUserService telegramUserService;
   @Autowired
-  TestingRepo testingRepo;
+  private TestingRepo testingRepo;
   @Autowired
-  ResultTestService resultTestService;
+  private ResultTestService resultTestService;
   @Autowired
-  TelegramTestingHelper telegramTestingHelper;
+  private TelegramTestingHelper telegramTestingHelper;
 
   @Autowired
   TestService testService;
@@ -51,6 +53,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   private final TelegramBot telegramBot;
 
   @Override
+  @Transactional
   public void testing(Update update) { //Обработка прохождения теста
 
     Message message = update.getMessage();
@@ -63,7 +66,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
       );
       boolean isTestDontStart = testFromTelegramUser.getTimeStart() == null;
       if (isTestDontStart) { // Eсли тест не начат предлагаем пользователю его начать
-        if (message.getText().equals("/go")) {
+        if (message.getText().equals(Command.GO.getCommandText())) {
           if (testFromTelegramUser.getTest().isMixQuestions()) {
             Collections.shuffle(questionList);
             testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
@@ -81,7 +84,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           return;
         }
         telegramBot.sendMessege(message.getChatId(),
-            "Для начала тестирования введите комманду /go");
+            "Для начала тестирования введите комманду" + Command.GO.getCommandText());
       } else if (testFromTelegramUser.getCurrentQuestion() < testFromTelegramUser.getTest()
           .getQuestionSet().size()) { // Пока вопросы не кончатся выводим их и фиксируем ответ
         try {
@@ -135,9 +138,13 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
     }
   }
 
+  /** Раз в определенное время
+   * проходим по всем открытым тестам
+   * и закрываем их, если время на их выполнение вышло
+   * **/
+
   @Scheduled(cron = "0 * * * * *")
-  // Вызываем метод раз в минуту
-  private void endTestByTime() {// Пробегаем по всем активным тестам, и закрываем их если время на них вышло
+  protected void endTestByTime() {
     List<TestFromTelegramUser> testsFromTelegramUsers = testingRepo.getAll();
     if (testsFromTelegramUsers == null) {
       return;
@@ -220,4 +227,11 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
 
+  @Override
+  public void cancel(Long chatId) {
+    if (!testingRepo.isUserHaveTest(chatId)) return;
+    TestFromTelegramUser testFromTelegramUser = testingRepo.get(chatId);
+    resultSave(testFromTelegramUser, chatId);
+    testingRepo.delite(chatId);
+  }
 }

@@ -10,8 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.fqw.TestingServis.bot.models.AnalysisQuestion;
 import ru.fqw.TestingServis.bot.models.AnswerFromTelegramUser;
 import ru.fqw.TestingServis.bot.models.AnswerWhithSelect;
@@ -27,17 +29,18 @@ import ru.fqw.TestingServis.site.service.TestService;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
 
-  TestService testService;
-  AnswerService answerService;
-  ResultTestService resultTestService;
+  private  final TestService testService;
+  private  final AnswerService answerService;
+  private  final ResultTestService resultTestService;
 
   /**
    * Метод возвращает список вопросов с данными для аналитики по названию тестирования
    **/
   @Override
+  @Transactional
   public List<AnalysisQuestion> getQusetionsAnalysesByTitleTesting(String titleTesting) {
     List<ResultTest> resultTests = resultTestService.getResultsByAuthenticationUserAndTitle(
         titleTesting);
@@ -45,6 +48,7 @@ public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
   }
 
   @Override
+  @Transactional
   public List<AnalysisQuestion> getQusetionsAnalysesByTest(BaseTest test) {
     return analysisQuestionByResult(resultTestService.getResultsByTest(test));
   }
@@ -55,6 +59,7 @@ public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
    **/
 
   @Override
+  @Transactional
   public Map<String, List<AnalysisQuestion>> getAnalysisQuestionMapByPage(
       Page<Entry<String, List<ResultTest>>> resultsGroupedByTestName) {
     Map<String, List<AnalysisQuestion>> analysisQuestionMap = new HashMap<>();

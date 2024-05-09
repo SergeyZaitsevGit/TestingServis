@@ -1,11 +1,11 @@
 package ru.fqw.TestingServis.site.service.impls;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.fqw.TestingServis.site.models.Type;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.question.Question;
@@ -24,11 +24,13 @@ public class QuestionServiceImpl implements QuestionService {
   EntityManager entityManager;
 
   @Override
+  @Transactional()
   public List<Question> getQuestionsByAuthenticationUser() {
     return questionRepo.findByCreator(userService.getAuthenticationUser());
   }
 
   @Override
+  @Transactional
   public Question saveQuestion(Question question) {
     if (question.getId() == null) {
       User user = userService.getAuthenticationUser();
@@ -38,22 +40,26 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  @Transactional
   public List<Question> getQuestionsByType(Type type) {
     return questionRepo.findByType(type);
   }
 
   @Override
+  @Transactional
   public List<Question> getQuestionsByTest(Test test) {
     return new ArrayList<>(test.getQuestionSet());
   }
 
   @Override
+  @Transactional
   public Question getQuestionById(long questionId) {
     return questionRepo.findById(questionId)
         .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
   }
 
   @Override
+  @Transactional
   public void deliteQuestionById(long questionId) {
     questionRepo.deleteById(questionId);
   }

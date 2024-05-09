@@ -10,5 +10,5 @@ public interface RegistrationRepo {
 
   TelegramUser get(Long chatId);
 
-  boolean isUserpassesRegistration(Long chatId);
+  boolean isUserPassesRegistration(Long chatId);
 }

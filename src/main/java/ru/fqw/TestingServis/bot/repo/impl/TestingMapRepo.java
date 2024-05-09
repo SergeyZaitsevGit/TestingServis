@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import ru.fqw.TestingServis.bot.models.Cancellable;
 import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
 import ru.fqw.TestingServis.bot.repo.TestingRepo;
 
 @Component
-public class TestingMapRepo implements TestingRepo {
+public class TestingMapRepo implements TestingRepo, Cancellable {
 
-  private Map<Long, TestFromTelegramUser> testMap = new HashMap<>();
+  private Map<Long, TestFromTelegramUser> testMap = new ConcurrentHashMap<>();
 
   @Override
   public void save(Long chatId, TestFromTelegramUser testFromTelegramUser) {
@@ -46,5 +48,10 @@ public class TestingMapRepo implements TestingRepo {
         .stream()
         .filter(entry -> test.equals(entry.getValue()))
         .map(Map.Entry::getKey).collect(Collectors.toList());
+  }
+
+  @Override
+  public void cancel(Long chatId) {
+    delite(chatId);
   }
 }

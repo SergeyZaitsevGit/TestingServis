@@ -10,7 +10,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>ru.fqw</groupId>
-  <artifactId>TestingServis</artifactId>
+  <artifactId>TestingService</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TestingServis</name>
   <description>Demo project for Spring Boot</description>

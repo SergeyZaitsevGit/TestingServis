@@ -69,7 +69,8 @@
                               data-bs-toggle="collapse"
                               th:data-bs-target="|#flush-collapse${el.id}|"
                               aria-expanded="false" th:aria-controls="flush-collapse + ${el.id}">
-                        <p th:text="${el.name}"/>
+                        <input type="checkbox" class="select-group-checkbox">
+                        <span th:text="${el.name}"/>
                       </button>
                     </h2>
                     <div th:id="flush-collapse + ${el.id}" class="accordion-collapse collapse"
@@ -145,6 +146,7 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" src="../static/js/questionModal.js"></script>
 <script type="text/javascript" src="../static/js/questionFilter.js"></script>
+<script type="text/javascript" src="../static/js/selectAll.js"></script>
 </body>
 </html>
 

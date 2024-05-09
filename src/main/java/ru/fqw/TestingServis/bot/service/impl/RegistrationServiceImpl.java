@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.fqw.TestingServis.bot.models.enums.Command;
 import ru.fqw.TestingServis.bot.models.telegramUser.TelegramUser;
 import ru.fqw.TestingServis.bot.repo.RegistrationRepo;
 import ru.fqw.TestingServis.bot.service.RegistrationService;
@@ -19,18 +22,17 @@ import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.service.GroupService;
 import ru.fqw.TestingServis.site.service.UserService;
 
-@AllArgsConstructor
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
   @Autowired
-  UserService userService;
+  private UserService userService;
   @Autowired
-  TelegramUserService telegramUserService;
+  private TelegramUserService telegramUserService;
   @Autowired
-  GroupService groupService;
+  private GroupService groupService;
   @Autowired
-  RegistrationRepo registrationRepo; //Хранилище пользователей, который проходят регистрацию
+  private RegistrationRepo registrationRepo; //Хранилище пользователей, которые проходят регистрацию
 
   @Autowired
   public RegistrationServiceImpl(
@@ -40,11 +42,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
   private final TelegramBot telegramBot;
 
+  @Override
+  @Transactional(noRollbackFor = {ResourceNotFoundException.class, IndexOutOfBoundsException.class, NumberFormatException.class})
   public void registration(Update update) { //Обработка регистрации в телеграмм боте
     Message message = update.getMessage();
     boolean isUserReg = telegramUserService.telegramUserExistsByChatId(message.getChatId());
-    boolean isCommandReg = message.getText().equals("/reg");
-    boolean isUserNowReg = registrationRepo.isUserpassesRegistration(message.getChatId());
+    boolean isCommandReg = message.getText().equals(Command.REGISTRATION.getCommandText());
+    boolean isUserNowReg = registrationRepo.isUserPassesRegistration(message.getChatId());
 
     if (!isUserReg && !isCommandReg && !isUserNowReg) {
       telegramBot.sendMessege(message.getChatId(),
@@ -86,11 +90,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         int groupIndex = Integer.parseInt(message.getText()) - 1;
         List<Group> groups = groupService.getByUser(
             telegramUser.getUserSetInvited().iterator().next());
-        Group group = groups.get(groupIndex);
-        telegramUser.getGroupSet().add(groupService.getById(group.getId()));
-        telegramUserService.saveTelegramUser(telegramUser);
-        registrationRepo.delite(message.getChatId());
-        telegramBot.sendMessege(message.getChatId(), "Вы успешно зарегистрированны.");
+        try {
+          Group group = groups.get(groupIndex);
+          telegramUser.getGroupSet().add(groupService.getById(group.getId()));
+          telegramUserService.saveTelegramUser(telegramUser);
+          registrationRepo.delite(message.getChatId());
+          telegramBot.sendMessege(message.getChatId(), "Вы успешно зарегистрированны.");
+        }
+        catch (IndexOutOfBoundsException | NumberFormatException e){
+          telegramBot.sendMessege(message.getChatId(), "Введите правильный номер группы");
+        }
       }
     }
   }

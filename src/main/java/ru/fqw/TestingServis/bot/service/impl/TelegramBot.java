@@ -1,39 +1,54 @@
 package ru.fqw.TestingServis.bot.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ru.fqw.TestingServis.bot.config.BotConfig;
-import ru.fqw.TestingServis.bot.service.RegistrationService;
-import ru.fqw.TestingServis.bot.service.TelegramTestingService;
+import ru.fqw.TestingServis.bot.service.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
 
-  BotConfig botConfig;
-  TelegramTestingService telegramTestingService;
-  RegistrationService registrationServise;
+  private final BotConfig botConfig;
+  private final TelegramTestingService telegramTestingService;
+  private final RegistrationService registrationServise;
+  private final InvitedService invitedService;
+  private final BotMenuService botMenuService;
+  private final CancelService cancelService;
 
   @Override
   public void onUpdateReceived(Update update) {
     logUserMessege(update);
+    cancelService.cancel(update);
     registrationServise.registration(update);
     telegramTestingService.testing(update);
-
+    invitedService.addInvited(update);
+    invitedService.removeInvited(update);
   }
 
   @SneakyThrows
+  @Transactional
   public void sendMessege(long chatId, String text) {
-    execute(new SendMessage(String.valueOf(chatId), text));
+    SendMessage message = new SendMessage(String.valueOf(chatId), text);
+    botMenuService.setMenu(message);
+    execute(message);
     logBotMessege(chatId, text);
   }
 

@@ -16,5 +16,4 @@ public interface ResultAnalysisServise {
 
   Map<String, List<AnalysisQuestion>> getAnalysisQuestionMapByPage(
       Page<Entry<String, List<ResultTest>>> resultsGroupedByTestName);
-
 }

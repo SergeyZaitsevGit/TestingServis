@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.models.user.User;
@@ -21,6 +22,7 @@ public class TestServiceImpl implements TestService {
   UserService userService;
 
   @Override
+  @Transactional
   public Test saveTest(Test test) {
     if (test.getId() == null || !testRepo.existsById(test.getId())) {
       User user = userService.getAuthenticationUser();
@@ -31,12 +33,14 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
+  @Transactional
   public Page<Test> getTestsByAuthenticationUser(Pageable pageable) {
     User user = userService.getAuthenticationUser();
     return testRepo.findByCreator(pageable, user);
   }
 
   @Override
+  @Transactional
   public Test getTestById(Long testId) {
     return testRepo.findById(testId).orElseThrow(
         () -> new ResourceNotFoundException("Тест не найден")
@@ -44,6 +48,7 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
+  @Transactional
   public Page<Test> getTestsByAuthenticationUserAndNameContaining(Pageable pageable,
       String keywordName) {
     User user = userService.getAuthenticationUser();
@@ -51,11 +56,13 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
+  @Transactional
   public void updateTestActivById(Long testId, boolean newActivValue) {
     testRepo.updateTestActivById(testId, newActivValue);
   }
 
   @Override
+  @Transactional
   public boolean existTestById(Long testId) {
     return testRepo.existsById(testId);
   }
