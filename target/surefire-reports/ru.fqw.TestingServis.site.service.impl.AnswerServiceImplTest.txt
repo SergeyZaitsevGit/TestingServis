@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ru.fqw.TestingServis.site.service.impl.AnswerServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.391 s - in ru.fqw.TestingServis.site.service.impl.AnswerServiceImplTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.313 s - in ru.fqw.TestingServis.site.service.impl.AnswerServiceImplTest
