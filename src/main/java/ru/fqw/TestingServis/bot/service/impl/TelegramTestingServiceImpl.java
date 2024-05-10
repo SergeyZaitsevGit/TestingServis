@@ -75,6 +75,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
           if (testFromTelegramUser.getTest().isMixAnswers()) {
             Collections.shuffle(question.getAnswerList());
+            testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
           }
           telegramBot.sendMessege(
               message.getChatId(), "Вы начали тестирование\n"
