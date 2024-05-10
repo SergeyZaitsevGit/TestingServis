@@ -24,6 +24,7 @@ public class TestServiceImpl implements TestService {
   private TestRepo testRepo;
   private UserService userService;
   private QuestionService questionService;
+  private TimeUtils timeUtils;
 
   @Override
   @Transactional
@@ -31,7 +32,7 @@ public class TestServiceImpl implements TestService {
     if (test.getId() == null || !testRepo.existsById(test.getId())) {
       User user = userService.getAuthenticationUser();
       test.setCreator(user);
-      test.setDateCreated(TimeUtils.getNow());
+      test.setDateCreated(timeUtils.getNow());
     }
     test.setMaxBall(getMaxBall(test));
     test.setCountQuestion(getCountQuestion(test));

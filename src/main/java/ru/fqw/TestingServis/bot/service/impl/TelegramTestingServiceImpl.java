@@ -42,6 +42,8 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   private ResultTestService resultTestService;
   @Autowired
   private TelegramTestingHelper telegramTestingHelper;
+  @Autowired
+  private TimeUtils timeUtils;
 
   @Autowired
   TestService testService;
@@ -71,7 +73,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           if (testFromTelegramUser.getTest().isMixQuestions()) {
             Collections.shuffle(questionList);
           }
-          testFromTelegramUser.setTimeStart(TimeUtils.getNow());
+          testFromTelegramUser.setTimeStart(timeUtils.getNow());
           Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
           if (testFromTelegramUser.getTest().isMixAnswers()) {
             Collections.shuffle(question.getAnswerList());
@@ -156,7 +158,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
       }
       long timeStart = testFromTelegramUser.getTimeStart().getTime();
       long timeEnd = (testFromTelegramUser.getTest().getTimeActiv() * 60000L);
-      if (timeStart + timeEnd > TimeUtils.getNow().getTime()) { //Проверка не вышло ли время теста
+      if (timeStart + timeEnd > timeUtils.getNow().getTime()) { //Проверка не вышло ли время теста
         return;
       }
       Test test = testFromTelegramUser.getTest();
@@ -180,7 +182,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
   private void resultSave(TestFromTelegramUser testFromTelegramUser, long chatId) {
-    testFromTelegramUser.setTimeEnd(TimeUtils.getNow());
+    testFromTelegramUser.setTimeEnd(timeUtils.getNow());
     Test test = testFromTelegramUser.getTest();
     ResultTest resultTest = new ResultTest();
     resultTest.setBall(testFromTelegramUser.getBall());
