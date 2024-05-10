@@ -4,6 +4,6 @@ RUN apk add maven
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 RUN mvn clean package
-COPY usr/src/app/target/*.jar /app.jar
+RUN cp target/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 EXPOSE 8080
