@@ -16,5 +16,5 @@ public interface ResultsTestRepo extends MongoRepository<ResultTest, String> {
 
   List<ResultTest> findResultTestsByTestBaseUserAndTitle(BaseUser baseUser, String title);
 
-  List<ResultTest> findResultTestsByTest(BaseTest baseTest);
+  List<ResultTest> findResultTestsByTestId(Long id);
 }

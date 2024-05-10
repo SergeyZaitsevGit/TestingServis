@@ -24,12 +24,6 @@ public class MainController {
   @GetMapping("/")
   public String home(Model model) {
     model.addAttribute("title", "Главная страница");
-    return "home";
-  }
-
-  @GetMapping("/main")
-  public String mainPage(Model model) {
-    model.addAttribute("name", SecurityContextHolder.getContext().getAuthentication().getName());
     return "main";
   }
 

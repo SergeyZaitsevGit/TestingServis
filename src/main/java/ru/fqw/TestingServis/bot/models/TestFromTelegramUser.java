@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
+import ru.fqw.TestingServis.site.models.question.Question;
 import ru.fqw.TestingServis.site.models.test.Test;
 
 @Data
@@ -16,7 +17,7 @@ public class TestFromTelegramUser {
   private int ball;
 
   private List<AnswerFromTelegramUser> answerFromTelegramUserList = new ArrayList<>();
-  private List<BaseQuestion> questions = new ArrayList<>();
+  private List<Question> questions = new ArrayList<>();
   private Timestamp timeStart;
   private Timestamp timeEnd;
   private Timestamp timeActiv;

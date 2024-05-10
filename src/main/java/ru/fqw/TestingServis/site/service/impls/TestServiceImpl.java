@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
+import ru.fqw.TestingServis.site.models.question.BaseQuestion;
 import ru.fqw.TestingServis.site.models.test.Test;
 import ru.fqw.TestingServis.site.models.user.User;
 import ru.fqw.TestingServis.site.repo.TestRepo;
+import ru.fqw.TestingServis.site.service.QuestionService;
 import ru.fqw.TestingServis.site.service.TestService;
 import ru.fqw.TestingServis.site.service.UserService;
 
@@ -18,8 +20,9 @@ import ru.fqw.TestingServis.site.service.UserService;
 @AllArgsConstructor
 public class TestServiceImpl implements TestService {
 
-  TestRepo testRepo;
-  UserService userService;
+  private TestRepo testRepo;
+  private UserService userService;
+  private QuestionService questionService;
 
   @Override
   @Transactional
@@ -29,6 +32,8 @@ public class TestServiceImpl implements TestService {
       test.setCreator(user);
       test.setDateCreated(new Timestamp(System.currentTimeMillis()));
     }
+    test.setMaxBall(getMaxBall(test));
+    test.setCountQuestion(getCountQuestion(test));
     return testRepo.save(test);
   }
 
@@ -65,5 +70,19 @@ public class TestServiceImpl implements TestService {
   @Transactional
   public boolean existTestById(Long testId) {
     return testRepo.existsById(testId);
+  }
+
+  @Override
+  @Transactional
+  public int getMaxBall(Test test) {
+    return test.getQuestionSet()
+            .stream()
+            .mapToInt(BaseQuestion::getBall)
+            .sum();
+  }
+
+  @Override
+  public int getCountQuestion(Test test) {
+    return test.getQuestionSet().size();
   }
 }

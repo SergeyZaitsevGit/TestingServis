@@ -19,4 +19,8 @@ public interface TestService {
 
   boolean existTestById(Long testId);
 
+  int getMaxBall(Test test);
+
+  int getCountQuestion(Test test);
+
 }

@@ -1,6 +1,7 @@
 package ru.fqw.TestingServis.bot.service.impl;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -61,21 +62,18 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
     if (isUserHaveTest) {
       TestFromTelegramUser testFromTelegramUser = testingRepo.get(
           message.getChatId());
-      List<Question> questionList = new ArrayList<>(
-          testService.getTestById(testFromTelegramUser.getTest().getId()).getQuestionSet()
-      );
+      List<Question> questionList = testFromTelegramUser.getQuestions();
       boolean isTestDontStart = testFromTelegramUser.getTimeStart() == null;
       if (isTestDontStart) { // Eсли тест не начат предлагаем пользователю его начать
         if (message.getText().equals(Command.GO.getCommandText())) {
+          questionList.addAll(testService.getTestById(testFromTelegramUser.getTest().getId()).getQuestionSet());
           if (testFromTelegramUser.getTest().isMixQuestions()) {
             Collections.shuffle(questionList);
-            testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
           }
           testFromTelegramUser.setTimeStart(new Timestamp(System.currentTimeMillis()));
           Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
           if (testFromTelegramUser.getTest().isMixAnswers()) {
             Collections.shuffle(question.getAnswerList());
-            testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
           }
           telegramBot.sendMessege(
               message.getChatId(), "Вы начали тестирование\n"
@@ -93,6 +91,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           parseAnswer(testFromTelegramUser, questionList, message);
           if (testFromTelegramUser.getTest().isMixAnswers()) {
             Collections.shuffle(question.getAnswerList());
+            testFromTelegramUser.getTest().setQuestionSet(new LinkedHashSet<>(questionList));
           }
           goNextQuestion(telegramBot, message, testFromTelegramUser, question);
         } catch (NumberFormatException e) {
@@ -180,7 +179,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
   private void resultSave(TestFromTelegramUser testFromTelegramUser, long chatId) {
-    testFromTelegramUser.setTimeEnd(new Timestamp(System.currentTimeMillis()));
+    testFromTelegramUser.setTimeEnd(Timestamp.from(Instant.now()));
     Test test = testFromTelegramUser.getTest();
     ResultTest resultTest = new ResultTest();
     resultTest.setBall(testFromTelegramUser.getBall());

@@ -101,6 +101,6 @@ public class ResultTestServiceImpl implements ResultTestService {
   }
 
   public List<ResultTest> getResultsByTest(BaseTest baseTest) {
-    return resultsTestRepo.findResultTestsByTest(baseTest);
+    return resultsTestRepo.findResultTestsByTestId(baseTest.getId());
   }
 }

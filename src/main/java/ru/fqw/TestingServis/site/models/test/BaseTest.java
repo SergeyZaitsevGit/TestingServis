@@ -11,6 +11,8 @@ import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import ru.fqw.TestingServis.site.models.user.BaseUser;
 
 @Data
@@ -40,11 +42,9 @@ public class BaseTest {
   @Transient
   protected BaseUser baseUser;
 
-//  @Transient
-//  protected int countQuestion;
-//
-//  @Transient
-//  protected int maxBall;
+  private Integer countQuestion;
+
+  private Integer maxBall;
 
   public String getFormatedDataCreated() {
     SimpleDateFormat sdf =

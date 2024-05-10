@@ -30,16 +30,6 @@ import ru.fqw.TestingServis.site.models.user.User;
 
 public class Test extends BaseTest {
 
-  @Formula("(SELECT COUNT(*) FROM test_like_question q WHERE q.test_id = id)")
-  @Lazy
-  private Long countQuestion;
-
-  @Formula("(SELECT coalesce(SUM(q.ball), 0)"
-      + " FROM test_like_question tlq"
-      + " JOIN Question q on tlq.question_id = q.id where tlq.test_id = id)")
-  @Lazy
-  private Integer maxBall;
-
   @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
       name = "TestLikeQuestion",
