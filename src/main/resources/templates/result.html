@@ -82,8 +82,8 @@
                               th:text="${resultTest.telegramUser.surname}"/></td>
                           <td th:text="${resultTest.getFormatedTimeStart()}"></td>
                           <td th:text="${resultTest.getFormatedTimeEnd()}"></td>
-                          <td><span th:text="${resultTest.ball}"/> из <span
-                              th:text="${resultTest.test.getMaxBall()}"></span></td>
+                          <td><span th:text="${resultTest.ball}"></span> из <span
+                              th:text="${resultTest.getTest().getMaxBall()}"></span></td>
                           <td><a th:href="|result/${resultTest.id}">Подробнее</a></td>
                         </tr>
                         </tbody>
