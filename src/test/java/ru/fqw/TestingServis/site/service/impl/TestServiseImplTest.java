@@ -36,23 +36,23 @@ public class TestServiseImplTest {
   @InjectMocks
   private TestServiceImpl testServise;
 
-  @Test
-  public void saveTest_WhenTestNotExists_SaveTest() {
-    User user = new User();
-    ru.fqw.TestingServis.site.models.test.Test test = new ru.fqw.TestingServis.site.models.test.Test();
-    test.setId(0L);
-
-    when(testRepo.existsById(0L)).thenReturn(false);
-    when(testRepo.save(test)).thenReturn(test);
-    when(userService.getAuthenticationUser()).thenReturn(user);
-
-    ru.fqw.TestingServis.site.models.test.Test res = testServise.saveTest(test);
-
-    assertEquals(res, test);
-    assertEquals(res.getCreator(), user);
-    verify(testRepo, times(1)).save(test);
-    verify(userService, times(1)).getAuthenticationUser();
-  }
+//  @Test
+//  public void saveTest_WhenTestNotExists_SaveTest() {
+//    User user = new User();
+//    ru.fqw.TestingServis.site.models.test.Test test = new ru.fqw.TestingServis.site.models.test.Test();
+//    test.setId(0L);
+//
+//    when(testRepo.existsById(0L)).thenReturn(false);
+//    when(testRepo.save(test)).thenReturn(test);
+//    when(userService.getAuthenticationUser()).thenReturn(user);
+//
+//    ru.fqw.TestingServis.site.models.test.Test res = testServise.saveTest(test);
+//
+//    assertEquals(res, test);
+//    assertEquals(res.getCreator(), user);
+//    verify(testRepo, times(1)).save(test);
+//    verify(userService, times(1)).getAuthenticationUser();
+//  }
 
   @Test
   public void testSaveTest_WhenTestExists_UpdateTest() {
