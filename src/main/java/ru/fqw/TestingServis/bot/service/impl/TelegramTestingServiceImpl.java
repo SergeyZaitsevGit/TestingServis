@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.healpers.TelegramTestingHelper;
+import ru.fqw.TestingServis.bot.healpers.TimeUtils;
 import ru.fqw.TestingServis.bot.models.AnswerFromTelegramUser;
 import ru.fqw.TestingServis.bot.models.ResultTest;
 import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
@@ -70,7 +71,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           if (testFromTelegramUser.getTest().isMixQuestions()) {
             Collections.shuffle(questionList);
           }
-          testFromTelegramUser.setTimeStart(new Timestamp(System.currentTimeMillis()));
+          testFromTelegramUser.setTimeStart(TimeUtils.getNow());
           Question question = questionList.get(testFromTelegramUser.getCurrentQuestion());
           if (testFromTelegramUser.getTest().isMixAnswers()) {
             Collections.shuffle(question.getAnswerList());
@@ -155,7 +156,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
       }
       long timeStart = testFromTelegramUser.getTimeStart().getTime();
       long timeEnd = (testFromTelegramUser.getTest().getTimeActiv() * 60000L);
-      if (timeStart + timeEnd > System.currentTimeMillis()) { //Проверка не вышло ли время теста
+      if (timeStart + timeEnd > TimeUtils.getNow().getTime()) { //Проверка не вышло ли время теста
         return;
       }
       Test test = testFromTelegramUser.getTest();
@@ -179,7 +180,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
   private void resultSave(TestFromTelegramUser testFromTelegramUser, long chatId) {
-    testFromTelegramUser.setTimeEnd(Timestamp.from(Instant.now()));
+    testFromTelegramUser.setTimeEnd(TimeUtils.getNow());
     Test test = testFromTelegramUser.getTest();
     ResultTest resultTest = new ResultTest();
     resultTest.setBall(testFromTelegramUser.getBall());

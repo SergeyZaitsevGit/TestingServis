@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.fqw.TestingServis.bot.healpers.TimeUtils;
 import ru.fqw.TestingServis.site.models.exception.ResourceNotFoundException;
 import ru.fqw.TestingServis.site.models.question.BaseQuestion;
 import ru.fqw.TestingServis.site.models.test.Test;
@@ -30,7 +31,7 @@ public class TestServiceImpl implements TestService {
     if (test.getId() == null || !testRepo.existsById(test.getId())) {
       User user = userService.getAuthenticationUser();
       test.setCreator(user);
-      test.setDateCreated(new Timestamp(System.currentTimeMillis()));
+      test.setDateCreated(TimeUtils.getNow());
     }
     test.setMaxBall(getMaxBall(test));
     test.setCountQuestion(getCountQuestion(test));

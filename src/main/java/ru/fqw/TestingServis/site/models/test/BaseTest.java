@@ -42,9 +42,9 @@ public class BaseTest {
   @Transient
   protected BaseUser baseUser;
 
-  private Integer countQuestion;
+  protected Integer countQuestion;
 
-  private Integer maxBall;
+  protected Integer maxBall;
 
   public String getFormatedDataCreated() {
     SimpleDateFormat sdf =
