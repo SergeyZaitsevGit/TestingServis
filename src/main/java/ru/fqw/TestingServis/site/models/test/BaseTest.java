@@ -52,7 +52,6 @@ public class BaseTest {
     return sdf.format(dateCreated);
   }
 
-
   public BaseTest(BaseTest baseTest) {
     this.id = baseTest.getId();
     this.name = baseTest.getName();

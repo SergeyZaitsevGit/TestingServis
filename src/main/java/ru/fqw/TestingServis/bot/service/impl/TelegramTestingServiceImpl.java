@@ -10,19 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.fqw.TestingServis.bot.healpers.TelegramTestingHelper;
 import ru.fqw.TestingServis.bot.healpers.TimeUtils;
-import ru.fqw.TestingServis.bot.models.AnswerFromTelegramUser;
-import ru.fqw.TestingServis.bot.models.ResultTest;
-import ru.fqw.TestingServis.bot.models.TestFromTelegramUser;
+import ru.fqw.TestingServis.bot.models.*;
 import ru.fqw.TestingServis.bot.models.enums.Command;
 import ru.fqw.TestingServis.bot.repo.TestingRepo;
-import ru.fqw.TestingServis.bot.service.ResultTestService;
-import ru.fqw.TestingServis.bot.service.TelegramTestingService;
-import ru.fqw.TestingServis.bot.service.TelegramUserService;
+import ru.fqw.TestingServis.bot.service.*;
 import ru.fqw.TestingServis.site.models.answer.Answer;
 import ru.fqw.TestingServis.site.models.answer.BaseAnswer;
 import ru.fqw.TestingServis.site.models.exception.ObjectAlreadyExistsExeption;
@@ -44,6 +41,10 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   private TelegramTestingHelper telegramTestingHelper;
   @Autowired
   private TimeUtils timeUtils;
+  @Autowired
+  private ResultAnalysisServise resultAnalysisServise;
+  @Autowired
+  private AnalysisByTestingService analysisByTestingService;
 
   @Autowired
   TestService testService;
@@ -114,6 +115,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
           if (testingRepo.getChatIdsByTest(testFromTelegramUser).isEmpty()) {
             Test test = testFromTelegramUser.getTest();
             testService.updateTestActivById(test.getId(), false);
+            analysis(testFromTelegramUser);
           }
         } catch (NumberFormatException e) {
           telegramBot.sendMessege(message.getChatId(), "Неверный формат ввода. Повторите попытку.");
@@ -170,6 +172,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
         telegramBot.sendMessege(chatId,
             "Тест завершен автоматически, поскольку время на его прохождение вышло. Текущие результаты сохранены");
       }
+      analysis(testFromTelegramUser);
     }
   }
 
@@ -227,6 +230,18 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
             .add(new AnswerFromTelegramUser(lastQuestion, message.getText(), 0));
       }
     }
+  }
+
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void analysis(TestFromTelegramUser testFromTelegramUser){
+    List<ResultTest> results = resultTestService.getResultsByUserAndTitle(testFromTelegramUser.getTest().getBaseUser(),testFromTelegramUser.getTitle());
+    List<AnalysisQuestion> analysisQuestionList = resultAnalysisServise.analysisQuestionByResult(results);
+    analysisByTestingService.save(AnalysisByTesting
+            .builder()
+            .testing(testFromTelegramUser.getTitle())
+            .analysisQuestionList(analysisQuestionList)
+            .baseUser(testFromTelegramUser.getTest().getBaseUser())
+            .build());
   }
 
 

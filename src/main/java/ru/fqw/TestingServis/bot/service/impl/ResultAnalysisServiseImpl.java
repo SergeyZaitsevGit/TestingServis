@@ -79,7 +79,9 @@ public class ResultAnalysisServiseImpl implements ResultAnalysisServise {
    * подсчет среднего балла за вопрос, <p> Процента выполнения вопроса,<p> Сортировка итогового
    * списка про проценту выполнения
    **/
-  private List<AnalysisQuestion> analysisQuestionByResult(List<ResultTest> resultTests) {
+  @Override
+  @Transactional
+  public List<AnalysisQuestion> analysisQuestionByResult(List<ResultTest> resultTests) {
     if (!testService.existTestById(resultTests.get(0).getTest().getId())) {
       return new ArrayList<>();
     }

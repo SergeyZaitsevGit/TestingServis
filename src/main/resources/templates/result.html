@@ -58,12 +58,12 @@
                      data-bs-parent="#accordionFlushExample">
                   <div class="accordion-body">
                     <div class="accordion-body">
-                      <p class="fs-6 "><b>Тест: </b><a th:href="|/test/${el.value.get(0).test.id}"
-                                                       th:text="${el.value.get(0).test.name}"/></p>
+                      <p class="fs-6 "><b>Тест: </b><a th:href="|/test/${el.value.resultTests.get(0).test.id}"
+                                                       th:text="${el.value.resultTests.get(0).test.name}"/></p>
                       <p class="fs-6"><b>Время на тест: </b><span
-                          th:text="${el.value.get(0).test.timeActiv}"/></p>
+                          th:text="${el.value.resultTests.get(0).test.timeActiv}"/></p>
                       <p class="fs-6"><b>Количество людей, прошедших тест: </b><span
-                          th:text="${el.value.size()}"/></p>
+                          th:text="${el.value.resultTests.size()}"/></p>
                       <p class="text-center h4 fw-bold mb-5 mx-1 mx-md-4 mt-4">Результаты
                         тестирования</p>
                       <table class="table">
@@ -77,7 +77,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="resultTest : ${el.value}">
+                        <tr th:each="resultTest : ${el.value.resultTests}">
                           <td><span th:text="${resultTest.telegramUser.name}"/> <span
                               th:text="${resultTest.telegramUser.surname}"/></td>
                           <td th:text="${resultTest.getFormatedTimeStart()}"></td>
@@ -91,7 +91,7 @@
 
                       <p class="text-center h4 fw-bold mb-5 mx-1 mx-md-4 mt-4">Анализ
                         результатов</p>
-                      <table th:if="${analysisQuestionMap.get(el.key).size} > 0" class="table">
+                      <table th:if="${el.value.analysisQuestionList.size()} > 0" class="table">
                         <thead>
                         <tr>
                           <th scope="col">Вопрос</th>
@@ -101,7 +101,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="analiysisQuestion : ${analysisQuestionMap.get(el.key)}">
+                        <tr th:each="analiysisQuestion : ${el.value.analysisQuestionList}">
                           <td th:text="${analiysisQuestion.baseQuestion.text}"></td>
                           <td th:text="${analiysisQuestion.avgBall}"></td>
                           <td th:text="${analiysisQuestion.percentCorrected}"></td>
@@ -116,8 +116,8 @@
                         </tr>
                         </tbody>
                       </table>
-                      <span th:if="${analysisQuestionMap.get(el.key).size} == 0"
-                            class="text-danger">Данные об аналитике невозможно получить, поскольку тест был удален</span>
+                      <span th:if="${el.value.analysisQuestionList.size()} == 0"
+                            class="text-danger">Данные об аналитике не найдены</span>
                     </div>
                   </div>
                 </div>

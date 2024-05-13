@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.fqw.TestingServis.bot.models.AnalysisQuestion;
 import ru.fqw.TestingServis.bot.models.ResultTest;
+import ru.fqw.TestingServis.bot.models.ResultsByTestingWithAnalysis;
 import ru.fqw.TestingServis.bot.service.ResultAnalysisServise;
 import ru.fqw.TestingServis.bot.service.ResultTestService;
 import ru.fqw.TestingServis.site.service.UserService;
@@ -30,24 +31,20 @@ public class ResulTestController {
   final ResultAnalysisServise resultAnalysisServise;
 
   @GetMapping("/result")
-  public String resultTest(Model model, @PageableDefault(size = 20) Pageable pageable,
+  public String resultTest(Model model, @PageableDefault(size = 20, sort = "timeStart") Pageable pageable,
       @RequestParam("keyword") Optional<String> keyword) {
-    Map<String, List<AnalysisQuestion>> analysisQuestionMap = new HashMap<>();
     if (keyword.isPresent()) {
-      Page<Map.Entry<String, List<ResultTest>>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
+      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
           pageable, keyword.get());
 
       model.addAttribute("resultsGroupedByTestName", resultsGroupedByTestName);
       model.addAttribute("keyword", keyword.get());
 
     } else {
-      Page<Map.Entry<String, List<ResultTest>>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
+      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
           pageable, null);
-      analysisQuestionMap = resultAnalysisServise.getAnalysisQuestionMapByPage(
-          resultsGroupedByTestName);
       model.addAttribute("resultsGroupedByTestName", resultsGroupedByTestName);
     }
-    model.addAttribute("analysisQuestionMap", analysisQuestionMap);
     return "result";
   }
 
