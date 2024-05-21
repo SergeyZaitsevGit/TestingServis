@@ -56,7 +56,8 @@ public class InvitedServiceImpl implements InvitedService {
      * которое сможет отправлять тесты телеграмм пользователю
      **/
     @Override
-    @Transactional(noRollbackFor = {ResourceNotFoundException.class, IndexOutOfBoundsException.class, NumberFormatException.class})
+    @Transactional(noRollbackFor = {ResourceNotFoundException.class,
+            IndexOutOfBoundsException.class, NumberFormatException.class})
     public void addInvited(Update update) {
         Message message = update.getMessage();
         boolean isUserReg = telegramUserService.telegramUserExistsByChatId(message.getChatId());

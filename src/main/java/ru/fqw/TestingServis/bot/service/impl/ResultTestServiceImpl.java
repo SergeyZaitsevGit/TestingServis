@@ -89,10 +89,14 @@ public class ResultTestServiceImpl implements ResultTestService {
 
   @Transactional
   public Page<String> getDistinctTitles(Pageable pageable, String keyword, BaseUser user){
-    GroupOperation groupBy = Aggregation.group("title").push("$$ROOT").as("resultTest");
-    SortOperation sortOp = Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart"));
-    SkipOperation skipOp = Aggregation.skip(pageable.getPageNumber() * pageable.getPageSize() * 1L);
-    LimitOperation limitOp = Aggregation.limit(pageable.getPageSize());
+    GroupOperation groupBy
+            = Aggregation.group("title").push("$$ROOT").as("resultTest");
+    SortOperation sortOp
+            = Aggregation.sort(Sort.by(Sort.Direction.DESC, "resultTest.timeStart"));
+    SkipOperation skipOp
+            = Aggregation.skip(pageable.getPageNumber() * pageable.getPageSize() * 1L);
+    LimitOperation limitOp
+            = Aggregation.limit(pageable.getPageSize());
     Criteria matchUserCriteria = Criteria.where("resultTest.test.baseUser.email")
             .is(user.getEmail());
 
@@ -117,7 +121,8 @@ public class ResultTestServiceImpl implements ResultTestService {
               Aggregation.match(Criteria.where("resultTest.title").regex(".*" + keyword + ".*")));
     }
 
-    AggregationResults<Document> distinctTitles = mongoTemplate.aggregate(aggregation, "resultTest", Document.class);
+    AggregationResults<Document> distinctTitles
+            = mongoTemplate.aggregate(aggregation, "resultTest", Document.class);
     List<String> res = distinctTitles.getMappedResults().stream()
             .map(document -> document.get("_id").toString()).toList();
 
@@ -126,7 +131,8 @@ public class ResultTestServiceImpl implements ResultTestService {
             Aggregation.match(matchUserCriteria),
             Aggregation.count().as("total")
     );
-    AggregationResults<Document> countResult = mongoTemplate.aggregate(aggregationCount, "resultTest", Document.class);
+    AggregationResults<Document> countResult
+            = mongoTemplate.aggregate(aggregationCount, "resultTest", Document.class);
     Integer totalElements = countResult.getMappedResults().get(0).getInteger("total");
     return new PageImpl<>(res,pageable,totalElements);
   }

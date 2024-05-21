@@ -1,5 +1,7 @@
 package ru.fqw.TestingServis.bot.healpers;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,7 +38,7 @@ public class TelegramTestingHelper {
         if (resultBall < 0) {
           resultBall = 0;
         }
-        return Math.round(resultBall);
+        return new BigDecimal(resultBall).setScale(0, RoundingMode.FLOOR).intValue();
       }
     }
     return 0;

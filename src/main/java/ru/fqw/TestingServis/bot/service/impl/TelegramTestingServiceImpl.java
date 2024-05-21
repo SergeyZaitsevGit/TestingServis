@@ -127,6 +127,7 @@ public class TelegramTestingServiceImpl implements TelegramTestingService {
   }
 
   @Override
+  @Transactional
   public void startTest(List<Long> tgUsersChatIds, Test test, String title) {
     if (resultTestService.existByTitle(title)) {
       throw new ObjectAlreadyExistsExeption("Тестирование с таким названием уже существует");

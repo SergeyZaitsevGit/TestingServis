@@ -34,14 +34,16 @@ public class ResulTestController {
   public String resultTest(Model model, @PageableDefault(size = 20, sort = "timeStart") Pageable pageable,
       @RequestParam("keyword") Optional<String> keyword) {
     if (keyword.isPresent()) {
-      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
+      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName
+              = resultTestService.getTestingResultsGroupedByTestName(
           pageable, keyword.get());
 
       model.addAttribute("resultsGroupedByTestName", resultsGroupedByTestName);
       model.addAttribute("keyword", keyword.get());
 
     } else {
-      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName = resultTestService.getTestingResultsGroupedByTestName(
+      Page<Map.Entry<String, ResultsByTestingWithAnalysis>> resultsGroupedByTestName
+              = resultTestService.getTestingResultsGroupedByTestName(
           pageable, null);
       model.addAttribute("resultsGroupedByTestName", resultsGroupedByTestName);
     }
